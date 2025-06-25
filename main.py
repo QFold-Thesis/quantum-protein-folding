@@ -1,6 +1,22 @@
 from encoding import TetrahedralLattice, all_turn_combinations
 import matplotlib.pyplot as plt
 
+def aa_to_hp(sequence: str) -> str:
+    """
+    Konwertuje sekwencję aminokwasów na model HP (H - hydrofobowy, P - polarny).
+    Przyjmuje sekwencję jako string z jednoliterowym kodem aminokwasów.
+    Zwraca string z literami H i P.
+    """
+    # Lista hydrofobowych aminokwasów wg najczęściej stosowanej konwencji HP
+    hydrophobic = {'A', 'V', 'L', 'I', 'M', 'F', 'W', 'Y', 'C'}
+    # Pozostałe uznaje się za polarne
+    hp_sequence = ""
+    for aa in sequence.upper():
+        if aa in hydrophobic:
+            hp_sequence += "H"
+        else:
+            hp_sequence += "P"
+    return hp_sequence
 
 def main() -> None:
     main_chain = ["H", "P", "P", "H", "P", "H"]
@@ -8,31 +24,35 @@ def main() -> None:
     lattice = TetrahedralLattice(30, 30, 30)
     all_turns = all_turn_combinations(len(main_chain))
 
+    min_energy = float('inf')
+    min_turns = None
     for turns in all_turns:
         try:
-            qubit_string = lattice.encode_turn_sequence(turns)
+            positions = lattice.generate_positions((1, 1, 1), turns)
+            energy = lattice.compute_energy(positions, main_chain)
+            if energy < min_energy:
+                min_energy = energy
+                min_turns = turns
+        except ValueError:
+            continue
 
-            positions = lattice.generate_positions((10, 10, 10), turns)
-            xs = [p[0] for p in positions]
-            ys = [p[1] for p in positions]
-            zs = [p[2] for p in positions]
+    print(f"Minimalna energia: {min_energy}")
 
-            with open("encoded_turns.txt", "a+") as f:
-                f.write(f"x:{xs} y:{ys} z:{zs} | string: {qubit_string}\n")
+    positions = lattice.generate_positions((1, 1, 1), min_turns)
+    xs = [p[0] for p in positions]
+    ys = [p[1] for p in positions]
+    zs = [p[2] for p in positions]
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection="3d")
+    ax.plot(xs, ys, zs, marker="o", markersize=12, linestyle=":", color="grey")
 
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection="3d")
-            ax.plot(xs, ys, zs, marker="o")
-            ax.set_title("HP conformations on tetrahedral lattice")
-            ax.set_xlabel("X")
-            ax.set_ylabel("Y")
-            ax.set_zlabel("Z")
+    # Annotate each point with "H" or "P"
+    for x, y, z, label in zip(xs, ys, zs, main_chain):
+        ax.text(x, y, z, label, fontsize=14, ha='center', va='center', color='red' if label == 'H' else 'blue')
 
-            plt.show()
-            # plt.savefig("plots/plot_" + qubit_string + ".png")
-            # plt.close(fig)
-        except ValueError as e:
-            print(f"Error: {e}")
+    ax.set_title("Minimalna energia konformacji")
+    plt.show()
 
 
 if __name__ == "__main__":

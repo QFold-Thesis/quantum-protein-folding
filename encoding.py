@@ -85,8 +85,22 @@ class TetrahedralLattice:
                 raise ValueError(f"Position out of bounds: {new_pos}")
             pos_list.append(new_pos)
         return pos_list
+    
+    def compute_energy(self, positions, chain):
+        energy = 0
+        n = len(positions)
+        for i in range(n):
+            for j in range(i + 1, n):
+                if abs(i - j) > 1:
+                    if chain[i] == 'H' and chain[j] == 'H':
+                        dx, dy, dz = positions[j] - positions[i]
+                        if dx**2 + dy**2 + dz**2 == 3:
+                            energy -= 1
+        return energy
 
 
 def all_turn_combinations(seq_len):
-    n = seq_len - 1
-    return list(itertools.product(range(4), repeat=n))
+    n = seq_len - 3
+    fixed_turns = [1, 0]
+    for turns in itertools.product(range(4), repeat=n):
+        yield fixed_turns + list(turns)
