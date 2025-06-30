@@ -14,6 +14,11 @@ class Turn(Enum):
     DIR_2 = (-1, 1, -1)
     DIR_3 = (-1, -1, 1)
 
+class Penalty(IntEnum):
+    COLLISION = 100
+    BACK = 1
+    HYDROPHOBIC_HYDROPHOBIC = -1
+
 
 class Bead:
     def __init__(self, symbol: str, index: int):
@@ -82,7 +87,7 @@ class TetrahedralLattice:
         for t in turns:
             new_pos = pos_list[-1] + self.directions[t]
             if not self.is_valid(new_pos):
-                raise ValueError(f"Position out of bounds: {new_pos}")
+                raise ValueError(f"Position out of bounds:   {new_pos}")
             pos_list.append(new_pos)
         return pos_list
     
@@ -95,7 +100,15 @@ class TetrahedralLattice:
                     if chain[i] == 'H' and chain[j] == 'H':
                         dx, dy, dz = positions[j] - positions[i]
                         if dx**2 + dy**2 + dz**2 == 3:
-                            energy -= 1
+                            energy += Penalty.HYDROPHOBIC_HYDROPHOBIC
+                    if np.array_equal(positions[i], positions[j]):
+                        energy += Penalty.COLLISION
+                elif abs(i - j) == 1:
+                    if (positions[i][0] == positions[j][0] and positions[i][1] == positions[j][1]) or \
+                    (positions[i][0] == positions[j][0] and positions[i][2] == positions[j][2]) or \
+                    (positions[i][1] == positions[j][1] and positions[i][2] == positions[j][2]):
+                        energy += Penalty.BACK
+                        print(f"Backtracking detected between neighbors {i} and {j}: {positions[i]} <-> {positions[j]}")
         return energy
 
 
