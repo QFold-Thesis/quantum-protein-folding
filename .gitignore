@@ -1,6 +1,9 @@
 
+# Quantum protein folding project - specific ignores
 .idea/
 plots/
+test.py
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
