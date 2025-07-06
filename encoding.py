@@ -38,10 +38,7 @@ class TetrahedralLattice:
     def _init_turn_vectors(self):
         raw = np.array(
             [
-                [+1, +1, +1],
-                [+1, -1, -1],
-                [-1, +1, -1],
-                [-1, -1, +1],
+                turn.value for turn in Turn
             ],
             dtype=float,
         )
@@ -190,7 +187,7 @@ class TetrahedralLattice:
         return energy
 
     def find_lowest_energy_conformation(
-        self, beads, all_turn_sequences, starting_pos=[3.0, 3.0, 3.0]
+        self, beads, all_turn_sequences, starting_pos=[5.0, 5.0, 5.0]
     ):
         best_energy = float("inf")
         best_turns = None
