@@ -3,7 +3,7 @@ from protein import create_protein_sequence, all_turn_combinations
 
 
 def main() -> None:
-    main_chain = ["H", "P", "P", "H", "P", "H", "H", "P"]
+    main_chain = ["H", "P", "P", "H", "P", "H", "P", "H", "H"]
 
     beads = create_protein_sequence(main_chain)
 

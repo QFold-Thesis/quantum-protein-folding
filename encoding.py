@@ -37,9 +37,7 @@ class TetrahedralLattice:
 
     def _init_turn_vectors(self):
         raw = np.array(
-            [
-                turn.value for turn in Turn
-            ],
+            [turn.value for turn in Turn],
             dtype=float,
         )
 
@@ -152,37 +150,18 @@ class TetrahedralLattice:
             for j in range(i + 1, n):
                 if abs(i - j) > 1:
                     if beads[i].symbol == "H" and beads[j].symbol == "H":
-                        dx, dy, dz = positions[j] - positions[i]
-                        distance_squared = dx**2 + dy**2 + dz**2
-
-                        if abs(distance_squared - 3.0) < self.tolerance:
+                        if (
+                            abs(np.sum((positions[j] - positions[i]) ** 2) - 3.0)
+                            < self.tolerance
+                        ):
                             energy += Penalty.HYDROPHOBIC_HYDROPHOBIC
 
                     if np.allclose(positions[i], positions[j], atol=self.tolerance):
                         energy += Penalty.COLLISION
 
-                elif abs(i - j) == 1:
-                    pos_i = positions[i]
-                    pos_j = positions[j]
-
-                    if (
-                        (
-                            abs(pos_i[0] - pos_j[0]) < self.tolerance
-                            and abs(pos_i[1] - pos_j[1]) < self.tolerance
-                        )
-                        or (
-                            abs(pos_i[0] - pos_j[0]) < self.tolerance
-                            and abs(pos_i[2] - pos_j[2]) < self.tolerance
-                        )
-                        or (
-                            abs(pos_i[1] - pos_j[1]) < self.tolerance
-                            and abs(pos_i[2] - pos_j[2]) < self.tolerance
-                        )
-                    ):
-                        energy += Penalty.BACK
-                        print(
-                            f"Backtracking detected between neighbors {i} and {j}: {pos_i} <-> {pos_j}"
-                        )
+        for i in range(2, n):
+            if np.allclose(positions[i], positions[i - 2], atol=self.tolerance):
+                energy += Penalty.BACK
 
         return energy
 
