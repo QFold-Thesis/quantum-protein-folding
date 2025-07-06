@@ -4,17 +4,7 @@ from protein import create_protein_sequence, all_turn_combinations
 
 
 def main() -> None:
-    main_chain = [
-        "H",
-        "H", 
-        "P", 
-        "P", 
-        "H", 
-        "P", 
-        "H", 
-        "P", 
-        "H",
-    ]
+    main_chain = ["H", "P", "P", "H", "P", "H", "H", "P"]
 
     beads = create_protein_sequence(main_chain)
     
@@ -26,24 +16,35 @@ def main() -> None:
     
     lattice = TetrahedralLattice()
     lattice.generate_lattice(
-        nx=2, 
-        ny=2, 
-        nz=2
+        nx=3, 
+        ny=3, 
+        nz=3
     )
-    
+
     all_turns = list(all_turn_combinations(len(main_chain)))
     print(f"\nAll possible conformations: {len(all_turns)}")
+
     
-    example_turns = all_turns[0]
-    print(f"\nExample turn sequence: {example_turns}")
+    folding_result = lattice.find_lowest_energy_conformation(beads, all_turns, verbose=True)
+     
+    if folding_result['best_turns'] is None:
+        print("No valid conformation found.")
+        return
     
-    protein_path = lattice.generate_protein_path(beads, example_turns)
-    print(f"Wygenerowana ścieżka białka: {len(protein_path)} pozycji")
+    best_positions = folding_result['best_positions']
+    best_turns = folding_result['best_turns']
+
+    print(f"\nBest conformation positions:")
+    for i, (pos, bead) in enumerate(zip(best_positions, beads)):
+        print(f"  {bead.symbol}{i}: {pos}")
     
+    print(f"\nBest turn sequence: {best_turns}")
+    print(f"Best energy: {folding_result['best_energy']}")
+
     lattice.visualize_lattice(
-        show_bonds=True, 
-        show_node_labels=False, 
-        protein_path=protein_path, 
+        show_bonds=True,
+        show_node_labels=False,
+        protein_path=best_positions,
         protein_sequence=main_chain
     )
     
