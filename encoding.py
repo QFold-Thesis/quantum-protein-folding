@@ -22,7 +22,17 @@ class Penalty(IntEnum):
 
 
 class TetrahedralLattice:
-    def __init__(self, fcc_edge_length=4.0, tolerance=1e-3):
+    """
+    A class for representing proteins on a tetrahedral lattice using FCC structure.
+    
+    Key consistency principle: All spatial measurements (bond lengths, move vectors, 
+    and energy calculations) are scaled consistently with fcc_edge_length to ensure 
+    that the relative geometry remains constant regardless of the absolute scale.
+    
+    The fundamental unit is the bond length, which equals:
+    sqrt(0.25² + 0.25² + 0.25²) * fcc_edge_length = sqrt(3)/4 * fcc_edge_length
+    """
+    def __init__(self, fcc_edge_length=2.0, tolerance=1e-3):
         self.fcc_edge_length = fcc_edge_length
         self.tolerance = tolerance
         # Assuming the lattice will be limited to certain dimensions (we won't generate very long protein chains) - for now, we can
@@ -35,16 +45,27 @@ class TetrahedralLattice:
         self.move_vectors = None
         self._init_turn_vectors()
 
+    def _get_bond_length(self):
+        """
+        Calculate the bond length for the FCC tetrahedral lattice.
+        This is the distance between nearest neighbor positions in the base unit cell.
+        """
+        return np.linalg.norm([0.25, 0.25, 0.25]) * self.fcc_edge_length
+
     def _init_turn_vectors(self):
         raw = np.array(
             [turn.value for turn in Turn],
             dtype=float,
         )
 
+        # Normalize the direction vectors
         normed = raw / np.linalg.norm(raw, axis=1)[:, None]
-        self.move_vectors = normed * (
-            np.linalg.norm([0.25, 0.25, 0.25]) * self.fcc_edge_length
-        )
+        
+        # Use consistent bond length calculation
+        bond_length = self._get_bond_length()
+        
+        # Scale the normalized direction vectors by the bond length
+        self.move_vectors = normed * bond_length
 
     def generate_lattice(self, nx, ny, nz):
         # Base positions for the FCC lattice in a tetrahedral arrangement (8 nodes in one unit cell)
@@ -90,13 +111,10 @@ class TetrahedralLattice:
         n = len(self.nodes)
         self.neighbors = {i: [] for i in range(n)}
         self.bonds = []
-        # TODO
-        # Check the bond length for tetrahedral lattice
-        # For FCC, the bond length should be: sqrt(3) * edge_length / 2 (Pythagorean theorem)
-
-        bond_length = np.linalg.norm(
-            np.array([0.25, 0.25, 0.25]) * self.fcc_edge_length
-        )
+        
+        # Use consistent bond length calculation
+        bond_length = self._get_bond_length()
+        
         for i in range(n):
             for j in range(i + 1, n):
                 dist = np.linalg.norm(self.nodes[i] - self.nodes[j])
@@ -145,23 +163,29 @@ class TetrahedralLattice:
         """
         energy = 0
         n = len(positions)
+        
+        # Use consistent bond length for distance calculations
+        bond_length = self._get_bond_length()
+        bond_length_squared = bond_length ** 2
 
         for i in range(n):
             for j in range(i + 1, n):
                 if abs(i - j) > 1:
                     if beads[i].symbol == "H" and beads[j].symbol == "H":
-                        if (
-                            abs(np.sum((positions[j] - positions[i]) ** 2) - 3.0)
-                            < self.tolerance
-                        ):
+                        # Check if H-H beads are at nearest neighbor distance
+                        distance_squared = np.sum((positions[j] - positions[i]) ** 2)
+                        if abs(distance_squared - bond_length_squared) < self.tolerance:
                             energy += Penalty.HYDROPHOBIC_HYDROPHOBIC
+                            print("H-H found")
 
                     if np.allclose(positions[i], positions[j], atol=self.tolerance):
                         energy += Penalty.COLLISION
+                        print(f"Collision detected between beads {i} and {j}")
 
         for i in range(2, n):
             if np.allclose(positions[i], positions[i - 2], atol=self.tolerance):
                 energy += Penalty.BACK
+                print(f"Backtracking detected at bead {i}")
 
         return energy
 
