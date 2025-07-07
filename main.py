@@ -1,38 +1,45 @@
-from encoding import TetrahedralLattice, all_turn_combinations
-import matplotlib.pyplot as plt
+from encoding import TetrahedralLattice
+from protein import create_protein_sequence, all_turn_combinations
 
 
 def main() -> None:
-    main_chain = ["H", "P", "P", "H", "P", "H"]
+    main_chain = ["H", "P", "P", "H", "P", "H", "P", "H", "H"]
 
-    lattice = TetrahedralLattice(30, 30, 30)
-    all_turns = all_turn_combinations(len(main_chain))
+    beads = create_protein_sequence(main_chain)
 
-    for turns in all_turns:
-        try:
-            qubit_string = lattice.encode_turn_sequence(turns)
+    print(f"\nProtein sequence: {main_chain}")
+    print("\nBead information:")
+    for bead in beads:
+        print(f"  {bead}")
 
-            positions = lattice.generate_positions((10, 10, 10), turns)
-            xs = [p[0] for p in positions]
-            ys = [p[1] for p in positions]
-            zs = [p[2] for p in positions]
+    lattice = TetrahedralLattice()
+    lattice.generate_lattice(nx=3, ny=3, nz=3)
 
-            with open("encoded_turns.txt", "a+") as f:
-                f.write(f"x:{xs} y:{ys} z:{zs} | string: {qubit_string}\n")
+    all_turns = list(all_turn_combinations(len(main_chain)))
+    print(f"\nAll possible conformations: {len(all_turns)}")
 
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection="3d")
-            ax.plot(xs, ys, zs, marker="o")
-            ax.set_title("HP conformations on tetrahedral lattice")
-            ax.set_xlabel("X")
-            ax.set_ylabel("Y")
-            ax.set_zlabel("Z")
+    folding_result = lattice.find_lowest_energy_conformation(beads, all_turns)
 
-            plt.show()
-            # plt.savefig("plots/plot_" + qubit_string + ".png")
-            # plt.close(fig)
-        except ValueError as e:
-            print(f"Error: {e}")
+    if folding_result["best_turns"] is None:
+        print("No valid conformation found.")
+        return
+
+    best_positions = folding_result["best_positions"]
+    best_turns = folding_result["best_turns"]
+
+    print("\nBest conformation positions:")
+    for i, (pos, bead) in enumerate(zip(best_positions, beads)):
+        print(f"  {bead.symbol}{i}: {pos}")
+
+    print(f"\nBest turn sequence: {best_turns}")
+    print(f"Best energy: {folding_result['best_energy']}")
+
+    lattice.visualize_lattice(
+        show_bonds=True,
+        show_node_labels=False,
+        protein_path=best_positions,
+        protein_sequence=main_chain,
+    )
 
 
 if __name__ == "__main__":
