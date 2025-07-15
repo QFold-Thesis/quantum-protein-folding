@@ -1,6 +1,8 @@
 from enum import IntEnum, Enum
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy.typing import NDArray
+from matplotlib.figure import Figure
 
 
 class SubLattice(IntEnum):
@@ -24,35 +26,40 @@ class Penalty(IntEnum):
 class TetrahedralLattice:
     """
     A class for representing proteins on a tetrahedral lattice using FCC structure.
-    
-    Key consistency principle: All spatial measurements (bond lengths, move vectors, 
-    and energy calculations) are scaled consistently with fcc_edge_length to ensure 
+
+    Key consistency principle: All spatial measurements (bond lengths, move vectors,
+    and energy calculations) are scaled consistently with fcc_edge_length to ensure
     that the relative geometry remains constant regardless of the absolute scale.
-    
+
     The fundamental unit is the bond length, which equals:
     sqrt(0.25² + 0.25² + 0.25²) * fcc_edge_length = sqrt(3)/4 * fcc_edge_length
     """
-    def __init__(self, fcc_edge_length=2.0, tolerance=1e-3):
+
+    def __init__(self, fcc_edge_length: float = 2.0, tolerance: float = 1e-3) -> None:
         self.fcc_edge_length = fcc_edge_length
         self.tolerance = tolerance
         # Assuming the lattice will be limited to certain dimensions (we won't generate very long protein chains) - for now, we can
         # store all nodes, bonds and neighbors in memory
-        self.nodes = []
-        self.bonds = []
-        self.cell_indices = []  # only for debugging purposes
-        self.neighbors = {}
+        self.nodes: NDArray[np.float64] = np.empty(
+            (0, 3), dtype=np.float64
+        )  # empty array with shape (0, 3)
+        self.cell_indices: NDArray[np.int64] = np.empty(
+            0, dtype=np.int64
+        )  # empty 1D array of ints
+        self.bonds: list[tuple[int, int]] = []
+        self.neighbors: dict[int, list[int]] = {}
 
         self.move_vectors = None
         self._init_turn_vectors()
 
-    def _get_bond_length(self):
+    def _get_bond_length(self) -> float:
         """
         Calculate the bond length for the FCC tetrahedral lattice.
         This is the distance between nearest neighbor positions in the base unit cell.
         """
         return np.linalg.norm([0.25, 0.25, 0.25]) * self.fcc_edge_length
 
-    def _init_turn_vectors(self):
+    def _init_turn_vectors(self) -> None:
         raw = np.array(
             [turn.value for turn in Turn],
             dtype=float,
@@ -60,14 +67,14 @@ class TetrahedralLattice:
 
         # Normalize the direction vectors
         normed = raw / np.linalg.norm(raw, axis=1)[:, None]
-        
+
         # Use consistent bond length calculation
         bond_length = self._get_bond_length()
-        
+
         # Scale the normalized direction vectors by the bond length
         self.move_vectors = normed * bond_length
 
-    def generate_lattice(self, nx, ny, nz):
+    def generate_lattice(self, nx: int, ny: int, nz: int) -> None:
         # Base positions for the FCC lattice in a tetrahedral arrangement (8 nodes in one unit cell)
         # nx, ny, nz are the number of unit cells in each direction (NOT THE NUMBER OF NODES!!)
 
@@ -107,14 +114,14 @@ class TetrahedralLattice:
         self.cell_indices = np.array(cell_indices)
         self._find_neighbors()
 
-    def _find_neighbors(self):
+    def _find_neighbors(self) -> None:
         n = len(self.nodes)
         self.neighbors = {i: [] for i in range(n)}
         self.bonds = []
-        
+
         # Use consistent bond length calculation
         bond_length = self._get_bond_length()
-        
+
         for i in range(n):
             for j in range(i + 1, n):
                 dist = np.linalg.norm(self.nodes[i] - self.nodes[j])
@@ -123,7 +130,7 @@ class TetrahedralLattice:
                     self.neighbors[j].append(i)
                     self.bonds.append((i, j))
 
-    def _get_available_turns(self, sublattice):
+    def _get_available_turns(self, sublattice: SubLattice) -> NDArray[np.float64]:
         # TODO: Think over how to handle sublattice A and B
         # For now, let sublattice A be the original move vectors and sublattice B be the negative of them
         if sublattice == SubLattice.A:
@@ -131,7 +138,12 @@ class TetrahedralLattice:
         else:
             return -1 * self.move_vectors
 
-    def generate_protein_path(self, beads, turn_sequence, starting_pos=None):
+    def generate_protein_path(
+        self,
+        beads: list,
+        turn_sequence: list[int],
+        starting_pos: NDArray[np.float64] | None = None,
+    ) -> NDArray[np.float64]:
         if len(turn_sequence) != len(beads) - 1:
             raise ValueError("Turn sequence length must be equal to: len(beads) - 1")
 
@@ -154,7 +166,7 @@ class TetrahedralLattice:
 
         return np.array(positions)
 
-    def compute_energy(self, positions, beads):
+    def compute_energy(self, positions: NDArray[np.float64], beads: list) -> int:
         """
         Compute the energy of a protein conformation based on:
         1. Hydrophobic-hydrophobic contacts (favorable, -1 energy)
@@ -163,10 +175,10 @@ class TetrahedralLattice:
         """
         energy = 0
         n = len(positions)
-        
+
         # Use consistent bond length for distance calculations
         bond_length = self._get_bond_length()
-        bond_length_squared = bond_length ** 2
+        bond_length_squared = bond_length**2
 
         for i in range(n):
             for j in range(i + 1, n):
@@ -190,8 +202,11 @@ class TetrahedralLattice:
         return energy
 
     def find_lowest_energy_conformation(
-        self, beads, all_turn_sequences, starting_pos=[5.0, 5.0, 5.0]
-    ):
+        self,
+        beads: list,
+        all_turn_sequences: list[list[int]],
+        starting_pos: list[float] = [5.0, 5.0, 5.0],
+    ) -> dict:
         best_energy = float("inf")
         best_turns = None
         best_positions = None
@@ -223,11 +238,11 @@ class TetrahedralLattice:
 
     def visualize_lattice(
         self,
-        show_bonds=True,
-        show_node_labels=True,
-        protein_path=None,
-        protein_sequence=None,
-    ):
+        show_bonds: bool = True,
+        show_node_labels: bool = True,
+        protein_path: NDArray[np.float64] | None = None,
+        protein_sequence: list[str] | None = None,
+    ) -> Figure:
         fig = plt.figure(figsize=(14, 12))
         ax = fig.add_subplot(111, projection="3d")
 
@@ -293,7 +308,7 @@ class TetrahedralLattice:
 
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
-        ax.set_zlabel("Z")
+        ax.set_zlabel("Z")  # type: ignore
         ax.set_title("Tetrahedral Lattice with Folded Protein Highlighted")
         if protein_path is not None:
             ax.legend()
@@ -301,7 +316,7 @@ class TetrahedralLattice:
         plt.show()
         return fig
 
-    def visualize_node_environment(self, node_id):
+    def visualize_node_environment(self, node_id: int):
         """
         Visualize only one node and it's neighbors in 3D.
         """
@@ -318,14 +333,14 @@ class TetrahedralLattice:
             ax.plot([x0, xn], [y0, yn], [z0, zn], c=colors[idx % 4], linewidth=2)
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
-        ax.set_zlabel("Z")
+        ax.set_zlabel("Z")  # type: ignore
         ax.set_title(f"Node {node_id} and its neighbors")
         ax.legend()
         plt.tight_layout()
         plt.show()
         return fig
 
-    def print_neighbors(self):
+    def print_neighbors(self) -> None:
         # IMPORTANT: Indexes of lattice nodes are not the same as bead indexes!!
         for i, neigh in self.neighbors.items():
             print(f"Node index: {i}: neighbors {neigh}")
