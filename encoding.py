@@ -65,7 +65,7 @@ class TetrahedralLattice:
             y.append([self.nodes[i][1], self.nodes[j][1]])
             z.append([self.nodes[i][2], self.nodes[j][2]])
         return x, y, z
-    
+
     def get_node_coordinates(self) -> tuple[list, list, list]:
         return (
             self.nodes[:, 0],

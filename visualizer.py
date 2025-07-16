@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
 
+
 class Visualizer:
     def __init__(self) -> None:
         self._registry = {}
@@ -19,7 +20,9 @@ class Visualizer:
         if obj_type in self._registry:
             self._registry[obj_type](obj, **kwargs)
         else:
-            raise TypeError(f"No visualization function registered for {obj_type.__name__}")
+            raise TypeError(
+                f"No visualization function registered for {obj_type.__name__}"
+            )
 
     def _visualize_lattice(
         self,
@@ -51,7 +54,7 @@ class Visualizer:
         plt.tight_layout()
         plt.show()
         return fig
-    
+
     def _plot_bonds(self, ax: Axes, xs: list, ys: list, zs: list):
         for x, y, z in zip(xs, ys, zs):
             ax.plot(x, y, z, c="lightgray", alpha=0.4, linewidth=1, zorder=1)
@@ -68,8 +71,10 @@ class Visualizer:
             zorder=2,
             depthshade=False,
         )
-    
-    def plot_protein_path(self, ax: Axes, protein_path: NDArray, protein_sequence: list[str] | None = None) -> None:
+
+    def plot_protein_path(
+        self, ax: Axes, protein_path: NDArray, protein_sequence: list[str] | None = None
+    ) -> None:
         for k in range(len(protein_path) - 1):
             x = [protein_path[k][0], protein_path[k + 1][0]]
             y = [protein_path[k][1], protein_path[k + 1][1]]
@@ -79,13 +84,31 @@ class Visualizer:
         xs_p = protein_path[:, 0]
         ys_p = protein_path[:, 1]
         zs_p = protein_path[:, 2]
-        ax.scatter(xs_p, ys_p, zs_p, c="green", s=200, edgecolors="black", label="Protein nodes", zorder=5)
+        ax.scatter(
+            xs_p,
+            ys_p,
+            zs_p,
+            c="green",
+            s=200,
+            edgecolors="black",
+            label="Protein nodes",
+            zorder=5,
+        )
 
         if not protein_sequence:
             return
-        
+
         for idx, (x, y, z, aa) in enumerate(zip(xs_p, ys_p, zs_p, protein_sequence)):
-            ax.text(x, y, z + 0.2, f"{aa}{idx}", color="black", fontsize=10, ha="center", zorder=6)
+            ax.text(
+                x,
+                y,
+                z + 0.2,
+                f"{aa}{idx}",
+                color="black",
+                fontsize=10,
+                ha="center",
+                zorder=6,
+            )
 
     def plot_node_labels(self, ax: Axes, nodes: NDArray) -> None:
         for i, (x, y, z) in enumerate(nodes):

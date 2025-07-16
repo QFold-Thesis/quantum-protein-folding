@@ -35,7 +35,6 @@ def main() -> None:
     print(f"\nBest turn sequence: {best_turns}")
     print(f"Best energy: {folding_result['best_energy']}")
 
-
     visualizer = Visualizer()
     visualizer.visualize(
         lattice,
