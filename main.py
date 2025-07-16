@@ -1,5 +1,6 @@
 from encoding import TetrahedralLattice
 from protein import create_protein_sequence, all_turn_combinations
+from visualizer import Visualizer
 
 
 def main() -> None:
@@ -34,7 +35,10 @@ def main() -> None:
     print(f"\nBest turn sequence: {best_turns}")
     print(f"Best energy: {folding_result['best_energy']}")
 
-    lattice.visualize_lattice(
+
+    visualizer = Visualizer()
+    visualizer.visualize(
+        lattice,
         show_bonds=True,
         show_node_labels=False,
         protein_path=best_positions,
