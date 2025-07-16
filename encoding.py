@@ -58,6 +58,21 @@ class TetrahedralLattice:
         """
         return np.linalg.norm([0.25, 0.25, 0.25]) * self.fcc_edge_length
 
+    def get_bond_coordinates(self) -> tuple[list, list, list]:
+        x, y, z = [], [], []
+        for i, j in self.bonds:
+            x.append([self.nodes[i][0], self.nodes[j][0]])
+            y.append([self.nodes[i][1], self.nodes[j][1]])
+            z.append([self.nodes[i][2], self.nodes[j][2]])
+        return x, y, z
+    
+    def get_node_coordinates(self) -> tuple[list, list, list]:
+        return (
+            self.nodes[:, 0],
+            self.nodes[:, 1],
+            self.nodes[:, 2],
+        )
+
     def _init_turn_vectors(self) -> None:
         raw = np.array(
             [turn.value for turn in Turn],

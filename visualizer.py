@@ -4,6 +4,7 @@ from numpy.typing import NDArray
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
+from matplotlib.axes import Axes
 
 class Visualizer:
     def __init__(self) -> None:
@@ -32,64 +33,14 @@ class Visualizer:
         ax = fig.add_subplot(111, projection="3d")
 
         if show_bonds:
-            for i, j in obj.bonds:
-                x = [obj.nodes[i][0], obj.nodes[j][0]]
-                y = [obj.nodes[i][1], obj.nodes[j][1]]
-                z = [obj.nodes[i][2], obj.nodes[j][2]]
-                ax.plot(x, y, z, c="lightgray", alpha=0.4, linewidth=1, zorder=1)
+            self._plot_bonds(ax, *obj.get_bond_coordinates())
 
-        xs_all, ys_all, zs_all = obj.nodes[:, 0], obj.nodes[:, 1], obj.nodes[:, 2]
-        ax.scatter(
-            xs_all,
-            ys_all,
-            zs_all,
-            c="lightgray",
-            s=60,
-            alpha=0.4,
-            label="Lattice nodes",
-            zorder=2,
-            depthshade=False,
-        )
+        self._plot_nodes(ax, *obj.get_node_coordinates())
 
-        if protein_path is not None:
-            for k in range(len(protein_path) - 1):
-                x = [protein_path[k][0], protein_path[k + 1][0]]
-                y = [protein_path[k][1], protein_path[k + 1][1]]
-                z = [protein_path[k][2], protein_path[k + 1][2]]
-                ax.plot(x, y, z, c="red", linewidth=3, zorder=4)
-
-            xs_p = protein_path[:, 0]
-            ys_p = protein_path[:, 1]
-            zs_p = protein_path[:, 2]
-            ax.scatter(
-                xs_p,
-                ys_p,
-                zs_p,
-                c="green",
-                s=200,
-                edgecolors="black",
-                label="Protein nodes",
-                zorder=5,
-            )
-
-            if protein_sequence:
-                for idx, (x, y, z, aa) in enumerate(
-                    zip(xs_p, ys_p, zs_p, protein_sequence)
-                ):
-                    ax.text(
-                        x,
-                        y,
-                        z + 0.2,
-                        f"{aa}{idx}",
-                        color="black",
-                        fontsize=10,
-                        ha="center",
-                        zorder=6,
-                    )
+        self.plot_protein_path(ax, protein_path, protein_sequence)
 
         if show_node_labels:
-            for i, (x, y, z) in enumerate(obj.nodes):
-                ax.text(x, y, z, str(i), color="darkgray", fontsize=6, zorder=3)
+            self.plot_node_labels(ax, obj.nodes)
 
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
@@ -100,3 +51,42 @@ class Visualizer:
         plt.tight_layout()
         plt.show()
         return fig
+    
+    def _plot_bonds(self, ax: Axes, xs: list, ys: list, zs: list):
+        for x, y, z in zip(xs, ys, zs):
+            ax.plot(x, y, z, c="lightgray", alpha=0.4, linewidth=1, zorder=1)
+
+    def _plot_nodes(self, ax: Axes, xs: list, ys: list, zs: list):
+        ax.scatter(
+            xs,
+            ys,
+            zs,
+            c="lightgray",
+            s=60,
+            alpha=0.4,
+            label="Lattice nodes",
+            zorder=2,
+            depthshade=False,
+        )
+    
+    def plot_protein_path(self, ax: Axes, protein_path: NDArray, protein_sequence: list[str] | None = None) -> None:
+        for k in range(len(protein_path) - 1):
+            x = [protein_path[k][0], protein_path[k + 1][0]]
+            y = [protein_path[k][1], protein_path[k + 1][1]]
+            z = [protein_path[k][2], protein_path[k + 1][2]]
+            ax.plot(x, y, z, c="red", linewidth=3, zorder=4)
+
+        xs_p = protein_path[:, 0]
+        ys_p = protein_path[:, 1]
+        zs_p = protein_path[:, 2]
+        ax.scatter(xs_p, ys_p, zs_p, c="green", s=200, edgecolors="black", label="Protein nodes", zorder=5)
+
+        if not protein_sequence:
+            return
+        
+        for idx, (x, y, z, aa) in enumerate(zip(xs_p, ys_p, zs_p, protein_sequence)):
+            ax.text(x, y, z + 0.2, f"{aa}{idx}", color="black", fontsize=10, ha="center", zorder=6)
+
+    def plot_node_labels(self, ax: Axes, nodes: NDArray) -> None:
+        for i, (x, y, z) in enumerate(nodes):
+            ax.text(x, y, z, str(i), color="darkgray", fontsize=6, zorder=3)
