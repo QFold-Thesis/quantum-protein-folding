@@ -73,7 +73,10 @@ class Visualizer:
         )
 
     def plot_protein_path(
-        self, ax: Axes, protein_path: NDArray, protein_sequence: list[str] | None = None
+        self,
+        ax: Axes,
+        protein_path: NDArray | None,
+        protein_sequence: list[str] | None = None,
     ) -> None:
         for k in range(len(protein_path) - 1):
             x = [protein_path[k][0], protein_path[k + 1][0]]
