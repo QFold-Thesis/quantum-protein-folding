@@ -1,5 +1,5 @@
-from protein.chain import Chain
 from protein.bead.main_bead import MainBead
+from protein.chain import Chain
 
 
 class MainChain(Chain):
@@ -7,3 +7,7 @@ class MainChain(Chain):
         self.beads = [
             MainBead(symbol=bead, index=i) for i, bead in enumerate(protein_sequence)
         ]
+
+    @staticmethod
+    def build_turn_qubit() -> None:
+        pass

@@ -1,4 +1,5 @@
-"""Miyazawa–Jernigan (MJ) pairwise contact potentials.
+"""
+Miyazawa-Jernigan (MJ) pairwise contact potentials.
 
 This module provides a small utility class, ``MJInteraction``, that:
 
@@ -17,12 +18,15 @@ present with the same energy.
 """
 
 from pathlib import Path
-from constants import MJ_INTERACTION_MATRIX_FILEPATH
+
 import numpy as np
+
+from constants import MJ_INTERACTION_MATRIX_FILEPATH
 
 
 class MJInteraction:
-    """Represent Miyazawa–Jernigan interactions between amino acids.
+    """
+    Represent Miyazawa-Jernigan interactions between amino acids.
 
     The class reads an MJ interaction matrix and exposes:
 
@@ -41,6 +45,7 @@ class MJInteraction:
     energy_pairs:
         Mapping from two-letter residue pairs to contact energies. Keys are
         symmetric (e.g., "AB" and "BA" both exist with the same value).
+
     """
 
     def __init__(
@@ -48,7 +53,8 @@ class MJInteraction:
         protein_sequence: str,
         interaction_matrix_path: Path = MJ_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
-        """Initialize the interaction table and validate the sequence.
+        """
+        Initialize the interaction table and validate the sequence.
 
         Parameters
         ----------
@@ -64,6 +70,7 @@ class MJInteraction:
         ValueError
             If ``protein_sequence`` contains a symbol not present in the loaded
             matrix.
+
         """
         self._protein_sequence: str = protein_sequence
         self._interaction_matrix_path: Path = interaction_matrix_path
@@ -78,7 +85,8 @@ class MJInteraction:
     def _prepare_mj_interaction_matrix(
         self, mj_filepath: Path = MJ_INTERACTION_MATRIX_FILEPATH
     ) -> dict[str, float]:
-        """Load and symmetrize the MJ interaction matrix from a file.
+        """
+        Load and symmetrize the MJ interaction matrix from a file.
 
         The loader expects a header row of residue symbols and the upper
         triangular (including diagonal) numeric values beginning from the
@@ -101,8 +109,8 @@ class MJInteraction:
         - ``valid_symbols`` is populated from the matrix header during the
           load.
         - Any I/O or parsing errors raised by NumPy are propagated.
-        """
 
+        """
         mj_matrix = np.loadtxt(mj_filepath, dtype=str)
         self.valid_symbols: list[str] = [str(symbol) for symbol in mj_matrix[0, :]]
 
@@ -122,7 +130,8 @@ class MJInteraction:
         return energy_pairs
 
     def _check_if_valid_sequence(self) -> bool:
-        """Validate that the sequence contains only supported residue symbols.
+        """
+        Validate that the sequence contains only supported residue symbols.
 
         Returns
         -------
@@ -133,12 +142,11 @@ class MJInteraction:
         ------
         ValueError
             If an unknown residue symbol is encountered in the sequence.
-        """
 
+        """
         for symbol in self._protein_sequence:
             if symbol not in self.valid_symbols:
-                raise ValueError(
-                    f"Invalid amino acid symbol '{symbol}' found in the protein sequence."
-                )
+                msg = f"Invalid amino acid symbol '{symbol}' found in the protein sequence."
+                raise ValueError(msg)
 
         return True

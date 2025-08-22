@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from enums import ConformationEncoding
 
 ROOT_PROJECT_PATH: Path = Path(__file__).parent.parent

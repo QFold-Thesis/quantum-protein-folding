@@ -1,5 +1,6 @@
-from protein.bead import Bead
 from qiskit.quantum_info import Operator
+
+from protein.bead import Bead
 
 
 class SideBead(Bead):

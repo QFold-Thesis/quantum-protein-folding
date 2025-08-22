@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from qiskit.quantum_info import SparsePauliOp, Operator
+
+from qiskit.quantum_info import Operator, SparsePauliOp
 
 
 class Bead(ABC):

@@ -7,5 +7,6 @@ class Chain(ABC):
         pass
 
     @staticmethod
+    @abstractmethod
     def build_turn_qubit() -> None:
         pass

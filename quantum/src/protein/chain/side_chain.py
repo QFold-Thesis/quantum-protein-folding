@@ -1,6 +1,6 @@
-from protein.chain import Chain
-from protein.bead.side_bead import SideBead
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
+from protein.bead.side_bead import SideBead
+from protein.chain import Chain
 
 
 class SideChain(Chain):
@@ -10,3 +10,7 @@ class SideChain(Chain):
             for i, bead in enumerate(protein_sequence)
             if bead != EMPTY_SIDECHAIN_PLACEHOLDER
         ]
+
+    @staticmethod
+    def build_turn_qubit() -> None:
+        pass
