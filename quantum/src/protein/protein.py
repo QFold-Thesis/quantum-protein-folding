@@ -1,7 +1,12 @@
-from protein.chain import Chain
+from protein.chain import MainChain, SideChain
 
 
 class Protein:
     def __init__(self, main_protein_sequence: str, side_protein_sequence: str) -> None:
-        self.main_chain: Chain = Chain(main_protein_sequence)
-        self.side_chain: Chain = Chain(side_protein_sequence)
+        if len(main_protein_sequence) != len(side_protein_sequence):
+            raise ValueError(
+                "Main and side protein sequences must be of the same length."
+            )
+
+        self.main_chain: MainChain = MainChain(main_protein_sequence)
+        self.side_chain: SideChain = SideChain(side_protein_sequence)
