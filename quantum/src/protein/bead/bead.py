@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+from enums import SubLattice
+
 
 from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
     Operator,
@@ -14,6 +16,7 @@ class Bead(ABC):
             tuple[SparsePauliOp, SparsePauliOp]
             | tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp]
         )
+        self.sublattice: SubLattice = SubLattice.B if index % 2 == 1 else SubLattice.A
 
     @abstractmethod
     def turn_0(self) -> Operator:
