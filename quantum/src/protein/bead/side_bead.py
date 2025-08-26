@@ -1,4 +1,5 @@
-from qiskit.quantum_info import Operator
+import numpy as np
+from qiskit.quantum_info import Operator  # pyright: ignore[reportMissingTypeStubs]
 
 from protein.bead import Bead
 
@@ -8,13 +9,13 @@ class SideBead(Bead):
         super().__init__(symbol, index)
 
     def turn_0(self) -> Operator:
-        pass
+        return Operator(np.eye(4))
 
     def turn_1(self) -> Operator:
-        pass
+        return Operator(np.eye(4))
 
     def turn_2(self) -> Operator:
-        pass
+        return Operator(np.eye(4))
 
     def turn_3(self) -> Operator:
-        pass
+        return Operator(np.eye(4))

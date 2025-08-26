@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
 
-from qiskit.quantum_info import Operator, SparsePauliOp
+from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
+    Operator,
+    SparsePauliOp,
+)
 
 
 class Bead(ABC):

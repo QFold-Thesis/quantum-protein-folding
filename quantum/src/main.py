@@ -1,6 +1,6 @@
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
-from interaction.mj_interaction import MJInteraction
-from protein.protein import Protein
+from interaction import MJInteraction
+from protein import Protein
 
 
 def main() -> None:
