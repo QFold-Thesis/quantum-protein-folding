@@ -8,6 +8,6 @@ MJ_INTERACTION_MATRIX_FILEPATH: Path = (
     ROOT_PROJECT_PATH / "src" / "resources" / "mj_matrix.txt"
 )
 
-CONFORMATION_ENCODING = ConformationEncoding.DENSE
+CONFORMATION_ENCODING: ConformationEncoding = ConformationEncoding.DENSE
 
 EMPTY_SIDECHAIN_PLACEHOLDER = "_"
