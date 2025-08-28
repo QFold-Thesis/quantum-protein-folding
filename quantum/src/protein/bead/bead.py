@@ -6,17 +6,14 @@ from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
 
 from enums import SubLattice
 
-DenseTurnQubits = tuple[SparsePauliOp, SparsePauliOp]
-SparseTurnQubits = tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp]
-
-
 class Bead(ABC):
-    def __init__(self, symbol: str, index: int, chain_length: int) -> None:
+    def __init__(self, symbol: str, index: int, full_identity: SparsePauliOp) -> None:
         self.symbol: str = symbol
         self.index: int = index
-        self.turn_qubits: tuple[SparsePauliOp, ...]
+        self.turn_qubits: tuple[SparsePauliOp, ...] = tuple()
         self.sublattice: SubLattice = SubLattice.B if index % 2 == 1 else SubLattice.A
-        self.chain_length: int = chain_length
+        
+        self._full_identity: SparsePauliOp = full_identity
 
     @abstractmethod
     def turn_0(self) -> SparsePauliOp:

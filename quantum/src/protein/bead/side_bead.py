@@ -4,8 +4,8 @@ from protein.bead import Bead
 
 
 class SideBead(Bead):
-    def __init__(self, symbol: str, index: int, chain_length: int) -> None:
-        super().__init__(symbol, index, chain_length)
+    def __init__(self, symbol: str, index: int, full_identity: SparsePauliOp) -> None:
+        super().__init__(symbol, index, full_identity)
 
     def turn_0(self) -> SparsePauliOp:
         _msg: str = "Side beads are not yet implemented!"
