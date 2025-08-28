@@ -8,13 +8,17 @@ class SideBead(Bead):
         super().__init__(symbol, index, chain_length)
 
     def turn_0(self) -> SparsePauliOp:
-        raise NotImplementedError("Side beads do not have turn qubits.")
+        _msg: str = "Side beads are not yet implemented!"
+        raise NotImplementedError(_msg)
 
     def turn_1(self) -> SparsePauliOp:
-        raise NotImplementedError("Side beads do not have turn qubits.")
+        _msg: str = "Side beads are not yet implemented!"
+        raise NotImplementedError(_msg)
 
     def turn_2(self) -> SparsePauliOp:
-        raise NotImplementedError("Side beads do not have turn qubits.")
+        _msg: str = "Side beads are not yet implemented!"
+        raise NotImplementedError(_msg)
 
     def turn_3(self) -> SparsePauliOp:
-        raise NotImplementedError("Side beads do not have turn qubits.")
+        _msg: str = "Side beads are not yet implemented!"
+        raise NotImplementedError(_msg)

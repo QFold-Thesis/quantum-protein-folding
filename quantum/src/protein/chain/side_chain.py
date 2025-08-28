@@ -6,11 +6,12 @@ from protein.chain import Chain
 class SideChain(Chain):
     def __init__(self, protein_sequence: str) -> None:
         self.beads = [
-            SideBead(symbol=bead, index=i)
+            SideBead(chain_length=len(protein_sequence), symbol=bead, index=i)
             for i, bead in enumerate(protein_sequence)
             if bead != EMPTY_SIDECHAIN_PLACEHOLDER
         ]
 
     @staticmethod
     def build_turn_qubit() -> None:
-        pass
+        _msg: str = "SideChains are not yet implemented!"
+        raise NotImplementedError(_msg)
