@@ -7,7 +7,10 @@ def main() -> None:
     main_chain = "APRLRFY"
     side_chain = EMPTY_SIDECHAIN_PLACEHOLDER * len(main_chain)
 
-    Protein(main_chain, side_chain)
+    protein = Protein(main_chain, side_chain)
+
+    for bead in protein.main_chain:
+        print(bead.symbol, bead.index, bead.turn_qubits)  # noqa: T201
 
     MJInteraction(protein_sequence=main_chain)
 
