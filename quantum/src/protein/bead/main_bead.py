@@ -18,7 +18,7 @@ class MainBead(Bead):
             self.turn_qubits: tuple[SparsePauliOp, ...] = ()
 
     def _initate_turn_qubits(self) -> None:
-        if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
+        if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
             turn_qubit_0 = build_turn_qubit(2 * (self.chain_length - 1), 2 * self.index)
             turn_qubit_1 = build_turn_qubit(
                 2 * (self.chain_length - 1), 2 * self.index + 1
@@ -28,10 +28,23 @@ class MainBead(Bead):
                 turn_qubit_1,
             )
 
-            return
-        if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
-            msg = "Error."
-            raise NotImplementedError(msg)
+        if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
+            turn_qubit_0 = build_turn_qubit(4 * (self.chain_length - 1), 4 * self.index)
+            turn_qubit_1 = build_turn_qubit(
+                4 * (self.chain_length - 1), 4 * self.index + 1
+            )
+            turn_qubit_2 = build_turn_qubit(
+                4 * (self.chain_length - 1), 4 * self.index + 2
+            )
+            turn_qubit_3 = build_turn_qubit(
+                4 * (self.chain_length - 1), 4 * self.index + 3
+            )
+            self.turn_qubits = (
+                turn_qubit_0,
+                turn_qubit_1,
+                turn_qubit_2,
+                turn_qubit_3,
+            )
 
     def turn_0(self) -> SparsePauliOp:
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
