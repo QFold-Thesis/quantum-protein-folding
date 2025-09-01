@@ -14,6 +14,6 @@ class SideChain(Chain):
         ]
 
     @staticmethod
-    def build_turn_qubit() -> None:
+    def build_turn_qubits() -> None:
         _msg: str = "SideChains are not yet implemented!"
         raise NotImplementedError(_msg)

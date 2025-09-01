@@ -3,3 +3,9 @@ class ConformationEncodingError(Exception):
 
     def __init__(self, message: str = "Invalid conformation encoding. Make sure that the encoding is ConformationEncoding.") -> None:
         super().__init__(message)
+
+class ChainLengthError(Exception):
+    """Exception raised for errors in the chain length."""
+
+    def __init__(self, message: str = "Invalid chain length. Make sure that the chain length is correct.") -> None:
+        super().__init__(message)

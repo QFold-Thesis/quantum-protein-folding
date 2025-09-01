@@ -12,28 +12,56 @@ class MainBead(Bead):
 
     def turn_0(self) -> SparsePauliOp:
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
-            return self.turn_qubits[0]
+            return (
+                self._full_identity.tensor(self.turn_qubits[0])
+            )
         if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
-            pass
+            return (
+                self._full_identity.tensor(
+                    (self._full_identity - self.turn_qubits[0])
+                    @ (self._full_identity - self.turn_qubits[1])
+                )
+            ).simplify()
         raise ConformationEncodingError
 
     def turn_1(self) -> SparsePauliOp:
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
-            return self.turn_qubits[1]
+            return (
+                self._full_identity.tensor(self.turn_qubits[1])
+            )
         if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
-            pass
+            return (
+                self._full_identity.tensor(
+                    (self.turn_qubits[1]) @
+                    (self.turn_qubits[1] - self.turn_qubits[0])
+                )
+            ).simplify()
         raise ConformationEncodingError
 
     def turn_2(self) -> SparsePauliOp:
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
-            return self.turn_qubits[2]
+            return (
+                self._full_identity.tensor(self.turn_qubits[2])
+            )
         if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
-            pass
+            return (
+                self._full_identity.tensor(
+                    (self.turn_qubits[0]) @
+                    (self.turn_qubits[0] - self.turn_qubits[1])
+                )
+            ).simplify()
         raise ConformationEncodingError
 
     def turn_3(self) -> SparsePauliOp:
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
-            return self.turn_qubits[3]
+            return (
+                self._full_identity.tensor(self.turn_qubits[3])
+            )
         if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
-            pass
+            return (
+                self._full_identity.tensor(
+                    (self.turn_qubits[0]) @
+                    (self.turn_qubits[1])
+                )
+            ).simplify()
         raise ConformationEncodingError

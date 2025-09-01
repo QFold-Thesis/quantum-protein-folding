@@ -14,5 +14,5 @@ class MainChain(Chain):
         ]
 
     @staticmethod
-    def build_turn_qubit() -> None:
+    def build_turn_qubits() -> None:
         pass
