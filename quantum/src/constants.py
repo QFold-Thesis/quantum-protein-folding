@@ -17,4 +17,6 @@ try:
 except ValueError:
     raise ConformationEncodingError
 
-EMPTY_SIDECHAIN_PLACEHOLDER = "_"
+EMPTY_SIDECHAIN_PLACEHOLDER: str = "_"
+
+NORM_FACTOR: float = 0.5
