@@ -25,14 +25,10 @@ class Bead(ABC):
         )
 
         if self._has_turn_qubits:
-            print(
-                f"Initializing turn qubits for {self.symbol} at index {self.index} | {self._num_turn_qubits} qubits | "
-            )
             self._initialize_turn_qubits()
 
     def _initialize_turn_qubits(self) -> None:
         if not self._has_turn_qubits:
-            print("Last bead does not have turn qubits! Skipping initialization.")
             return
 
         if CONFORMATION_ENCODING == ConformationEncoding.DENSE:

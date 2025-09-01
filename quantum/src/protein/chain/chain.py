@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
-from protein.bead import Bead
+if TYPE_CHECKING:
+    from protein.bead import Bead
 
 
 class Chain(ABC):
