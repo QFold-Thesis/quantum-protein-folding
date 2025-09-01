@@ -1,6 +1,6 @@
 from qiskit.quantum_info import SparsePauliOp  # pyright: ignore[reportMissingTypeStubs]
-from constants import CONFORMATION_ENCODING
 
+from constants import CONFORMATION_ENCODING
 from enums import ConformationEncoding
 from exceptions import ConformationEncodingError
 from protein.bead import Bead
@@ -12,9 +12,7 @@ class MainBead(Bead):
 
     def turn_0(self) -> SparsePauliOp:
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
-            return (
-                self.turn_qubits[0]
-            )
+            return self.turn_qubits[0]
         if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
             return (
                 self._full_identity.tensor(
@@ -24,47 +22,35 @@ class MainBead(Bead):
             ).simplify()
         raise ConformationEncodingError
 
-
     def turn_1(self) -> SparsePauliOp:
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
-            return (
-                self.turn_qubits[1]
-            )
+            return self.turn_qubits[1]
         if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
             return (
                 self._full_identity.tensor(
-                    (self.turn_qubits[1]) @
-                    (self.turn_qubits[1] - self.turn_qubits[0])
+                    (self.turn_qubits[1]) @ (self.turn_qubits[1] - self.turn_qubits[0])
                 )
             ).simplify()
         raise ConformationEncodingError
-
 
     def turn_2(self) -> SparsePauliOp:
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
-            return (
-                self.turn_qubits[2]
-            )
+            return self.turn_qubits[2]
         if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
             return (
                 self._full_identity.tensor(
-                    (self.turn_qubits[0]) @
-                    (self.turn_qubits[0] - self.turn_qubits[1])
+                    (self.turn_qubits[0]) @ (self.turn_qubits[0] - self.turn_qubits[1])
                 )
             ).simplify()
         raise ConformationEncodingError
 
-
     def turn_3(self) -> SparsePauliOp:
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
-            return (
-                self.turn_qubits[3]
-            )
+            return self.turn_qubits[3]
         if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
             return (
                 self._full_identity.tensor(
-                    (self.turn_qubits[0]) @
-                    (self.turn_qubits[1])
+                    (self.turn_qubits[0]) @ (self.turn_qubits[1])
                 )
             ).simplify()
         raise ConformationEncodingError

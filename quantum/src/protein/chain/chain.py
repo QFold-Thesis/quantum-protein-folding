@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
+
 from protein.bead import Bead
+
 
 class Chain(ABC):
     @abstractmethod

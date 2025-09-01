@@ -9,8 +9,8 @@ class SideChain(Chain):
 
         self.beads = [
             SideBead(
-                symbol=bead, 
-                index=index, 
+                symbol=bead,
+                index=index,
                 parent_chain_len=len(protein_sequence),
             )
             for index, bead in enumerate(protein_sequence)
