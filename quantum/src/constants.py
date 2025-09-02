@@ -19,3 +19,5 @@ except ValueError as e:
 EMPTY_SIDECHAIN_PLACEHOLDER: str = "_"
 
 NORM_FACTOR: float = 0.5
+
+GLOBAL_LOGGER_NAME: str = "global_logger"

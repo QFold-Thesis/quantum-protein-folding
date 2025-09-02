@@ -43,6 +43,7 @@ class Bead(ABC):
                 ),
             )
             return
+        
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
             self.turn_qubits = (
                 build_turn_qubit(
