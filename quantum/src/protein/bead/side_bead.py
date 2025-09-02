@@ -1,6 +1,10 @@
 from qiskit.quantum_info import SparsePauliOp  # pyright: ignore[reportMissingTypeStubs]
 
 from protein.bead import Bead
+from logger import get_logger
+
+
+logger = get_logger()
 
 
 class SideBead(Bead):
@@ -9,16 +13,20 @@ class SideBead(Bead):
 
     def turn_0(self) -> SparsePauliOp:
         _msg: str = "Side beads are not yet implemented!"
+        logger.error(_msg)
         raise NotImplementedError(_msg)
 
     def turn_1(self) -> SparsePauliOp:
         _msg: str = "Side beads are not yet implemented!"
+        logger.error(_msg)
         raise NotImplementedError(_msg)
 
     def turn_2(self) -> SparsePauliOp:
         _msg: str = "Side beads are not yet implemented!"
+        logger.error(_msg)
         raise NotImplementedError(_msg)
 
     def turn_3(self) -> SparsePauliOp:
         _msg: str = "Side beads are not yet implemented!"
+        logger.error(_msg)
         raise NotImplementedError(_msg)

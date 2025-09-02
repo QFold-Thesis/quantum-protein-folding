@@ -3,12 +3,18 @@ from collections.abc import Iterator
 from protein.bead import Bead
 from protein.bead.main_bead import MainBead
 from protein.chain import Chain
+import logging
+from logger import get_logger
+
+
+logger: logging.Logger = get_logger()
 
 
 class MainChain(Chain):
     def __init__(self, protein_sequence: str) -> None:
         super().__init__(protein_sequence=protein_sequence)
-
+        logger.debug("Initializing MainChain with protein sequence: %s", protein_sequence)
+        
         self.beads = [
             MainBead(
                 symbol=bead,

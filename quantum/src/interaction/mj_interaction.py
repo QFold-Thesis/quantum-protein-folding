@@ -23,6 +23,11 @@ import numpy as np
 
 from constants import MJ_INTERACTION_MATRIX_FILEPATH
 
+from logger import get_logger
+
+
+logger = get_logger()
+
 
 class MJInteraction:
     """
@@ -111,23 +116,30 @@ class MJInteraction:
         - Any I/O or parsing errors raised by NumPy are propagated.
 
         """
-        mj_matrix = np.loadtxt(mj_filepath, dtype=str)
-        self.valid_symbols: list[str] = [str(symbol) for symbol in mj_matrix[0, :]]
+        try:
+            mj_matrix = np.loadtxt(mj_filepath, dtype=str)
 
-        energy_pairs: dict[str, float] = {}
 
-        for row in range(1, np.shape(mj_matrix)[0]):
-            for col in range(row - 1, np.shape(mj_matrix)[1]):
-                bead_1: str = self.valid_symbols[col]
-                bead_2: str = self.valid_symbols[row - 1]
-                energy: float = float(mj_matrix[row, col])
+            self.valid_symbols: list[str] = [str(symbol) for symbol in mj_matrix[0, :]]
 
-                key: str = f"{bead_1}{bead_2}"
+            energy_pairs: dict[str, float] = {}
 
-                energy_pairs[key] = energy
-                energy_pairs[key[::-1]] = energy
+            for row in range(1, np.shape(mj_matrix)[0]):
+                for col in range(row - 1, np.shape(mj_matrix)[1]):
+                    bead_1: str = self.valid_symbols[col]
+                    bead_2: str = self.valid_symbols[row - 1]
+                    energy: float = float(mj_matrix[row, col])
 
-        return energy_pairs
+                    key: str = f"{bead_1}{bead_2}"
+
+                    energy_pairs[key] = energy
+                    energy_pairs[key[::-1]] = energy
+        except Exception as e:
+            logger.error(f"Error loading MJ matrix: {e}")
+            raise e
+        else:
+            logger.debug(f"Successfully loaded {len(energy_pairs)} energy pairs from MJ matrix at: {mj_filepath}")
+            return energy_pairs
 
     def _check_if_valid_sequence(self) -> bool:
         """
@@ -147,6 +159,7 @@ class MJInteraction:
         for symbol in self._protein_sequence:
             if symbol not in self.valid_symbols:
                 msg = f"Invalid amino acid symbol '{symbol}' found in the protein sequence."
+                logger.error(msg)
                 raise ValueError(msg)
 
         return True

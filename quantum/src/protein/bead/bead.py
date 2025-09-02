@@ -8,7 +8,9 @@ from constants import CONFORMATION_ENCODING, QUBITS_PER_TURN
 from enums import ConformationEncoding, SubLattice
 from exceptions import ConformationEncodingError
 from utils.qubit_utils import build_full_identity, build_turn_qubit
+from logger import get_logger
 
+logger = get_logger()
 
 class Bead(ABC):
     def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:
@@ -26,6 +28,10 @@ class Bead(ABC):
 
         if self._has_turn_qubits:
             self._initialize_turn_qubits()
+        else:
+            logger.debug(
+                f"Bead {self.symbol} | {self.index} is the last in the chain - skipping turn qubit initialization."
+            )
 
     def _initialize_turn_qubits(self) -> None:
         if not self._has_turn_qubits:
@@ -42,6 +48,7 @@ class Bead(ABC):
                     z_index=QUBITS_PER_TURN * self.index + 1,
                 ),
             )
+            logger.debug(f"Initialized {len(self.turn_qubits)} turn qubits for Bead {self.symbol} | {self.index} ({CONFORMATION_ENCODING.name} encoding).")
             return
         
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
@@ -63,6 +70,7 @@ class Bead(ABC):
                     z_index=QUBITS_PER_TURN * self.index + 3,
                 ),
             )
+            logger.debug(f"Initialized {len(self.turn_qubits)} turn qubits for Bead {self.symbol} | {self.index} ({CONFORMATION_ENCODING.name} encoding).")
             return
         raise ConformationEncodingError
 
