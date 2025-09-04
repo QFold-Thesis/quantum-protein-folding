@@ -24,3 +24,14 @@ class ChainLengthError(Exception):
     ) -> None:
         logger.error(message)
         super().__init__(message)
+
+
+class InvalidAminoAcidError(Exception):
+    """Exception raised for errors in the amino acid."""
+
+    def __init__(
+        self,
+        message: str = "Invalid amino acid symbol. Make sure that the amino acid symbol is compatible with the solution.",
+    ) -> None:
+        logger.error(message)
+        super().__init__(message)
