@@ -2,10 +2,14 @@ from enum import IntEnum
 
 
 class ConformationEncoding(IntEnum):
-    SPARSE = 0
-    DENSE = 1
+    """Enum representing a map of encoding types and qubit counts."""
+
+    SPARSE = 4
+    DENSE = 2
 
 
 class SubLattice(IntEnum):
+    """Enum representing the sublattices in the protein chain."""
+
     A = 0
     B = 1
