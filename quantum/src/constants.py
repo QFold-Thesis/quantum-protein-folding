@@ -10,6 +10,7 @@ MJ_INTERACTION_MATRIX_FILEPATH: Path = (
 
 CONFORMATION_ENCODING: ConformationEncoding = ConformationEncoding.DENSE
 
+
 QUBITS_PER_TURN: int = CONFORMATION_ENCODING.value
 
 

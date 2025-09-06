@@ -20,7 +20,7 @@ class Bead(ABC):
         self.sublattice: SubLattice = SubLattice.B if index % 2 == 1 else SubLattice.A
 
         self._num_turn_qubits: int = (parent_chain_len - 1) * QUBITS_PER_TURN
-        self._has_turn_qubits: bool = index != parent_chain_len - 1
+        self._has_turn_qubits: bool = (index != (parent_chain_len - 1))
 
         self._full_identity: SparsePauliOp = build_full_identity(
             num_qubits=self._num_turn_qubits
