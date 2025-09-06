@@ -12,6 +12,7 @@ from logger import get_logger
 
 logger = get_logger()
 
+
 class Bead(ABC):
     def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:
         self.symbol: str = symbol

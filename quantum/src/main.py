@@ -12,7 +12,7 @@ def main() -> None:
         main_protein_sequence=main_chain, 
         side_protein_sequence=side_chain
     )
-
+    
     mj_interaction = MJInteraction(
         protein=protein
     )
