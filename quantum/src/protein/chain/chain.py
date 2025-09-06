@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-
 if TYPE_CHECKING:
     from protein.bead import Bead
 

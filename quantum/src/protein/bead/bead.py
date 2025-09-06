@@ -7,8 +7,8 @@ from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
 from constants import CONFORMATION_ENCODING, QUBITS_PER_TURN
 from enums import ConformationEncoding, SubLattice
 from exceptions import ConformationEncodingError
-from utils.qubit_utils import build_full_identity, build_turn_qubit
 from logger import get_logger
+from utils.qubit_utils import build_full_identity, build_turn_qubit
 
 logger = get_logger()
 
@@ -21,7 +21,7 @@ class Bead(ABC):
         self.sublattice: SubLattice = SubLattice.B if index % 2 == 1 else SubLattice.A
 
         self._num_turn_qubits: int = (parent_chain_len - 1) * QUBITS_PER_TURN
-        self._has_turn_qubits: bool = (index != (parent_chain_len - 1))
+        self._has_turn_qubits: bool = index != (parent_chain_len - 1)
 
         self._full_identity: SparsePauliOp = build_full_identity(
             num_qubits=self._num_turn_qubits
@@ -49,9 +49,11 @@ class Bead(ABC):
                     z_index=QUBITS_PER_TURN * self.index + 1,
                 ),
             )
-            logger.debug(f"Initialized {len(self.turn_qubits)} turn qubits for Bead {self.symbol} | {self.index} ({CONFORMATION_ENCODING.name} encoding).")
+            logger.debug(
+                f"Initialized {len(self.turn_qubits)} turn qubits for Bead {self.symbol} | {self.index} ({CONFORMATION_ENCODING.name} encoding)."
+            )
             return
-        
+
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
             self.turn_qubits = (
                 build_turn_qubit(
@@ -71,7 +73,9 @@ class Bead(ABC):
                     z_index=QUBITS_PER_TURN * self.index + 3,
                 ),
             )
-            logger.debug(f"Initialized {len(self.turn_qubits)} turn qubits for Bead {self.symbol} | {self.index} ({CONFORMATION_ENCODING.name} encoding).")
+            logger.debug(
+                f"Initialized {len(self.turn_qubits)} turn qubits for Bead {self.symbol} | {self.index} ({CONFORMATION_ENCODING.name} encoding)."
+            )
             return
         raise ConformationEncodingError
 

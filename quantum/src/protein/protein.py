@@ -1,7 +1,6 @@
-from protein.chain import MainChain, SideChain
 from exceptions import ChainLengthError
 from logger import get_logger
-
+from protein.chain import MainChain, SideChain
 
 logger = get_logger()
 

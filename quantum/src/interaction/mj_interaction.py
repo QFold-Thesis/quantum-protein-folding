@@ -22,22 +22,19 @@ from pathlib import Path
 import numpy as np
 
 from constants import MJ_INTERACTION_MATRIX_FILEPATH
-
-from logger import get_logger
 from exceptions import InvalidAminoAcidError
+from logger import get_logger
 from protein import Protein
 
 logger = get_logger()
 
 
 class MJInteraction:
-
     def __init__(
         self,
         protein: Protein,
         interaction_matrix_path: Path = MJ_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
-
         self._interaction_matrix_path: Path = interaction_matrix_path
 
         self.valid_symbols: list[str] = []
@@ -47,7 +44,7 @@ class MJInteraction:
         )
 
         protein_sequence: str = str(protein.main_chain) + str(protein.side_chain)
-        
+
         self._check_if_valid_sequence(protein_sequence)
 
     def _prepare_mj_interaction_matrix(
@@ -55,7 +52,6 @@ class MJInteraction:
     ) -> dict[str, float]:
         try:
             mj_matrix = np.loadtxt(mj_filepath, dtype=str)
-
 
             self.valid_symbols: list[str] = [str(symbol) for symbol in mj_matrix[0, :]]
 
@@ -75,9 +71,10 @@ class MJInteraction:
             logger.error(f"Error loading MJ matrix: {e}")
             raise e
         else:
-            logger.debug(f"Successfully loaded {len(energy_pairs)} energy pairs from MJ matrix at: {mj_filepath}")
+            logger.debug(
+                f"Successfully loaded {len(energy_pairs)} energy pairs from MJ matrix at: {mj_filepath}"
+            )
             return energy_pairs
-
 
     def _check_if_valid_sequence(self, protein_sequence: str) -> bool:
         for symbol in protein_sequence:

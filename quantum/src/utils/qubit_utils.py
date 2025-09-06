@@ -1,7 +1,11 @@
-from qiskit.quantum_info import SparsePauliOp, Pauli  # pyright: ignore[reportMissingTypeStubs]
+import numpy as np
+from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
+    Pauli,
+    SparsePauliOp,
+)
 
 from constants import NORM_FACTOR
-import numpy as np
+
 
 def build_full_identity(num_qubits: int) -> SparsePauliOp:
     """Builds a full identity Pauli operator for a given number of qubits."""
@@ -12,8 +16,7 @@ def build_full_identity(num_qubits: int) -> SparsePauliOp:
 def build_turn_qubit(z_index: int, num_qubits: int) -> SparsePauliOp:
     """Builds a turn qubit Pauli operator with Z at the specified index."""
     z_operator: SparsePauliOp = SparsePauliOp.from_sparse_list(
-        [("Z", [z_index], 1.0)], 
-        num_qubits=num_qubits
+        [("Z", [z_index], 1.0)], num_qubits=num_qubits
     )
 
     full_identity: SparsePauliOp = build_full_identity(num_qubits=num_qubits)
@@ -35,7 +38,7 @@ def build_pauli_z_operator(num_qubits: int, pauli_z_indices: set[int]) -> Sparse
 
 
 def convert_to_qubits(pauli_op: SparsePauliOp) -> SparsePauliOp:
-    num_qubits: int = int(pauli_op.num_qubits) # pyright: ignore[reportArgumentType]
+    num_qubits: int = int(pauli_op.num_qubits)  # pyright: ignore[reportArgumentType]
     full_id: SparsePauliOp = SparsePauliOp.from_list([("I" * num_qubits, 1.0)])
 
     converted = NORM_FACTOR * (full_id - pauli_op)
@@ -76,6 +79,7 @@ def fix_qubits(
     operator_updated = SparsePauliOp(new_paulis, new_coeffs).simplify()
     return operator_updated
 
+
 def _calc_updated_coeffs(table_z, coeff, has_side_chain_second_bead: bool) -> float:
     """
     Update coefficients based on fixed qubit positions. Negate if appropriate.
@@ -88,12 +92,14 @@ def _calc_updated_coeffs(table_z, coeff, has_side_chain_second_bead: bool) -> fl
         coeff = -1 * coeff
     return coeff
 
+
 def _preset_binary_vals(table_z: np.ndarray, has_side_chain_second_bead: bool) -> None:
     main_beads_indices = [0, 1, 2, 3]
     if not has_side_chain_second_bead:
         main_beads_indices.append(5)
     for index in main_beads_indices:
         _preset_single_binary_val(table_z, index)
+
 
 def _preset_single_binary_val(table_z: np.ndarray, index: int) -> None:
     try:
