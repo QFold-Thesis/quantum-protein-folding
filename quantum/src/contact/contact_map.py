@@ -14,11 +14,18 @@ from utils.qubit_utils import (
 logger = get_logger()
 
 
+MIN_DISTANCE_BETWEEN_CONTACTS = (
+    5  # Minimum bonds between two beads to consider a contact
+)
+
+
 class ContactMap:
     def __init__(self, protein: Protein):
         self.main_main_contacts: dict[int, dict[int, SparsePauliOp]] = defaultdict(
             lambda: defaultdict()
         )
+
+        """
         # self.main_side_contacts: dict[int, dict[int, SparsePauliOp]] = defaultdict(
         #     lambda: defaultdict()
         # )
@@ -28,6 +35,7 @@ class ContactMap:
         # self.side_side_contacts: dict[int, dict[int, SparsePauliOp]] = defaultdict(
         #     lambda: defaultdict()
         # )
+        """
 
         self._contacts_detected: int = 0
         self._protein: Protein = protein
@@ -39,9 +47,9 @@ class ContactMap:
 
         try:
             self.initialize_contact_map()
-        except Exception as e:
-            logger.error(f"Error in initializing contact map: {e}")
-            raise e
+        except Exception:
+            logger.exception("Error in initializing contact map")
+            raise
 
         else:
             logger.debug(
@@ -60,7 +68,10 @@ class ContactMap:
                 if upper_bead.sublattice == lower_bead.sublattice:
                     continue
 
-                if abs(upper_bead.index - lower_bead.index) < 5:
+                if (
+                    abs(upper_bead.index - lower_bead.index)
+                    < MIN_DISTANCE_BETWEEN_CONTACTS
+                ):
                     continue
 
                 contact_operator: SparsePauliOp = self._create_main_main_contact(

@@ -67,9 +67,9 @@ class MJInteraction:
 
                     energy_pairs[key] = energy
                     energy_pairs[key[::-1]] = energy
-        except Exception as e:
-            logger.error(f"Error loading MJ matrix: {e}")
-            raise e
+        except Exception:
+            logger.exception("Error loading MJ matrix")
+            raise
         else:
             logger.debug(
                 f"Successfully loaded {len(energy_pairs)} energy pairs from MJ matrix at: {mj_filepath}"

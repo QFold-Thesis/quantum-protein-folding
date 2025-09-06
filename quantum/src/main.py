@@ -12,9 +12,9 @@ def main() -> None:
         main_protein_sequence=main_chain, side_protein_sequence=side_chain
     )
 
-    mj_interaction = MJInteraction(protein=protein)
+    _ = MJInteraction(protein=protein)
 
-    contact_map = ContactMap(protein=protein)
+    _ = ContactMap(protein=protein)
 
 
 if __name__ == "__main__":

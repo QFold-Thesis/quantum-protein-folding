@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+import contextlib
+
 import numpy as np
 from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
     Pauli,
@@ -5,6 +9,8 @@ from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
 )
 
 from constants import NORM_FACTOR
+
+NEGATE_COEFF_INDEX = 5
 
 
 def build_full_identity(num_qubits: int) -> SparsePauliOp:
@@ -41,12 +47,12 @@ def convert_to_qubits(pauli_op: SparsePauliOp) -> SparsePauliOp:
     num_qubits: int = int(pauli_op.num_qubits)  # pyright: ignore[reportArgumentType]
     full_id: SparsePauliOp = SparsePauliOp.from_list([("I" * num_qubits, 1.0)])
 
-    converted = NORM_FACTOR * (full_id - pauli_op)
-    return converted
+    return NORM_FACTOR * (full_id - pauli_op)
 
 
 def fix_qubits(
     operator: int | SparsePauliOp | Pauli,
+    *,
     has_side_chain_second_bead: bool = False,
 ) -> int | SparsePauliOp | Pauli:
     """
@@ -58,29 +64,35 @@ def fix_qubits(
         return operator
 
     # Normalize operators to SparsePauliOp
+    coeffs: np.ndarray = np.array([1.0])
     if isinstance(operator, Pauli):
-        operator = SparsePauliOp([operator], [1.0])
+        operator = SparsePauliOp([operator], coeffs)
 
-    new_paulis = []
-    new_coeffs = []
+    new_paulis: list[Pauli] = []
+    new_coeffs: np.ndarray = np.array([])
 
-    for idx, pauli in enumerate(operator.paulis):
+    for idx, pauli in enumerate(operator.paulis):  # pyright: ignore[reportArgumentType]
         table_z = np.copy(pauli.z)
         table_x = np.copy(pauli.x)
         coeff = operator.coeffs[idx]
 
-        _preset_binary_vals(table_z, has_side_chain_second_bead)
-        coeff = _calc_updated_coeffs(table_z, coeff, has_side_chain_second_bead)
+        _preset_binary_vals(
+            table_z, has_side_chain_second_bead=has_side_chain_second_bead
+        )
+        coeff = _calc_updated_coeffs(
+            table_z, coeff, has_side_chain_second_bead=has_side_chain_second_bead
+        )
         # Create new Pauli from updated z, x
         new_pauli = Pauli((table_z, table_x))
         new_paulis.append(new_pauli)
-        new_coeffs.append(coeff)
+        new_coeffs = np.append(new_coeffs, coeff)
 
-    operator_updated = SparsePauliOp(new_paulis, new_coeffs).simplify()
-    return operator_updated
+    return SparsePauliOp(new_paulis, new_coeffs).simplify()
 
 
-def _calc_updated_coeffs(table_z, coeff, has_side_chain_second_bead: bool) -> float:
+def _calc_updated_coeffs(
+    table_z: np.ndarray, coeff: float, *, has_side_chain_second_bead: bool
+) -> float:
     """
     Update coefficients based on fixed qubit positions. Negate if appropriate.
     """
@@ -88,12 +100,16 @@ def _calc_updated_coeffs(table_z, coeff, has_side_chain_second_bead: bool) -> fl
     if len(table_z) > 1 and table_z[3]:
         coeff = -1 * coeff
     # Negate coeff if index 5 == True and no side_chain
-    if (not has_side_chain_second_bead) and (len(table_z) > 6 and table_z[4]):
+    if (not has_side_chain_second_bead) and (
+        len(table_z) > NEGATE_COEFF_INDEX and table_z[NEGATE_COEFF_INDEX - 1]
+    ):
         coeff = -1 * coeff
     return coeff
 
 
-def _preset_binary_vals(table_z: np.ndarray, has_side_chain_second_bead: bool) -> None:
+def _preset_binary_vals(
+    table_z: np.ndarray, *, has_side_chain_second_bead: bool
+) -> None:
     main_beads_indices = [0, 1, 2, 3]
     if not has_side_chain_second_bead:
         main_beads_indices.append(5)
@@ -102,7 +118,5 @@ def _preset_binary_vals(table_z: np.ndarray, has_side_chain_second_bead: bool) -
 
 
 def _preset_single_binary_val(table_z: np.ndarray, index: int) -> None:
-    try:
+    with contextlib.suppress(IndexError):
         table_z[index] = False
-    except IndexError:
-        pass

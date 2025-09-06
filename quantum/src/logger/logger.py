@@ -8,7 +8,6 @@ def get_logger(name: str = GLOBAL_LOGGER_NAME) -> logging.Logger:
     if not logger.hasHandlers():
         handler = logging.StreamHandler()
         formatter = logging.Formatter(
-            # "%(asctime)-19s [%(levelname)-5s] | %(module)s.%(funcName)-50s - %(message)s",
             "%(asctime)-19s [%(levelname)-5s] | %(module)-20s - %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
         )
