@@ -99,11 +99,15 @@ def _calc_updated_coeffs(
     Update coefficients based on fixed qubit positions. Negate if appropriate.
     """
     # Negate coeff if table_z[1] == True
-    if len(table_z) > SIGN_FLIP_SECOND_QUBIT_INDEX and table_z[SIGN_FLIP_SECOND_QUBIT_INDEX]:
+    if (
+        len(table_z) > SIGN_FLIP_SECOND_QUBIT_INDEX
+        and table_z[SIGN_FLIP_SECOND_QUBIT_INDEX]
+    ):
         coeff = -1 * coeff
     # Negate coeff if index 5 == True and no side_chain
     if (not has_side_chain_second_bead) and (
-        len(table_z) > SIGN_FLIP_SIXTH_QUBIT_INDEX + 1 and table_z[SIGN_FLIP_SIXTH_QUBIT_INDEX]
+        len(table_z) > SIGN_FLIP_SIXTH_QUBIT_INDEX + 1
+        and table_z[SIGN_FLIP_SIXTH_QUBIT_INDEX]
     ):
         coeff = -1 * coeff
     return coeff
