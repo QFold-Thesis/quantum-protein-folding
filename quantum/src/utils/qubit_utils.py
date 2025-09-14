@@ -70,6 +70,17 @@ def fix_qubits(
     if isinstance(operator, Pauli):
         operator = SparsePauliOp([operator], coeffs)
 
+    # Check if only one Pauli term is present, if so don't negate coeffs
+    if len(operator.paulis) == 1:
+        table_z = np.copy(operator.paulis[0].z)
+        table_x = np.copy(operator.paulis[0].x)
+        _preset_binary_vals(
+            table_z, has_side_chain_second_bead=has_side_chain_second_bead
+        )
+        return SparsePauliOp(
+            [Pauli((table_z, table_x))], [operator.coeffs[0]]
+        ).simplify()
+
     new_paulis: list[Pauli] = []
     new_coeffs: np.ndarray = np.array([])
 
