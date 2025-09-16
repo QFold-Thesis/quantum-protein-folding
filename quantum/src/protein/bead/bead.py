@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 
 from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
@@ -78,6 +80,11 @@ class Bead(ABC):
             )
             return
         raise ConformationEncodingError
+
+    def turn_funcs(self) -> None | tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp]:
+        if self.turn_qubits is None:
+            return None
+        return (self.turn_0(), self.turn_1(), self.turn_2(), self.turn_3())
 
     @abstractmethod
     def turn_0(self) -> SparsePauliOp:
