@@ -1,8 +1,8 @@
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from contact import ContactMap
+from distance import DistanceMap
 from interaction import MJInteraction
 from protein import Protein
-from distance import DistanceMap
 
 
 def main() -> None:
