@@ -135,5 +135,5 @@ def _preset_binary_vals(
 
 
 def _preset_single_binary_val(table_z: np.ndarray, index: int) -> None:
-    with contextlib.suppress(IndexError):
+    if index < len(table_z):
         table_z[index] = False
