@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import contextlib
-
 import numpy as np
 from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
     Pauli,
@@ -135,5 +133,5 @@ def _preset_binary_vals(
 
 
 def _preset_single_binary_val(table_z: np.ndarray, index: int) -> None:
-    with contextlib.suppress(IndexError):
+    if index < len(table_z):
         table_z[index] = False
