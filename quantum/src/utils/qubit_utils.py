@@ -1,16 +1,16 @@
 from __future__ import annotations
 
-import contextlib
-
 import numpy as np
 from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
     Pauli,
     SparsePauliOp,
 )
 
-from constants import NORM_FACTOR
-
-NEGATE_COEFF_INDEX = 5
+from constants import (
+    NORM_FACTOR,
+    SIGN_FLIP_SECOND_QUBIT_INDEX,
+    SIGN_FLIP_SIXTH_QUBIT_INDEX,
+)
 
 
 def build_full_identity(num_qubits: int) -> SparsePauliOp:
@@ -68,6 +68,17 @@ def fix_qubits(
     if isinstance(operator, Pauli):
         operator = SparsePauliOp([operator], coeffs)
 
+    # Check if only one Pauli term is present, if so don't negate coeffs
+    if len(operator.paulis) == 1:
+        table_z = np.copy(operator.paulis[0].z)
+        table_x = np.copy(operator.paulis[0].x)
+        _preset_binary_vals(
+            table_z, has_side_chain_second_bead=has_side_chain_second_bead
+        )
+        return SparsePauliOp(
+            [Pauli((table_z, table_x))], [operator.coeffs[0]]
+        ).simplify()
+
     new_paulis: list[Pauli] = []
     new_coeffs: np.ndarray = np.array([])
 
@@ -76,11 +87,11 @@ def fix_qubits(
         table_x = np.copy(pauli.x)
         coeff = operator.coeffs[idx]
 
-        _preset_binary_vals(
-            table_z, has_side_chain_second_bead=has_side_chain_second_bead
-        )
         coeff = _calc_updated_coeffs(
             table_z, coeff, has_side_chain_second_bead=has_side_chain_second_bead
+        )
+        _preset_binary_vals(
+            table_z, has_side_chain_second_bead=has_side_chain_second_bead
         )
         # Create new Pauli from updated z, x
         new_pauli = Pauli((table_z, table_x))
@@ -96,12 +107,16 @@ def _calc_updated_coeffs(
     """
     Update coefficients based on fixed qubit positions. Negate if appropriate.
     """
-    # Negate coeff if table_z[3] == True
-    if len(table_z) > 1 and table_z[3]:
+    # Negate coeff if table_z[1] == True
+    if (
+        len(table_z) > SIGN_FLIP_SECOND_QUBIT_INDEX
+        and table_z[SIGN_FLIP_SECOND_QUBIT_INDEX]
+    ):
         coeff = -1 * coeff
     # Negate coeff if index 5 == True and no side_chain
     if (not has_side_chain_second_bead) and (
-        len(table_z) > NEGATE_COEFF_INDEX and table_z[NEGATE_COEFF_INDEX - 1]
+        len(table_z) > SIGN_FLIP_SIXTH_QUBIT_INDEX + 1
+        and table_z[SIGN_FLIP_SIXTH_QUBIT_INDEX]
     ):
         coeff = -1 * coeff
     return coeff
@@ -118,5 +133,5 @@ def _preset_binary_vals(
 
 
 def _preset_single_binary_val(table_z: np.ndarray, index: int) -> None:
-    with contextlib.suppress(IndexError):
+    if index < len(table_z):
         table_z[index] = False
