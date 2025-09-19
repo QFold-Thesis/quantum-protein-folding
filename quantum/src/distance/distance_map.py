@@ -1,6 +1,7 @@
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
+from constants import DIST_VECTOR_AXES
 from logger import get_logger
 from protein import Protein
 from utils.qubit_utils import fix_qubits
@@ -16,10 +17,7 @@ class DistanceMap:
         self.protein = protein
         self.distance_map = defaultdict(lambda: defaultdict(int))
         self._distances_vector: list[defaultdict] = [
-            defaultdict(lambda: defaultdict(int)),
-            defaultdict(lambda: defaultdict(int)),
-            defaultdict(lambda: defaultdict(int)),
-            defaultdict(lambda: defaultdict(int)),
+            defaultdict(lambda: defaultdict(int)) for _ in range(DIST_VECTOR_AXES)
         ]
         self._calc_distances_main_chain()
 
@@ -66,3 +64,12 @@ class DistanceMap:
                     f"main_chain_{lower_bead_idx} -> main_chain_{upper_bead_idx}: {self.distance_map[lower_bead_idx][upper_bead_idx]}"
                 )
         logger.debug("Distance map initialized successfully")
+
+    def __getitem__(self, key):
+        return self.distance_map[key]
+
+    def __setitem__(self, key, value):
+        self.distance_map[key] = value
+
+    def __len__(self):
+        return len(self.distance_map)
