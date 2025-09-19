@@ -1,5 +1,6 @@
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from contact import ContactMap
+from distance import DistanceMap
 from interaction import MJInteraction
 from protein import Protein
 
@@ -15,6 +16,8 @@ def main() -> None:
     _ = MJInteraction(protein=protein)
 
     _ = ContactMap(protein=protein)
+
+    _ = DistanceMap(protein=protein)
 
 
 if __name__ == "__main__":
