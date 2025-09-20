@@ -35,6 +35,7 @@ class MJInteraction:
         protein: Protein,
         interaction_matrix_path: Path = MJ_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
+        self.protein = protein
         self._interaction_matrix_path: Path = interaction_matrix_path
 
         self.valid_symbols: list[str] = []
@@ -83,3 +84,10 @@ class MJInteraction:
                 logger.error(msg)
                 raise InvalidAminoAcidError(msg)
         return True
+
+    def get_energy_by_indices(self, i: int, j: int) -> float:
+        """Get MJ interaction energy between residues at chain positions i and j."""
+        symbol_i = self.protein.main_chain[i].symbol
+        symbol_j = self.protein.main_chain[j].symbol
+        key = f"{symbol_i}{symbol_j}"
+        return self.energy_pairs.get(key, 0.0)

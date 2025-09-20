@@ -1,4 +1,4 @@
-from enum import IntEnum, FloatEnum
+from enum import FloatEnum, IntEnum
 
 
 class ConformationEncoding(IntEnum):
@@ -13,6 +13,7 @@ class SubLattice(IntEnum):
 
     A = 0
     B = 1
+
 
 class Penalties(FloatEnum):
     """Enum representing penalty types for protein folding constraints."""
