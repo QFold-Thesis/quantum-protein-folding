@@ -1,4 +1,4 @@
-from enum import FloatEnum, IntEnum
+from enum import IntEnum
 
 
 class ConformationEncoding(IntEnum):
@@ -15,9 +15,9 @@ class SubLattice(IntEnum):
     B = 1
 
 
-class Penalties(FloatEnum):
+class Penalties(IntEnum):
     """Enum representing penalty types for protein folding constraints."""
 
-    OVERLAP_PENALTY = 10.0
-    CHIRALITY_PENALTY = 10.0
-    BACK_PENALTY = 10.0
+    OVERLAP_PENALTY = 10
+    CHIRALITY_PENALTY = 10
+    BACK_PENALTY = 10
