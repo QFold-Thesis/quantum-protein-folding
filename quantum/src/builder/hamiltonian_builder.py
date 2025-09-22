@@ -5,6 +5,7 @@ from distance.distance_map import DistanceMap
 from interaction.mj_interaction import MJInteraction
 from logger import get_logger
 from protein import Protein
+from protein.bead import Bead
 from utils.qubit_utils import build_full_identity, fix_qubits
 
 logger = get_logger()
@@ -15,6 +16,16 @@ class HamiltonianBuilder:
         self.protein: Protein = protein
         self.mj: MJInteraction = MJInteraction(protein)
         self.distance_map: DistanceMap = DistanceMap(protein)
+
+    def get_turn_operators(self, lower_bead: Bead, upper_bead: Bead) -> SparsePauliOp:
+        turn_operators: SparsePauliOp = sum(
+            lower_bead_idx @ upper_bead_idx
+            for lower_bead_idx, upper_bead_idx in zip(
+                lower_bead.turn_funcs(), upper_bead.turn_funcs()
+            )
+        )
+
+        return fix_qubits(turn_operators)
 
     def get_first_neighbor_hamiltonian(
         self,
