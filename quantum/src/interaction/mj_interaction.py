@@ -35,7 +35,7 @@ class MJInteraction:
         protein: Protein,
         interaction_matrix_path: Path = MJ_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
-        self.protein = protein
+        self.protein: Protein = protein
         self._interaction_matrix_path: Path = interaction_matrix_path
 
         self.valid_symbols: list[str] = []

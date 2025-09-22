@@ -23,6 +23,52 @@ class HamiltonianBuilder:
         self.mj: MJInteraction = MJInteraction(protein)
         self.distance_map: DistanceMap = DistanceMap(protein)
 
+    def build_backbone_contact_term(self) -> SparsePauliOp:
+        """
+        Builds the Hamiltonian term corresponding to backbone_backbone (BB-BB) interactions.
+        Includes both 1st neighbor and 2nd neighbor contributions (with shifts i±1, j±1).
+        """
+        logger.info("Creating h_bbbb term (BB-BB interactions)...")
+
+        main_chain: MainChain = self.protein.main_chain
+        hamiltonian: SparsePauliOp = 0
+        chain_len: int = len(main_chain)
+
+        for i in range(1, len(main_chain) - 3):
+            for j in range(i + 5, len(main_chain)):
+                # Skip even distances to respect lattice constraints
+                if (j - i) % 2 == 0:
+                    continue
+
+                # Add first neighbor interaction
+                if 0 <= i < chain_len and 0 <= j < chain_len:
+                    logger.debug(f"Adding BB-BB i={i}, j={j} (1st neighbor)")
+                    hamiltonian += self.get_first_neighbor_hamiltonian(
+                        i, j, Penalties.OVERLAP_PENALTY
+                    )
+
+                # Add second neighbor interactions (with index shifts)
+                for di, dj, label in [
+                    (-1, 0, "i-1"),
+                    (1, 0, "i+1"),
+                    (0, -1, "j-1"),
+                    (0, 1, "j+1"),
+                ]:
+                    ii, jj = i + di, j + dj
+                    if 0 <= ii < chain_len and 0 <= jj < chain_len:
+                        logger.debug(
+                            f"Adding BB-BB i={ii}, j={jj} (2nd neighbor, {label})"
+                        )
+                        hamiltonian += self.get_second_neighbor_hamiltonian(
+                            ii, jj, Penalties.OVERLAP_PENALTY
+                        )
+
+                # Ensure qubit registers are consistent
+                hamiltonian = fix_qubits(hamiltonian)
+
+        logger.info(f"Finished creating h_bbbb term: {hamiltonian}")
+        return hamiltonian
+
     def add_backtracking_penalty(self) -> SparsePauliOp:
         main_chain: MainChain = self.protein.main_chain
         h_back: SparsePauliOp = 0
@@ -32,9 +78,6 @@ class HamiltonianBuilder:
             )
 
         return fix_qubits(h_back)
-
-    def build_backbone_contact_term(self) -> SparsePauliOp:
-        pass
 
     def get_turn_operators(self, lower_bead: Bead, upper_bead: Bead) -> SparsePauliOp:
         turn_operators: SparsePauliOp = sum(
@@ -56,7 +99,12 @@ class HamiltonianBuilder:
             BOUNDING_CONSTANT * (upper_bead_idx - lower_bead_idx + 1) * lambda_1
         )
         energy: float = self.mj.get_energy_by_indices(lower_bead_idx, upper_bead_idx)
-        x: int = self.distance_map[lower_bead_idx][upper_bead_idx]
+        x: SparsePauliOp | int = self.distance_map[lower_bead_idx][upper_bead_idx]
+
+        if isinstance(x, int):
+            num_qubits = 12
+            x = SparsePauliOp("I" * num_qubits, coeffs=[float(x)])
+
         expression: SparsePauliOp = lambda_0 * (
             x - build_full_identity(x.num_qubits)
         ) + (MJ_ENERGY_MULTIPLIER * energy * build_full_identity(x.num_qubits))
@@ -69,7 +117,17 @@ class HamiltonianBuilder:
         lambda_1: float,
     ) -> SparsePauliOp:
         energy: float = self.mj.get_energy_by_indices(lower_bead_idx, upper_bead_idx)
-        x: int = self.distance_map[lower_bead_idx][upper_bead_idx]
+        x: SparsePauliOp | int = self.distance_map[lower_bead_idx][upper_bead_idx]
+
+        if isinstance(x, (int, float)):
+            num_qubits = 12
+            print(
+                40 * "-",
+                self.distance_map[lower_bead_idx][upper_bead_idx],
+                40 * "-",
+            )
+            x = SparsePauliOp("I" * num_qubits, coeffs=[float(x)])
+
         expression: SparsePauliOp = lambda_1 * (
             2 * build_full_identity(x.num_qubits) - x
         ) + (MJ_ENERGY_MULTIPLIER * energy * build_full_identity(x.num_qubits))

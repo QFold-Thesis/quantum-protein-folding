@@ -43,6 +43,13 @@ def build_pauli_z_operator(num_qubits: int, pauli_z_indices: set[int]) -> Sparse
     )
 
 
+def to_sparse_pauli_op(x: SparsePauliOp | int, num_qubits: int):
+    if isinstance(x, SparsePauliOp):
+        return x
+
+    return SparsePauliOp("I" * (num_qubits or 1), coeffs=[float(x)])
+
+
 def convert_to_qubits(pauli_op: SparsePauliOp) -> SparsePauliOp:
     num_qubits: int = int(pauli_op.num_qubits)  # pyright: ignore[reportArgumentType]
     full_id: SparsePauliOp = SparsePauliOp.from_list([("I" * num_qubits, 1.0)])

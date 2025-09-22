@@ -1,3 +1,4 @@
+from builder import HamiltonianBuilder
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from contact import ContactMap
 from distance import DistanceMap
@@ -18,6 +19,9 @@ def main() -> None:
     _ = ContactMap(protein=protein)
 
     _ = DistanceMap(protein=protein)
+
+    builder = HamiltonianBuilder(protein)
+    builder.build_backbone_contact_term()
 
 
 if __name__ == "__main__":
