@@ -1,12 +1,18 @@
+from typing import TYPE_CHECKING
+
 from qiskit.quantum_info import SparsePauliOp
 
 from constants import BOUNDING_CONSTANT, MJ_ENERGY_MULTIPLIER
 from distance.distance_map import DistanceMap
+from enums import Penalties
 from interaction.mj_interaction import MJInteraction
 from logger import get_logger
 from protein import Protein
 from protein.bead import Bead
 from utils.qubit_utils import build_full_identity, fix_qubits
+
+if TYPE_CHECKING:
+    from protein.chain import MainChain
 
 logger = get_logger()
 
@@ -16,6 +22,19 @@ class HamiltonianBuilder:
         self.protein: Protein = protein
         self.mj: MJInteraction = MJInteraction(protein)
         self.distance_map: DistanceMap = DistanceMap(protein)
+
+    def add_backtracking_penalty(self) -> SparsePauliOp:
+        main_chain: MainChain = self.protein.main_chain
+        h_back: SparsePauliOp = 0
+        for i in range(1, len(main_chain) - 2):
+            h_back += Penalties.BACK_PENALTY * self.get_turn_operators(
+                main_chain[i], main_chain[i + 1]
+            )
+
+        return fix_qubits(h_back)
+
+    def build_backbone_contact_term(self) -> SparsePauliOp:
+        pass
 
     def get_turn_operators(self, lower_bead: Bead, upper_bead: Bead) -> SparsePauliOp:
         turn_operators: SparsePauliOp = sum(
