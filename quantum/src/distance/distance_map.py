@@ -1,5 +1,4 @@
 from collections import defaultdict
-from typing import TYPE_CHECKING
 
 from qiskit.quantum_info import SparsePauliOp
 
@@ -7,9 +6,6 @@ from constants import DIST_VECTOR_AXES
 from logger import get_logger
 from protein import Protein
 from utils.qubit_utils import fix_qubits
-
-if TYPE_CHECKING:
-    from protein.bead import Bead
 
 logger = get_logger()
 
@@ -28,35 +24,32 @@ class DistanceMap:
 
         main_chain_len = len(self.protein.main_chain)
 
-        for lower_bead_idx in range(1, main_chain_len):
-            for upper_bead_idx in range(lower_bead_idx + 1, main_chain_len + 1):
-                lower_bead: Bead = self.protein.main_chain[lower_bead_idx - 1]
-                upper_bead: Bead = self.protein.main_chain[upper_bead_idx - 1]
-
+        for lower_bead_idx in range(main_chain_len):
+            for upper_bead_idx in range(lower_bead_idx + 1, main_chain_len):
                 logger.debug(
                     "Processing pair main_chain_%s -> main_chain_%s",
                     lower_bead_idx,
                     upper_bead_idx,
                 )
                 for k in range(lower_bead_idx, upper_bead_idx):
-                    indic_funcs = self.protein.main_chain[k - 1].turn_funcs()
+                    indic_funcs = self.protein.main_chain[k].turn_funcs()
                     sub_lattice_sign = (-1) ** k
 
                     for indic_fun_x, dist_vector in zip(
                         indic_funcs, self._distances_vector
                     ):
-                        dist_vector[lower_bead][upper_bead] += (
+                        dist_vector[lower_bead_idx][upper_bead_idx] += (
                             sub_lattice_sign * indic_fun_x
                         )
 
                 for dist_vector in self._distances_vector:
-                    dist_vector[lower_bead][upper_bead] = fix_qubits(
-                        dist_vector[lower_bead][upper_bead]
+                    dist_vector[lower_bead_idx][upper_bead_idx] = fix_qubits(
+                        dist_vector[lower_bead_idx][upper_bead_idx]
                     )
 
                 for dist_vector in self._distances_vector:
                     self.distance_map[lower_bead_idx][upper_bead_idx] += (
-                        dist_vector[lower_bead][upper_bead] ** 2
+                        dist_vector[lower_bead_idx][upper_bead_idx] ** 2
                     )
 
                 self.distance_map[lower_bead_idx][upper_bead_idx] = fix_qubits(
