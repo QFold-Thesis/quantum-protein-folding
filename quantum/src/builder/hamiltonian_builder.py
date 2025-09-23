@@ -23,6 +23,15 @@ class HamiltonianBuilder:
         self.mj: MJInteraction = MJInteraction(protein)
         self.distance_map: DistanceMap = DistanceMap(protein)
 
+    def sum_hamiltonians(self) -> SparsePauliOp:
+        hamiltonian: SparsePauliOp = 0
+        backbone = self.build_backbone_contact_term()
+        backtrack = self.add_backtracking_penalty()
+
+        hamiltonian += backbone + backtrack
+
+        return (hamiltonian.simplify(), backbone, backtrack)
+
     def build_backbone_contact_term(self) -> SparsePauliOp:
         """
         Builds the Hamiltonian term corresponding to backbone_backbone (BB-BB) interactions.
@@ -34,7 +43,7 @@ class HamiltonianBuilder:
         hamiltonian: SparsePauliOp = 0
         chain_len: int = len(main_chain)
 
-        for i in range(1, len(main_chain) - 3):
+        for i in range(len(main_chain) - 3):
             for j in range(i + 5, len(main_chain)):
                 # Skip even distances to respect lattice constraints
                 if (j - i) % 2 == 0:
@@ -67,7 +76,7 @@ class HamiltonianBuilder:
                 hamiltonian = fix_qubits(hamiltonian)
 
         logger.info(f"Finished creating h_bbbb term: {hamiltonian}")
-        return hamiltonian
+        return hamiltonian / 2
 
     def add_backtracking_penalty(self) -> SparsePauliOp:
         main_chain: MainChain = self.protein.main_chain

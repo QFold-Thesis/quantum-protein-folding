@@ -21,7 +21,24 @@ def main() -> None:
     _ = DistanceMap(protein=protein)
 
     builder = HamiltonianBuilder(protein)
-    builder.build_backbone_contact_term()
+    hamiltonian, backbone, backtrack = builder.sum_hamiltonians()
+    print(  # noqa: T201
+        40 * "-",
+        "\n backbone hamiltonian\n",
+        backbone,
+    )
+
+    print(  # noqa: T201
+        40 * "-",
+        "\n backtrack hamiltonian\n",
+        backtrack,
+    )
+
+    print(  # noqa: T201
+        40 * "-",
+        "\nfinal hamiltonian\n",
+        hamiltonian,
+    )
 
 
 if __name__ == "__main__":
