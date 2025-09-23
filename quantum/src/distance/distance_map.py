@@ -1,7 +1,5 @@
 from collections import defaultdict
 
-from qiskit.quantum_info import SparsePauliOp
-
 from constants import DIST_VECTOR_AXES
 from logger import get_logger
 from protein import Protein
@@ -55,15 +53,6 @@ class DistanceMap:
                 self.distance_map[lower_bead_idx][upper_bead_idx] = fix_qubits(
                     self.distance_map[lower_bead_idx][upper_bead_idx]
                 )
-
-                if not isinstance(
-                    self.distance_map[lower_bead_idx][upper_bead_idx], SparsePauliOp
-                ):
-                    print(
-                        40 * "-",
-                        self.distance_map[lower_bead_idx][upper_bead_idx],
-                        40 * "-",
-                    )
 
                 logger.debug(
                     f"main_chain_{lower_bead_idx} -> main_chain_{upper_bead_idx}: {self.distance_map[lower_bead_idx][upper_bead_idx]}"

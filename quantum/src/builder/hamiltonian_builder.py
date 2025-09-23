@@ -101,10 +101,6 @@ class HamiltonianBuilder:
         energy: float = self.mj.get_energy_by_indices(lower_bead_idx, upper_bead_idx)
         x: SparsePauliOp | int = self.distance_map[lower_bead_idx][upper_bead_idx]
 
-        if isinstance(x, int):
-            num_qubits = 12
-            x = SparsePauliOp("I" * num_qubits, coeffs=[float(x)])
-
         expression: SparsePauliOp = lambda_0 * (
             x - build_full_identity(x.num_qubits)
         ) + (MJ_ENERGY_MULTIPLIER * energy * build_full_identity(x.num_qubits))
@@ -118,15 +114,6 @@ class HamiltonianBuilder:
     ) -> SparsePauliOp:
         energy: float = self.mj.get_energy_by_indices(lower_bead_idx, upper_bead_idx)
         x: SparsePauliOp | int = self.distance_map[lower_bead_idx][upper_bead_idx]
-
-        if isinstance(x, (int, float)):
-            num_qubits = 12
-            print(
-                40 * "-",
-                self.distance_map[lower_bead_idx][upper_bead_idx],
-                40 * "-",
-            )
-            x = SparsePauliOp("I" * num_qubits, coeffs=[float(x)])
 
         expression: SparsePauliOp = lambda_1 * (
             2 * build_full_identity(x.num_qubits) - x
