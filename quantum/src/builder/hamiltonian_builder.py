@@ -108,8 +108,7 @@ class HamiltonianBuilder:
             BOUNDING_CONSTANT * (upper_bead_idx - lower_bead_idx + 1) * lambda_1
         )
         energy: float = self.mj.get_energy_by_indices(lower_bead_idx, upper_bead_idx)
-        x: SparsePauliOp | int = self.distance_map[lower_bead_idx][upper_bead_idx]
-
+        x: SparsePauliOp = self.distance_map[lower_bead_idx][upper_bead_idx]
         expression: SparsePauliOp = lambda_0 * (
             x - build_full_identity(x.num_qubits)
         ) + (MJ_ENERGY_MULTIPLIER * energy * build_full_identity(x.num_qubits))
@@ -122,8 +121,7 @@ class HamiltonianBuilder:
         lambda_1: float,
     ) -> SparsePauliOp:
         energy: float = self.mj.get_energy_by_indices(lower_bead_idx, upper_bead_idx)
-        x: SparsePauliOp | int = self.distance_map[lower_bead_idx][upper_bead_idx]
-
+        x: SparsePauliOp = self.distance_map[lower_bead_idx][upper_bead_idx]
         expression: SparsePauliOp = lambda_1 * (
             2 * build_full_identity(x.num_qubits) - x
         ) + (MJ_ENERGY_MULTIPLIER * energy * build_full_identity(x.num_qubits))
