@@ -53,6 +53,7 @@ class DistanceMap:
                 self.distance_map[lower_bead_idx][upper_bead_idx] = fix_qubits(
                     self.distance_map[lower_bead_idx][upper_bead_idx]
                 )
+
                 logger.debug(
                     f"main_chain_{lower_bead_idx} -> main_chain_{upper_bead_idx}: {self.distance_map[lower_bead_idx][upper_bead_idx]}"
                 )
