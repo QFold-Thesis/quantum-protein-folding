@@ -40,6 +40,39 @@ def main() -> None:
         hamiltonian,
     )
 
+    from qiskit.circuit.library import RealAmplitudes
+    from qiskit_algorithms.optimizers import COBYLA
+    from qiskit_algorithms import SamplingVQE
+    from qiskit.primitives import StatevectorSampler as Sampler
+
+    # Classical optimizer
+    optimizer = COBYLA(maxiter=50)
+
+    # Variational ansatz
+    ansatz = RealAmplitudes(reps=1)
+
+    counts = []
+    values = []
+
+    def store_intermediate_result(eval_count, parameters, mean, std):
+        counts.append(eval_count)
+        values.append(mean)
+
+
+    # Inicjalizacja VQE
+    vqe = SamplingVQE(
+        sampler=Sampler(),
+        ansatz=ansatz,
+        optimizer=optimizer,
+        aggregation=0.1,  # CVaR dla alpha=0.1
+        callback=store_intermediate_result
+    )
+
+    # Uruchomienie optymalizacji
+    raw_result = vqe.compute_minimum_eigenvalue(hamiltonian)
+    print(raw_result)
+
+
 
 if __name__ == "__main__":
     main()
