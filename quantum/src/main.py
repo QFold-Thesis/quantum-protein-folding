@@ -4,6 +4,17 @@ from contact import ContactMap
 from distance import DistanceMap
 from interaction import MJInteraction
 from protein import Protein
+from utils.qubit_utils import remove_unused_qubits
+
+
+def _fmt_coeff(c) -> str:
+    """Format complex/float coefficient as '+ 487.5' or '- 12.0'."""
+    try:
+        val = float(c.real)
+    except Exception:  # pragma: no cover
+        val = float(c)
+    sign = "+" if val >= 0 else "-"
+    return f"{sign} {abs(val)}"
 
 
 def main() -> None:
@@ -69,8 +80,12 @@ def main() -> None:
     )
 
     # Uruchomienie optymalizacji
-    raw_result = vqe.compute_minimum_eigenvalue(hamiltonian)
-    print(raw_result)
+    compressed_h, unused, mapping = remove_unused_qubits(hamiltonian)
+    print("Compressed Hamiltonian:")  # noqa: T201
+    for coeff, pauli in zip(compressed_h.coeffs, compressed_h.paulis):
+        print(f"{_fmt_coeff(coeff)} * {pauli}")  # noqa: T201
+    raw_result = vqe.compute_minimum_eigenvalue(compressed_h)
+    print(raw_result)  # noqa: T201
 
 
 

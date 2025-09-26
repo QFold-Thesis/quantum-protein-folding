@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import numpy as np
+from typing import Dict, List, Tuple
 from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
     Pauli,
     SparsePauliOp,
@@ -142,3 +143,49 @@ def _preset_binary_vals(
 def _preset_single_binary_val(table_z: np.ndarray, index: int) -> None:
     if index < len(table_z):
         table_z[index] = False
+
+def find_unused_qubits(op: SparsePauliOp) -> List[int]:
+    """
+    Return indices of qubits that are identity (I) in every term of the operator.
+    """
+    if op.num_qubits == 0 or len(op.paulis) == 0:
+        return []
+    z = op.paulis.z  # shape: (n_terms, n_qubits)
+    x = op.paulis.x
+    used_mask = np.any(z | x, axis=0)  # qubit used if any Z or X present
+    return [i for i, used in enumerate(used_mask) if not used]
+
+def remove_unused_qubits(
+    op: SparsePauliOp,
+) -> Tuple[SparsePauliOp, List[int], Dict[int, int]]:
+    """
+    Remove qubits that are identity in all terms.
+
+    Returns:
+      (compressed_op, unused_indices, old_to_new_index)
+    """
+    unused = find_unused_qubits(op)
+    if not unused:
+        # Nothing to remove
+        return op.copy(), [], {i: i for i in range(op.num_qubits)}
+
+    mask = np.ones(op.num_qubits, dtype=bool)
+    mask[unused] = False
+
+    new_paulis: list[Pauli] = []
+    z_full = op.paulis.z
+    x_full = op.paulis.x
+    for k in range(len(op.paulis)):
+        new_paulis.append(Pauli((z_full[k][mask], x_full[k][mask])))
+
+    compressed = SparsePauliOp(new_paulis, coeffs=op.coeffs).simplify()
+
+    old_to_new: Dict[int, int] = {}
+    new_index = 0
+    for old in range(op.num_qubits):
+        if old in unused:
+            continue
+        old_to_new[old] = new_index
+        new_index += 1
+
+    return compressed, unused, old_to_new
