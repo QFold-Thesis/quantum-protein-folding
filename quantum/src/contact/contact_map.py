@@ -78,7 +78,7 @@ class ContactMap:
                     upper_bead=upper_bead, lower_bead=lower_bead
                 )
 
-                self.main_main_contacts[upper_bead.index][lower_bead.index] = (
+                self.main_main_contacts[lower_bead.index][upper_bead.index] = (
                     contact_operator
                 )
                 self._contacts_detected += 1

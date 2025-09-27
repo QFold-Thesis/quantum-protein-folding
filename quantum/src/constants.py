@@ -24,4 +24,8 @@ SIGN_FLIP_SIXTH_QUBIT_INDEX: int = 5
 
 DIST_VECTOR_AXES: int = 4
 
+BOUNDING_CONSTANT: int = 7
+
+MJ_ENERGY_MULTIPLIER: float = 0.1
+
 GLOBAL_LOGGER_NAME: str = "global_logger"
