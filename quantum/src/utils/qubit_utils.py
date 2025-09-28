@@ -137,6 +137,14 @@ def _preset_single_binary_val(table_z: np.ndarray, index: int) -> None:
         table_z[index] = False
 
 
+def pad_to_n_qubits(op: SparsePauliOp, target: int) -> SparsePauliOp:
+    if op.num_qubits == target:
+        return op
+    pad = target - op.num_qubits
+    id_pad = build_full_identity(pad)
+    return id_pad ^ op
+
+
 def find_unused_qubits(op: SparsePauliOp) -> list[int]:
     """
     Return indices of qubits that are identity (I) in every term of the operator.
