@@ -3,13 +3,14 @@ from typing import TYPE_CHECKING
 from qiskit.quantum_info import SparsePauliOp
 
 from constants import BOUNDING_CONSTANT, MJ_ENERGY_MULTIPLIER
+from contact.contact_map import ContactMap
 from distance.distance_map import DistanceMap
 from enums import Penalties
 from interaction.mj_interaction import MJInteraction
 from logger import get_logger
 from protein import Protein
 from protein.bead import Bead
-from utils.qubit_utils import build_full_identity, fix_qubits
+from utils.qubit_utils import build_full_identity, fix_qubits, pad_to_n_qubits
 
 if TYPE_CHECKING:
     from protein.chain import MainChain
@@ -18,19 +19,37 @@ logger = get_logger()
 
 
 class HamiltonianBuilder:
-    def __init__(self, protein: Protein):
+    def __init__(
+        self,
+        protein: Protein,
+        mj: MJInteraction,
+        distance_map: DistanceMap,
+        contact_map: ContactMap,
+    ):
         self.protein: Protein = protein
-        self.mj: MJInteraction = MJInteraction(protein)
-        self.distance_map: DistanceMap = DistanceMap(protein)
+        self.mj: MJInteraction = mj
+        self.distance_map: DistanceMap = distance_map
+        self.contact_map: ContactMap = contact_map
 
     def sum_hamiltonians(self) -> SparsePauliOp:
-        hamiltonian: SparsePauliOp = 0
-        backbone = self.build_backbone_contact_term()
-        backtrack = self.add_backtracking_penalty()
+        """Build and sum all Hamiltonian components, padding to a common qubit size."""
+        backbone: SparsePauliOp = self.build_backbone_contact_term()
+        backtrack: SparsePauliOp = self.add_backtracking_penalty()
 
-        hamiltonian += backbone + backtrack
+        part_hamiltonians: list[SparsePauliOp] = [backbone, backtrack]
+        target_qubits: int = max(
+            hamiltonian.num_qubits for hamiltonian in part_hamiltonians
+        )
+        padded_hamiltonians: list[SparsePauliOp] = [
+            pad_to_n_qubits(hamiltonian, target_qubits)
+            for hamiltonian in part_hamiltonians
+        ]
 
-        return (hamiltonian.simplify(), backbone, backtrack)
+        total_hamiltonian: SparsePauliOp = 0
+        for hamiltonian in padded_hamiltonians:
+            total_hamiltonian += hamiltonian
+
+        return total_hamiltonian.simplify()
 
     def build_backbone_contact_term(self) -> SparsePauliOp:
         """
@@ -43,40 +62,38 @@ class HamiltonianBuilder:
         hamiltonian: SparsePauliOp = 0
         chain_len: int = len(main_chain)
 
-        for i in range(len(main_chain) - 3):
-            for j in range(i + 5, len(main_chain)):
-                # Skip even distances to respect lattice constraints
+        for i in range(len(main_chain) - 4):
+            for j in range(i + 4, len(main_chain)):
                 if (j - i) % 2 == 0:
                     continue
 
-                # Add first neighbor interaction
                 if 0 <= i < chain_len and 0 <= j < chain_len:
                     logger.debug(f"Adding BB-BB i={i}, j={j} (1st neighbor)")
-                    hamiltonian += self.get_first_neighbor_hamiltonian(
+                    hamiltonian += self.contact_map.main_main_contacts[i][
+                        j
+                    ] ^ self.get_first_neighbor_hamiltonian(
                         i, j, Penalties.OVERLAP_PENALTY
                     )
 
-                # Add second neighbor interactions (with index shifts)
-                for di, dj, label in [
-                    (-1, 0, "i-1"),
-                    (1, 0, "i+1"),
-                    (0, -1, "j-1"),
-                    (0, 1, "j+1"),
+                for di, dj in [
+                    (-1, 0),
+                    (1, 0),
+                    (0, -1),
+                    (0, 1),
                 ]:
                     ii, jj = i + di, j + dj
                     if 0 <= ii < chain_len and 0 <= jj < chain_len:
-                        logger.debug(
-                            f"Adding BB-BB i={ii}, j={jj} (2nd neighbor, {label})"
-                        )
-                        hamiltonian += self.get_second_neighbor_hamiltonian(
+                        logger.debug(f"Adding BB-BB i={ii}, j={jj} (2nd neighbor)")
+                        hamiltonian += self.contact_map.main_main_contacts[i][
+                            j
+                        ] ^ self.get_second_neighbor_hamiltonian(
                             ii, jj, Penalties.OVERLAP_PENALTY
                         )
 
-                # Ensure qubit registers are consistent
                 hamiltonian = fix_qubits(hamiltonian)
 
         logger.info(f"Finished creating h_bbbb term: {hamiltonian}")
-        return hamiltonian / 2
+        return hamiltonian
 
     def add_backtracking_penalty(self) -> SparsePauliOp:
         main_chain: MainChain = self.protein.main_chain
