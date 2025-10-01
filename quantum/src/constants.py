@@ -8,6 +8,10 @@ MJ_INTERACTION_MATRIX_FILEPATH: Path = (
     ROOT_PROJECT_PATH / "src" / "resources" / "mj_matrix.txt"
 )
 
+HP_INTERACTION_MATRIX_FILEPATH: Path = (
+    ROOT_PROJECT_PATH / "src" / "resources" / "hp_matrix.txt"
+)
+
 CONFORMATION_ENCODING: ConformationEncoding = ConformationEncoding.DENSE
 
 
@@ -27,5 +31,9 @@ DIST_VECTOR_AXES: int = 4
 BOUNDING_CONSTANT: int = 7
 
 MJ_ENERGY_MULTIPLIER: float = 0.1
+
+HP_HH_CONTACT_ENERGY: float = -1.0
+
+HP_NON_HH_CONTACT_ENERGY: float = 0.0
 
 GLOBAL_LOGGER_NAME: str = "global_logger"

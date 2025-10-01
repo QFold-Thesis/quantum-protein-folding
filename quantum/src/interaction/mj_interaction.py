@@ -22,22 +22,21 @@ from pathlib import Path
 import numpy as np
 
 from constants import MJ_INTERACTION_MATRIX_FILEPATH
+from interaction.interaction import Interaction
 from logger import get_logger
 
 logger = get_logger()
 
 
-class MJInteraction:
+class MJInteraction(Interaction):
     def __init__(
         self,
         interaction_matrix_path: Path = MJ_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
-        self._interaction_matrix_path: Path = interaction_matrix_path
-
-        self.valid_symbols: list[str] = []
+        super().__init__(interaction_matrix_path)
 
         self.energy_pairs: dict[str, float] = self._prepare_mj_interaction_matrix(
-            self._interaction_matrix_path
+            self.interaction_matrix_path
         )
 
     def _prepare_mj_interaction_matrix(
@@ -46,18 +45,15 @@ class MJInteraction:
         try:
             mj_matrix = np.loadtxt(mj_filepath, dtype=str)
 
-            self.valid_symbols: list[str] = [str(symbol) for symbol in mj_matrix[0, :]]
-
+            header = mj_matrix[0, :]
             energy_pairs: dict[str, float] = {}
 
             for row in range(1, np.shape(mj_matrix)[0]):
+                row_symbol = header[row - 1]
                 for col in range(row - 1, np.shape(mj_matrix)[1]):
-                    bead_1: str = self.valid_symbols[col]
-                    bead_2: str = self.valid_symbols[row - 1]
-                    energy: float = float(mj_matrix[row, col])
-
-                    key: str = f"{bead_1}{bead_2}"
-
+                    col_symbol = header[col]
+                    energy = float(mj_matrix[row, col])
+                    key = f"{col_symbol}{row_symbol}"
                     energy_pairs[key] = energy
                     energy_pairs[key[::-1]] = energy
         except Exception:
