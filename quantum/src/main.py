@@ -14,29 +14,22 @@ def main() -> None:
         main_protein_sequence=main_chain, side_protein_sequence=side_chain
     )
 
-    _ = MJInteraction(protein=protein)
+    mj_interaction = MJInteraction()
 
-    _ = ContactMap(protein=protein)
+    contact_map = ContactMap(protein=protein)
 
-    _ = DistanceMap(protein=protein)
+    distance_map = DistanceMap(protein=protein)
 
-    builder = HamiltonianBuilder(protein)
-    hamiltonian, backbone, backtrack = builder.sum_hamiltonians()
-    print(  # noqa: T201
-        40 * "-",
-        "\n backbone hamiltonian\n",
-        backbone,
+    builder = HamiltonianBuilder(
+        protein=protein,
+        mj=mj_interaction,
+        distance_map=distance_map,
+        contact_map=contact_map,
     )
-
+    hamiltonian = builder.sum_hamiltonians()
     print(  # noqa: T201
         40 * "-",
-        "\n backtrack hamiltonian\n",
-        backtrack,
-    )
-
-    print(  # noqa: T201
-        40 * "-",
-        "\nfinal hamiltonian\n",
+        "\n hamiltonian\n",
         hamiltonian,
     )
 
