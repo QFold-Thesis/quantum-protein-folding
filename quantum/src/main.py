@@ -7,7 +7,7 @@ from builder import HamiltonianBuilder
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from contact import ContactMap
 from distance import DistanceMap
-from interaction import MJInteraction
+from interaction import HPInteraction, MJInteraction  # noqa: F401
 from protein import Protein
 from utils.qubit_utils import remove_unused_qubits
 
@@ -21,6 +21,7 @@ def main() -> None:
     )
 
     mj_interaction = MJInteraction()
+    #hp_interaction = HPInteraction()  # noqa: ERA001
 
     contact_map = ContactMap(protein=protein)
 
@@ -28,7 +29,7 @@ def main() -> None:
 
     builder = HamiltonianBuilder(
         protein=protein,
-        mj=mj_interaction,
+        interaction=mj_interaction,
         distance_map=distance_map,
         contact_map=contact_map,
     )
