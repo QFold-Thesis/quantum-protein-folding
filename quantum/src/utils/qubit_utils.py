@@ -1,3 +1,9 @@
+"""
+Module providing tools to create and manipulate Pauli operators,
+manage main chain bead states, and prepare operators for qubit-based
+protein folding simulations.
+"""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -31,7 +37,9 @@ def build_identity_op(
 
 
 def build_turn_qubit(z_index: int, num_qubits: int) -> SparsePauliOp:
-    """Builds a turn qubit Pauli operator with Z at the specified index."""
+    """
+    Builds a turn qubit Pauli operator with Z at the specified index.
+    """
     z_operator: SparsePauliOp = SparsePauliOp.from_sparse_list(
         [("Z", [z_index], 1.0)], num_qubits=num_qubits
     )
@@ -42,6 +50,10 @@ def build_turn_qubit(z_index: int, num_qubits: int) -> SparsePauliOp:
 
 
 def build_pauli_z_operator(num_qubits: int, pauli_z_indices: set[int]) -> SparsePauliOp:
+    """
+    Builds a Pauli operator of a given size with Pauli Z operators on indicated positions and
+    identity operators on other positions.
+    """
     if not pauli_z_indices:
         return SparsePauliOp.from_list([("I" * num_qubits, 1.0)])
 
@@ -55,6 +67,9 @@ def build_pauli_z_operator(num_qubits: int, pauli_z_indices: set[int]) -> Sparse
 
 
 def convert_to_qubits(pauli_op: SparsePauliOp) -> SparsePauliOp:
+    """
+    Converts a Pauli operator to a qubit operator using the identity and normalization factor.
+    """
     if pauli_op.num_qubits is None:
         msg = "pauli_op.num_qubits is None, cannot convert to qubits."
         raise InvalidOperatorError(msg)
@@ -136,7 +151,11 @@ def _calc_updated_coeffs(
 def _preset_binary_vals(
     table_z: NDArray[np.bool], *, has_side_chain_second_bead: bool
 ) -> None:
+    """
+    Sets False for main bead indices in the Z table.
+    """
     main_beads_indices = MAIN_CHAIN_FIXED_POSITIONS.copy()
+
     if not has_side_chain_second_bead:
         main_beads_indices.append(MAIN_CHAIN_FIFTH_FIXED_POSITION)
 
@@ -145,11 +164,17 @@ def _preset_binary_vals(
 
 
 def _preset_single_binary_val(table_z: NDArray[np.bool], index: int) -> None:
+    """
+    Extends a Pauli operator with identity qubits to reach the target size.
+    """
     if index < len(table_z):
         table_z[index] = False
 
 
 def pad_to_n_qubits(op: SparsePauliOp, target: int) -> SparsePauliOp:
+    """
+    Extends a Pauli operator with identity qubits to reach the target size.
+    """
     if op.num_qubits is None:
         msg = "op.num_qubits is None, cannot pad operator."
         raise InvalidOperatorError(msg)

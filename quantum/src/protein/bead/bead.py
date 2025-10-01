@@ -18,7 +18,15 @@ logger = get_logger()
 
 
 class Bead(ABC):
+    """
+    An abstract class defining a bead of a peptide.
+    """
+
     def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:
+        """
+        Initializes a bead by setting its symbol, position, sublattice type,
+        and quantum turn qubits based on its location in the chain.
+        """
         self.symbol: str = symbol
         self.index: int = index
         self.turn_qubits: tuple[SparsePauliOp, ...] = ()
@@ -39,6 +47,13 @@ class Bead(ABC):
             )
 
     def _initialize_turn_qubits(self) -> None:
+        """
+        Initializes the quantum turn qubits associated with this bead based on the selected conformation encoding.
+
+        For each bead (except the last in the chain), the function builds a set of Pauli operators representing
+        directional turns in the protein structure. The number of initialized qubits depends on whether the
+        encoding is dense or sparse.
+        """
         if not self._has_turn_qubits:
             return
 
@@ -59,6 +74,12 @@ class Bead(ABC):
     def turn_funcs(
         self,
     ) -> None | tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp]:
+        """
+        Returns a tuple of Pauli operators representing turn functions for this bead.
+
+        Returns the tuple of Pauli turn operators (along axes 0, 1, 2, 3),
+        or `None` if the bead has no turn qubits.
+        """
         if not self.turn_qubits or not self._has_turn_qubits:
             return None
         return (self.turn_0(), self.turn_1(), self.turn_2(), self.turn_3())

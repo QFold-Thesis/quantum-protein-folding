@@ -6,8 +6,15 @@ if TYPE_CHECKING:
 
 
 class Chain(ABC):
+    """
+    Abstract base class for protein chains, defining shared behavior for all chain types.
+    """
+
     @abstractmethod
     def __init__(self, protein_sequence: str) -> None:
+        """
+        Initializes the chain with an empty list of beads.
+        """
         self.beads: list[Bead] = []
 
     def get_symbol_at(self, index: int) -> str:

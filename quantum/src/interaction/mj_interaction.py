@@ -34,6 +34,10 @@ class MJInteraction(Interaction):
         self,
         interaction_matrix_path: Path = MJ_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
+        """
+        Loads the MJ interaction matrix from a file and prepares a mapping of
+        residue-residue pairs to their contact energies.
+        """
         super().__init__(interaction_matrix_path)
 
         self._energy_pairs: dict[str, float] = self._prepare_mj_interaction_matrix(
@@ -43,6 +47,10 @@ class MJInteraction(Interaction):
     def _prepare_mj_interaction_matrix(
         self, mj_filepath: Path = MJ_INTERACTION_MATRIX_FILEPATH
     ) -> dict[str, float]:
+        """
+        Reads the MJ matrix file, records valid residue symbols, and builds a
+        dictionary of symmetric residue-residue contact energies.
+        """
         try:
             mj_matrix = np.loadtxt(mj_filepath, dtype=str)
 

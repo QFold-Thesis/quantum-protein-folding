@@ -1,3 +1,13 @@
+"""
+Contact map utilities for protein folding simulations.
+
+This module provides the `ContactMap` class that:
+
+- Initializes contact operators between beads of a protein's main chain,
+- Ensures minimum bond separation between beads to consider contacts,
+- Represents contacts as qubit operators (SparsePauliOp) suitable for quantum simulations.
+"""
+
 from collections import defaultdict
 
 from qiskit.quantum_info import SparsePauliOp
@@ -16,7 +26,16 @@ logger = get_logger()
 
 
 class ContactMap:
+    """
+    Represents a contact map for a protein's main chain.
+
+    Stores pairwise contact operators between beads, using Pauli operators
+    to encode whether contacts are present, respecting minimum bond distances
+    and sublattice constraints.
+    """
+
     def __init__(self, protein: Protein):
+        """Initializes the contact map for the given protein."""
         self.main_main_contacts: dict[int, dict[int, SparsePauliOp]] = defaultdict(
             lambda: defaultdict()
         )

@@ -1,3 +1,15 @@
+"""
+Distance map calculations for a protein's main chain.
+
+This module provides the ``DistanceMap`` class, which:
+
+- computes pairwise distances between beads in the main chain,
+- stores distances in a vectorized form for multiple axes,
+- applies qubit fixes to account for predefined bead states,
+- and maintains a dictionary of squared distances for downstream
+  quantum simulations of protein folding.
+"""
+
 from collections import defaultdict
 
 from qiskit.quantum_info import SparsePauliOp
@@ -15,6 +27,11 @@ logger = get_logger()
 
 class DistanceMap:
     def __init__(self, protein: Protein):
+        """
+        Initializes the distance map for the given protein's main chain,
+        setting up data structures to store distances along multiple axes
+        and computing initial pairwise distances.
+        """
         self._protein: Protein = protein
         self._main_chain_len: int = len(self._protein.main_chain)
 
@@ -78,10 +95,13 @@ class DistanceMap:
                 )
 
     def __getitem__(self, key: int) -> defaultdict[int, SparsePauliOp]:
+        """Returns the distance map entry for the given bead index."""
         return self._distance_map[key]
 
     def __setitem__(self, key: int, value: defaultdict[int, SparsePauliOp]) -> None:
+        """Sets the distance map entry for the given bead index."""
         self._distance_map[key] = value
 
     def __len__(self) -> int:
+        """Returns the number of beads in the distance map."""
         return len(self._distance_map)

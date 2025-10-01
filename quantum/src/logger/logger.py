@@ -4,6 +4,7 @@ from constants import GLOBAL_LOGGER_NAME, LOGGER_DEFAULT_LEVEL
 
 
 def get_logger(name: str = GLOBAL_LOGGER_NAME) -> logging.Logger:
+    """Returns a configured logger."""
     logger = logging.getLogger(name)
     if not logger.hasHandlers():
         handler = logging.StreamHandler()

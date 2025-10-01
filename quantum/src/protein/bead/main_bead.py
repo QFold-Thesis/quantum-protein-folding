@@ -7,10 +7,20 @@ from protein.bead import Bead
 
 
 class MainBead(Bead):
+    """
+    Represents a main bead in the protein's backbone.
+    """
+
     def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:
+        """
+        Initializes the main bead and sets up its turn qubits.
+        """
         super().__init__(symbol=symbol, index=index, parent_chain_len=parent_chain_len)
 
     def turn_0(self) -> SparsePauliOp:
+        """
+        Returns the Pauli operator for the turn in direction 0.
+        """
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
             return self.turn_qubits[0]
         if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
@@ -18,6 +28,9 @@ class MainBead(Bead):
         raise ConformationEncodingError
 
     def turn_1(self) -> SparsePauliOp:
+        """
+        Returns the Pauli operator for the turn in direction 1.
+        """
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
             return self.turn_qubits[1]
         if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
@@ -25,6 +38,9 @@ class MainBead(Bead):
         raise ConformationEncodingError
 
     def turn_2(self) -> SparsePauliOp:
+        """
+        Returns the Pauli operator for the turn in direction 2.
+        """
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
             return self.turn_qubits[2]
         if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
@@ -32,6 +48,9 @@ class MainBead(Bead):
         raise ConformationEncodingError
 
     def turn_3(self) -> SparsePauliOp:
+        """
+        Returns the Pauli operator for the turn in direction 3.
+        """
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
             return self.turn_qubits[3]
         if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
@@ -39,20 +58,32 @@ class MainBead(Bead):
         raise ConformationEncodingError
 
     def _dense_turn_fun_0(self) -> SparsePauliOp:
+        """
+        Direction 0 operator for dense encoding.
+        """
         return (
             (self._full_identity - self.turn_qubits[0])
             @ (self._full_identity - self.turn_qubits[1])
         ).simplify()
 
     def _dense_turn_fun_1(self) -> SparsePauliOp:
+        """
+        Direction 1 operator for dense encoding.
+        """
         return (
             self.turn_qubits[1] @ (self.turn_qubits[1] - self.turn_qubits[0])
         ).simplify()
 
     def _dense_turn_fun_2(self) -> SparsePauliOp:
+        """
+        Direction 2 operator for dense encoding.
+        """
         return (
             self.turn_qubits[0] @ (self.turn_qubits[0] - self.turn_qubits[1])
         ).simplify()
 
     def _dense_turn_fun_3(self) -> SparsePauliOp:
+        """
+        Direction 3 operator for dense encoding.
+        """
         return (self.turn_qubits[0] @ self.turn_qubits[1]).simplify()
