@@ -32,4 +32,8 @@ BOUNDING_CONSTANT: int = 7
 
 MJ_ENERGY_MULTIPLIER: float = 0.1
 
+HP_HH_CONTACT_ENERGY: float = -1.0
+
+HP_NON_HH_CONTACT_ENERGY: float = 0.0
+
 GLOBAL_LOGGER_NAME: str = "global_logger"

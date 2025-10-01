@@ -33,7 +33,11 @@ from pathlib import Path
 
 import numpy as np
 
-from constants import HP_INTERACTION_MATRIX_FILEPATH
+from constants import (
+    HP_HH_CONTACT_ENERGY,
+    HP_INTERACTION_MATRIX_FILEPATH,
+    HP_NON_HH_CONTACT_ENERGY,
+)
 from interaction.interaction import Interaction
 from logger import get_logger
 
@@ -61,11 +65,11 @@ class HPInteraction(Interaction):
         """
         hydros: list[str] = []
         try:
-            mj_matrix = np.loadtxt(hp_filepath, dtype=str)
-            for row in range(1, np.shape(mj_matrix)[0]):
-                for col in range(1, np.shape(mj_matrix)[1]):
-                    if mj_matrix[row, col] == "1":
-                        hydros.extend(mj_matrix[0, col])
+            hp_matrix = np.loadtxt(hp_filepath, dtype=str)
+            for row in range(1, np.shape(hp_matrix)[0]):
+                for col in range(1, np.shape(hp_matrix)[1]):
+                    if hp_matrix[row, col] == "1":
+                        hydros.extend(hp_matrix[0, col])
         except Exception:
             logger.exception("Error loading HP matrix")
             raise
@@ -82,14 +86,14 @@ class HPInteraction(Interaction):
         """
         Return the HP model pair energy.
 
-        Basic rule (modifiable): returns -1.0 if both residues are hydrophobic,
-        else 0.0.
+        Basic rule: returns HP_HH_CONTACT_ENERGY if both residues are hydrophobic,
+        else HP_NON_HH_CONTACT_ENERGY.
         """
         try:
             return (
-                -1.0
+                HP_HH_CONTACT_ENERGY
                 if (self._is_hydrophobic(symbol_i) and self._is_hydrophobic(symbol_j))
-                else 0.0
+                else HP_NON_HH_CONTACT_ENERGY
             )
         except Exception:
             logger.exception(
