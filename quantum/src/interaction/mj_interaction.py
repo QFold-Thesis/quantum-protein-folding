@@ -22,9 +22,7 @@ from pathlib import Path
 import numpy as np
 
 from constants import MJ_INTERACTION_MATRIX_FILEPATH
-from exceptions import InvalidAminoAcidError
 from logger import get_logger
-from protein import Protein
 
 logger = get_logger()
 
@@ -32,7 +30,6 @@ logger = get_logger()
 class MJInteraction:
     def __init__(
         self,
-        protein: Protein,
         interaction_matrix_path: Path = MJ_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
         self._interaction_matrix_path: Path = interaction_matrix_path
@@ -42,10 +39,6 @@ class MJInteraction:
         self.energy_pairs: dict[str, float] = self._prepare_mj_interaction_matrix(
             self._interaction_matrix_path
         )
-
-        protein_sequence: str = str(protein.main_chain) + str(protein.side_chain)
-
-        self._check_if_valid_sequence(protein_sequence)
 
     def _prepare_mj_interaction_matrix(
         self, mj_filepath: Path = MJ_INTERACTION_MATRIX_FILEPATH
@@ -76,10 +69,14 @@ class MJInteraction:
             )
             return energy_pairs
 
-    def _check_if_valid_sequence(self, protein_sequence: str) -> bool:
-        for symbol in protein_sequence:
-            if symbol not in self.valid_symbols:
-                msg = f"Invalid amino acid symbol '{symbol}' found in the protein sequence."
-                logger.error(msg)
-                raise InvalidAminoAcidError(msg)
-        return True
+    def get_energy(self, symbol_i: str, symbol_j: str) -> float:
+        """
+        Return MJ interaction energy for a pair of residue symbols.
+
+        """
+        key = f"{symbol_i}{symbol_j}"
+        try:
+            return self.energy_pairs[key]
+        except KeyError:
+            logger.exception("Missing MJ energy for pair '%s'", key)
+            raise

@@ -135,3 +135,44 @@ def _preset_binary_vals(
 def _preset_single_binary_val(table_z: np.ndarray, index: int) -> None:
     if index < len(table_z):
         table_z[index] = False
+
+
+def pad_to_n_qubits(op: SparsePauliOp, target: int) -> SparsePauliOp:
+    if op.num_qubits == target:
+        return op
+    pad = target - op.num_qubits
+    id_pad = build_full_identity(pad)
+    return id_pad ^ op
+
+
+def find_unused_qubits(op: SparsePauliOp) -> list[int]:
+    """
+    Return indices of qubits that are identity (I) in every term of the operator.
+    """
+    if op.num_qubits == 0 or len(op.paulis) == 0:
+        return []
+    used_mask = np.any(op.paulis.z, axis=0)
+    return [i for i, used in enumerate(used_mask) if not used]
+
+
+def remove_unused_qubits(
+    op: SparsePauliOp,
+) -> SparsePauliOp:
+    """
+    Remove qubits that are identity in all terms.
+
+    """
+    unused = find_unused_qubits(op)
+    if not unused:
+        return op.copy()
+
+    mask = np.ones(op.num_qubits, dtype=bool)
+    mask[unused] = False
+
+    z_full = op.paulis.z
+    x_full = op.paulis.x
+    new_paulis: list[Pauli] = [
+        Pauli((z_full[k][mask], x_full[k][mask])) for k in range(len(op.paulis))
+    ]
+
+    return SparsePauliOp(new_paulis, coeffs=op.coeffs).simplify()

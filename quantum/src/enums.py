@@ -13,3 +13,11 @@ class SubLattice(IntEnum):
 
     A = 0
     B = 1
+
+
+class Penalties(IntEnum):
+    """Enum representing penalty types for protein folding constraints."""
+
+    OVERLAP_PENALTY = 10
+    CHIRALITY_PENALTY = 10
+    BACK_PENALTY = 10
