@@ -1,3 +1,15 @@
+"""
+Distance map calculations for a protein's main chain.
+
+This module provides the ``DistanceMap`` class, which:
+
+- computes pairwise distances between beads in the main chain,
+- stores distances in a vectorized form for multiple axes,
+- applies qubit fixes to account for predefined bead states,
+- and maintains a dictionary of squared distances for downstream
+  quantum simulations of protein folding.
+"""
+
 from collections import defaultdict
 
 from constants import DIST_VECTOR_AXES
@@ -10,6 +22,11 @@ logger = get_logger()
 
 class DistanceMap:
     def __init__(self, protein: Protein):
+        """
+        Initializes the distance map for the given protein's main chain,
+        setting up data structures to store distances along multiple axes
+        and computing initial pairwise distances.
+        """
         self.protein = protein
         self.distance_map = defaultdict(lambda: defaultdict(int))
         self._distances_vector: list[defaultdict] = [
@@ -18,6 +35,11 @@ class DistanceMap:
         self._calc_distances_main_chain()
 
     def _calc_distances_main_chain(self):
+        """
+        Computes the pairwise distances between all beads in the main chain.
+        Distances are accumulated over multiple axes, squared, and adjusted
+        using fixed qubit operators where applicable.
+        """
         logger.debug("Creating distance map for main chain")
 
         main_chain_len = len(self.protein.main_chain)
@@ -60,10 +82,13 @@ class DistanceMap:
         logger.debug("Distance map initialized successfully")
 
     def __getitem__(self, key):
+        """Returns the distance map entry for the given bead index."""
         return self.distance_map[key]
 
     def __setitem__(self, key, value):
+        """Sets the distance map entry for the given bead index."""
         self.distance_map[key] = value
 
     def __len__(self):
+        """Returns the number of beads in the distance map."""
         return len(self.distance_map)

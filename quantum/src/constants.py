@@ -1,3 +1,7 @@
+"""
+Definitions of constants used throughout the protein folding simulations.
+"""
+
 from pathlib import Path
 
 from enums import ConformationEncoding
