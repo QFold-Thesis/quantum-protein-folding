@@ -8,6 +8,10 @@ MJ_INTERACTION_MATRIX_FILEPATH: Path = (
     ROOT_PROJECT_PATH / "src" / "resources" / "mj_matrix.txt"
 )
 
+HP_INTERACTION_MATRIX_FILEPATH: Path = (
+    ROOT_PROJECT_PATH / "src" / "resources" / "hp_matrix.txt"
+)
+
 CONFORMATION_ENCODING: ConformationEncoding = ConformationEncoding.DENSE
 
 

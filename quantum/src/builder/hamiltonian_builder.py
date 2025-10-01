@@ -6,7 +6,7 @@ from constants import BOUNDING_CONSTANT, MJ_ENERGY_MULTIPLIER
 from contact.contact_map import ContactMap
 from distance.distance_map import DistanceMap
 from enums import Penalties
-from interaction.mj_interaction import MJInteraction
+from interaction.interaction import Interaction
 from logger import get_logger
 from protein import Protein
 from protein.bead import Bead
@@ -22,12 +22,12 @@ class HamiltonianBuilder:
     def __init__(
         self,
         protein: Protein,
-        mj: MJInteraction,
+        interaction: Interaction,
         distance_map: DistanceMap,
         contact_map: ContactMap,
     ):
         self.protein: Protein = protein
-        self.mj: MJInteraction = mj
+        self.interaction: Interaction = interaction
         self.distance_map: DistanceMap = distance_map
         self.contact_map: ContactMap = contact_map
 
@@ -126,7 +126,7 @@ class HamiltonianBuilder:
         )
         symbol_lower: str = self.protein.main_chain.get_symbol_at(lower_bead_idx)
         symbol_upper: str = self.protein.main_chain.get_symbol_at(upper_bead_idx)
-        energy: float = self.mj.get_energy(symbol_lower, symbol_upper)
+        energy: float = self.interaction.get_energy(symbol_lower, symbol_upper)
         x: SparsePauliOp = self.distance_map[lower_bead_idx][upper_bead_idx]
         expression: SparsePauliOp = lambda_0 * (
             x - build_full_identity(x.num_qubits)
@@ -141,7 +141,7 @@ class HamiltonianBuilder:
     ) -> SparsePauliOp:
         symbol_lower: str = self.protein.main_chain.get_symbol_at(lower_bead_idx)
         symbol_upper: str = self.protein.main_chain.get_symbol_at(upper_bead_idx)
-        energy: float = self.mj.get_energy(symbol_lower, symbol_upper)
+        energy: float = self.interaction.get_energy(symbol_lower, symbol_upper)
         x: SparsePauliOp = self.distance_map[lower_bead_idx][upper_bead_idx]
         expression: SparsePauliOp = lambda_1 * (
             2 * build_full_identity(x.num_qubits) - x
