@@ -1,3 +1,8 @@
+from qiskit.circuit.library import RealAmplitudes
+from qiskit.primitives import StatevectorSampler as Sampler
+from qiskit_algorithms import SamplingVQE
+from qiskit_algorithms.optimizers import COBYLA
+
 from builder import HamiltonianBuilder
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from contact import ContactMap
@@ -33,11 +38,6 @@ def main() -> None:
         "\n hamiltonian\n",
         hamiltonian,
     )
-
-    from qiskit.circuit.library import RealAmplitudes
-    from qiskit.primitives import StatevectorSampler as Sampler
-    from qiskit_algorithms import SamplingVQE
-    from qiskit_algorithms.optimizers import COBYLA
 
     optimizer = COBYLA(maxiter=50)
 
