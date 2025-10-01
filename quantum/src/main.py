@@ -46,22 +46,22 @@ def main() -> None:
     counts = []
     values = []
 
-    def store_intermediate_result(eval_count, parameters, mean, std):
+    def store_intermediate_result(eval_count, parameters, mean, std):  # noqa: ARG001
         counts.append(eval_count)
         values.append(mean)
-
 
     vqe = SamplingVQE(
         sampler=Sampler(),
         ansatz=ansatz,
         optimizer=optimizer,
         aggregation=0.1,
-        callback=store_intermediate_result
+        callback=store_intermediate_result,
     )
 
     compressed_h = remove_unused_qubits(hamiltonian)
     raw_result = vqe.compute_minimum_eigenvalue(compressed_h)
     print(raw_result)  # noqa: T201
+
 
 if __name__ == "__main__":
     main()
