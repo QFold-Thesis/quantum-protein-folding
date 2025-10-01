@@ -4,6 +4,7 @@ from contact import ContactMap
 from distance import DistanceMap
 from interaction import MJInteraction
 from protein import Protein
+from utils.qubit_utils import remove_unused_qubits
 
 
 def main() -> None:
@@ -33,6 +34,34 @@ def main() -> None:
         hamiltonian,
     )
 
+    from qiskit.circuit.library import RealAmplitudes
+    from qiskit.primitives import StatevectorSampler as Sampler
+    from qiskit_algorithms import SamplingVQE
+    from qiskit_algorithms.optimizers import COBYLA
+
+    optimizer = COBYLA(maxiter=50)
+
+    ansatz = RealAmplitudes(reps=1)
+
+    counts = []
+    values = []
+
+    def store_intermediate_result(eval_count, parameters, mean, std):
+        counts.append(eval_count)
+        values.append(mean)
+
+
+    vqe = SamplingVQE(
+        sampler=Sampler(),
+        ansatz=ansatz,
+        optimizer=optimizer,
+        aggregation=0.1,
+        callback=store_intermediate_result
+    )
+
+    compressed_h = remove_unused_qubits(hamiltonian)
+    raw_result = vqe.compute_minimum_eigenvalue(compressed_h)
+    print(raw_result)  # noqa: T201
 
 if __name__ == "__main__":
     main()
