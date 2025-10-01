@@ -21,7 +21,7 @@ def main() -> None:
     )
 
     mj_interaction = MJInteraction()
-    #hp_interaction = HPInteraction()  # noqa: ERA001
+    # hp_interaction = HPInteraction()  # noqa: ERA001
 
     contact_map = ContactMap(protein=protein)
 
