@@ -1,3 +1,5 @@
+from typing import Any
+
 from qiskit.circuit.library import real_amplitudes
 from qiskit.primitives import StatevectorSampler as Sampler
 from qiskit.quantum_info import SparsePauliOp
@@ -22,7 +24,7 @@ def setup_folding_system(main_chain: str, side_chain: str) -> tuple[Protein, MJI
         main_protein_sequence=main_chain, side_protein_sequence=side_chain
     )
     mj_interaction = MJInteraction()
-    hp_interaction = HPInteraction()  # noqa: F841
+    _ = HPInteraction()
 
     contact_map = ContactMap(protein=protein)
     distance_map = DistanceMap(protein=protein)
@@ -53,13 +55,13 @@ def build_and_compress_hamiltonian(
     return hamiltonian, compressed_h
 
 
-def setup_vqe_optimization(compressed_h: SparsePauliOp) -> tuple[SparsePauliOp, list, list]:
+def setup_vqe_optimization(compressed_h: SparsePauliOp) -> tuple[SamplingVQE, list[Any], list[Any]]:
     """Setup VQE optimization components."""
     optimizer = COBYLA(maxiter=50)
-    ansatz = real_amplitudes(num_qubits=compressed_h.num_qubits, reps=1)
+    ansatz = real_amplitudes(num_qubits=compressed_h.num_qubits, reps=1) # pyright: ignore[reportArgumentType]
 
-    counts = []
-    values = []
+    counts: list[Any] = []
+    values: list[Any] = []
 
     def _store_intermediate_result(eval_count, parameters, mean, std):  # noqa: ARG001
         counts.append(eval_count)
@@ -93,7 +95,7 @@ def main() -> None:
 
     logger.debug("Hamiltonian:\n%s", hamiltonian)
 
-    vqe, counts, values = setup_vqe_optimization(compressed_h)
+    vqe, _, _ = setup_vqe_optimization(compressed_h)
 
     logger.debug("Starting VQE optimization...")
     raw_result = vqe.compute_minimum_eigenvalue(compressed_h)

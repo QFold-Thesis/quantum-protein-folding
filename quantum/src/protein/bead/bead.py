@@ -21,7 +21,7 @@ class Bead(ABC):
     def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:
         self.symbol: str = symbol
         self.index: int = index
-        self.turn_qubits: tuple[SparsePauliOp, ...] | None = None
+        self.turn_qubits: tuple[SparsePauliOp, ...] = ()
         self.sublattice: SubLattice = SubLattice.B if index % 2 == 1 else SubLattice.A
 
         self._num_turn_qubits: int = (parent_chain_len - 1) * QUBITS_PER_TURN
@@ -59,7 +59,7 @@ class Bead(ABC):
     def turn_funcs(
         self,
     ) -> None | tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp]:
-        if self.turn_qubits is None:
+        if len(self.turn_qubits) == 0 or not self._has_turn_qubits:
             return None
         return (self.turn_0(), self.turn_1(), self.turn_2(), self.turn_3())
 
