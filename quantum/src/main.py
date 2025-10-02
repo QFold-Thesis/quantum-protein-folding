@@ -1,4 +1,4 @@
-from qiskit.circuit.library import RealAmplitudes
+from qiskit.circuit.library import real_amplitudes
 from qiskit.primitives import StatevectorSampler as Sampler
 from qiskit_algorithms import SamplingVQE
 from qiskit_algorithms.optimizers import COBYLA
@@ -27,27 +27,35 @@ def main() -> None:
 
     distance_map = DistanceMap(protein=protein)
 
-    builder = HamiltonianBuilder(
+    h_builder = HamiltonianBuilder(
         protein=protein,
         interaction=mj_interaction,
         distance_map=distance_map,
         contact_map=contact_map,
     )
-    hamiltonian = builder.sum_hamiltonians()
+
+    hamiltonian = h_builder.sum_hamiltonians()
     print(  # noqa: T201
         40 * "-",
-        "\n hamiltonian\n",
-        hamiltonian,
+        "\n Original hamiltonian qubits:",
+        hamiltonian.num_qubits,
+    )
+
+    compressed_h = remove_unused_qubits(hamiltonian)
+    print(  # noqa: T201
+        "\n Compressed hamiltonian qubits:",
+        compressed_h.num_qubits,
+        "\n",
+        40 * "-",
     )
 
     optimizer = COBYLA(maxiter=50)
-
-    ansatz = RealAmplitudes(reps=1)
+    ansatz = real_amplitudes(num_qubits=compressed_h.num_qubits, reps=1)
 
     counts = []
     values = []
 
-    def store_intermediate_result(eval_count, parameters, mean, std):  # noqa: ARG001
+    def _store_intermediate_result(eval_count, parameters, mean, std):  # noqa: ARG001
         counts.append(eval_count)
         values.append(mean)
 
@@ -56,10 +64,9 @@ def main() -> None:
         ansatz=ansatz,
         optimizer=optimizer,
         aggregation=0.1,
-        callback=store_intermediate_result,
+        callback=_store_intermediate_result,
     )
 
-    compressed_h = remove_unused_qubits(hamiltonian)
     raw_result = vqe.compute_minimum_eigenvalue(compressed_h)
     print(raw_result)  # noqa: T201
 
