@@ -1,5 +1,7 @@
 from collections import defaultdict
 
+from qiskit.quantum_info import SparsePauliOp  # pyright: ignore[reportMissingTypeStubs]
+
 from constants import DIST_VECTOR_AXES
 from logger import get_logger
 from protein import Protein
@@ -11,10 +13,10 @@ logger = get_logger()
 class DistanceMap:
     def __init__(self, protein: Protein):
         self._protein = protein
-        self.distance_map = defaultdict(lambda: defaultdict(int))
+        self.distance_map = defaultdict(lambda: defaultdict(SparsePauliOp))
         self._calc_distances_main_chain()
 
-    def _calc_distances_main_chain(self):
+    def _calc_distances_main_chain(self) -> None:
         logger.debug("Creating distance map for main chain")
 
         main_chain_len = len(self._protein.main_chain)
@@ -51,11 +53,11 @@ class DistanceMap:
                 )
         logger.debug("Distance map initialized successfully")
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: int) -> dict[int, SparsePauliOp]:
         return self.distance_map[key]
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: int, value: dict[int, SparsePauliOp]) -> None:
         self.distance_map[key] = value
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.distance_map)
