@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from enums import ConformationEncoding
@@ -38,6 +39,8 @@ HP_NON_HH_CONTACT_ENERGY: float = 0.0
 
 GLOBAL_LOGGER_NAME: str = "global_logger"
 
-MIN_DISTANCE_BETWEEN_CONTACTS = (
+LOGGER_DEFAULT_LEVEL: int = logging.DEBUG
+
+MIN_DISTANCE_BETWEEN_CONTACTS: int = (
     5  # Minimum bonds between two beads to consider a contact
 )
