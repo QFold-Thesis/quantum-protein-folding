@@ -10,7 +10,7 @@ from logger import get_logger
 from utils.qubit_utils import build_full_identity, build_turn_qubit
 
 if TYPE_CHECKING:
-    from qiskit.quantum_info import (
+    from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
         SparsePauliOp,
     )
 
@@ -21,7 +21,7 @@ class Bead(ABC):
     def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:
         self.symbol: str = symbol
         self.index: int = index
-        self.turn_qubits: tuple[SparsePauliOp, ...] = ()
+        self.turn_qubits: tuple[SparsePauliOp, ...] | None = None
         self.sublattice: SubLattice = SubLattice.B if index % 2 == 1 else SubLattice.A
 
         self._num_turn_qubits: int = (parent_chain_len - 1) * QUBITS_PER_TURN
