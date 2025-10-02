@@ -2,6 +2,7 @@ from collections import defaultdict
 
 from qiskit.quantum_info import SparsePauliOp  # pyright: ignore[reportMissingTypeStubs]
 
+from constants import MIN_DISTANCE_BETWEEN_CONTACTS
 from logger import get_logger
 from protein import Protein
 from protein.bead import Bead
@@ -12,11 +13,6 @@ from utils.qubit_utils import (
 )
 
 logger = get_logger()
-
-
-MIN_DISTANCE_BETWEEN_CONTACTS = (
-    5  # Minimum bonds between two beads to consider a contact
-)
 
 
 class ContactMap:
