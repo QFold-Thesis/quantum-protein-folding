@@ -1,5 +1,6 @@
 from qiskit.circuit.library import real_amplitudes
 from qiskit.primitives import StatevectorSampler as Sampler
+from qiskit.quantum_info import SparsePauliOp
 from qiskit_algorithms import SamplingVQE
 from qiskit_algorithms.optimizers import COBYLA
 
@@ -34,7 +35,7 @@ def build_and_compress_hamiltonian(
     interaction: Interaction,
     contact_map: ContactMap,
     distance_map: DistanceMap
-) -> tuple[object, object]:
+) -> tuple[SparsePauliOp, SparsePauliOp]:
     """Build and compress the Hamiltonian."""
     h_builder = HamiltonianBuilder(
         protein=protein,
@@ -52,7 +53,7 @@ def build_and_compress_hamiltonian(
     return hamiltonian, compressed_h
 
 
-def setup_vqe_optimization(compressed_h: object) -> tuple[object, list, list]:
+def setup_vqe_optimization(compressed_h: SparsePauliOp) -> tuple[SparsePauliOp, list, list]:
     """Setup VQE optimization components."""
     optimizer = COBYLA(maxiter=50)
     ansatz = real_amplitudes(num_qubits=compressed_h.num_qubits, reps=1)
@@ -87,6 +88,8 @@ def main() -> None:
         contact_map=contact_map,
         distance_map=distance_map
     )
+
+    logger.debug("Hamiltonian:\n%s", hamiltonian)
 
     vqe, counts, values = setup_vqe_optimization(compressed_h)
 
