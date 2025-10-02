@@ -89,6 +89,8 @@ def main() -> None:
         distance_map=distance_map
     )
 
+    logger.debug("Compressed hamiltonian:\n%s", compressed_h)
+
     logger.debug("Hamiltonian:\n%s", hamiltonian)
 
     vqe, counts, values = setup_vqe_optimization(compressed_h)
