@@ -12,9 +12,6 @@ class DistanceMap:
     def __init__(self, protein: Protein):
         self._protein = protein
         self.distance_map = defaultdict(lambda: defaultdict(int))
-        self._distances_vector: list[defaultdict] = [
-            defaultdict(lambda: defaultdict(int)) for _ in range(DIST_VECTOR_AXES)
-        ]
         self._calc_distances_main_chain()
 
     def _calc_distances_main_chain(self):
@@ -29,25 +26,20 @@ class DistanceMap:
                     lower_bead_idx,
                     upper_bead_idx,
                 )
+
+                axes_vector: list[int] = [0] * DIST_VECTOR_AXES
+
                 for k in range(lower_bead_idx, upper_bead_idx):
                     indic_funcs = self._protein.main_chain[k].turn_funcs()
                     sub_lattice_sign = (-1) ** k
 
-                    for indic_fun_x, dist_vector in zip(
-                        indic_funcs, self._distances_vector
-                    ):
-                        dist_vector[lower_bead_idx][upper_bead_idx] += (
-                            sub_lattice_sign * indic_fun_x
-                        )
+                    for axis_idx, indic_fun_x in enumerate(indic_funcs):
+                        axes_vector[axis_idx] += sub_lattice_sign * indic_fun_x
 
-                for dist_vector in self._distances_vector:
-                    dist_vector[lower_bead_idx][upper_bead_idx] = fix_qubits(
-                        dist_vector[lower_bead_idx][upper_bead_idx]
-                    )
-
-                for dist_vector in self._distances_vector:
+                for axis_idx in range(len(axes_vector)):
+                    axes_vector[axis_idx] = fix_qubits(axes_vector[axis_idx])
                     self.distance_map[lower_bead_idx][upper_bead_idx] += (
-                        dist_vector[lower_bead_idx][upper_bead_idx] ** 2
+                        axes_vector[axis_idx] ** 2
                     )
 
                 self.distance_map[lower_bead_idx][upper_bead_idx] = fix_qubits(
