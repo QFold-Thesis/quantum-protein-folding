@@ -42,7 +42,7 @@ class ContactMap:
         )
 
         try:
-            self.initialize_contact_map()
+            self._initialize_contact_map()
         except Exception:
             logger.exception("Error in initializing contact map")
             raise
@@ -52,7 +52,7 @@ class ContactMap:
                 f"Contact map initialized successfully. Contacts detected: {self._contacts_detected}"
             )
 
-    def initialize_contact_map(self):
+    def _initialize_contact_map(self):
         """Initializes all contact maps to empty dictionaries."""
         main_chain_length: int = len(self._protein.main_chain)
 
