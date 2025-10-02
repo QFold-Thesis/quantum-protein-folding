@@ -7,6 +7,8 @@ from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
 )
 
 from constants import (
+    MAIN_CHAIN_FIFTH_FIXED_POSITION,
+    MAIN_CHAIN_FIXED_POSITIONS,
     NORM_FACTOR,
     SIGN_FLIP_SECOND_QUBIT_INDEX,
     SIGN_FLIP_SIXTH_QUBIT_INDEX,
@@ -125,9 +127,10 @@ def _calc_updated_coeffs(
 def _preset_binary_vals(
     table_z: np.ndarray, *, has_side_chain_second_bead: bool
 ) -> None:
-    main_beads_indices = [0, 1, 2, 3]
+    main_beads_indices = MAIN_CHAIN_FIXED_POSITIONS.copy()
     if not has_side_chain_second_bead:
-        main_beads_indices.append(5)
+        main_beads_indices.append(MAIN_CHAIN_FIFTH_FIXED_POSITION)
+
     for index in main_beads_indices:
         _preset_single_binary_val(table_z, index)
 

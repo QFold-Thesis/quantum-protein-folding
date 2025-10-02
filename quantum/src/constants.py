@@ -44,3 +44,6 @@ LOGGER_DEFAULT_LEVEL: int = logging.DEBUG
 MIN_DISTANCE_BETWEEN_CONTACTS: int = (
     5  # Minimum bonds between two beads to consider a contact
 )
+
+MAIN_CHAIN_FIXED_POSITIONS: list[int] = [0, 1, 2, 3, 5]
+MAIN_CHAIN_FIFTH_FIXED_POSITION: int = 5
