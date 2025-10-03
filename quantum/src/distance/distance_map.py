@@ -24,18 +24,19 @@ class DistanceMap:
             )
         )
 
-        self.distances_detected: int = 0
+        self._main_chain_distances_detected: int = 0
 
-        self._calc_distances_main_chain()
+        try:
+            self._calc_distances_main_chain()
+        except Exception as e:
+            logger.exception(f"Error occurred while calculating distances for main_chain: {e}")
+            raise e
+        else:
+            logger.info("Distance map for main_chain initialized successfully.")
 
     def _calc_distances_main_chain(self) -> None:
-        logger.debug("Creating distance map for main chain")
-
         for lower_bead_idx in range(self._main_chain_len):
             for upper_bead_idx in range(lower_bead_idx + 1, self._main_chain_len):
-                logger.debug(
-                    f"Started calculating distance for main_chain_{lower_bead_idx} -> main_chain_{upper_bead_idx}"
-                )
 
                 axes_vector: list[SparsePauliOp] = [
                     create_empty_sparse_pauli_op(self._pauli_op_len)
@@ -45,7 +46,7 @@ class DistanceMap:
                 for k in range(lower_bead_idx, upper_bead_idx):
                     indic_funcs = self._protein.main_chain[k].turn_funcs()
                     if indic_funcs is None:
-                        logger.info("No turn functions for bead %s, skipping...", k)
+                        logger.debug(f"No turn functions for bead {k}, skipping calculating distance...")
                         continue
 
                     sub_lattice_sign: int = (-1) ** k
@@ -62,12 +63,11 @@ class DistanceMap:
                 self._distance_map[lower_bead_idx][upper_bead_idx] = fix_qubits(
                     self._distance_map[lower_bead_idx][upper_bead_idx]
                 )
-                self.distances_detected += 1
+                self._main_chain_distances_detected += 1
 
-                logger.info(
-                    f"Calculated distance: main_chain_{lower_bead_idx} -> main_chain_{upper_bead_idx}: {self._distance_map[lower_bead_idx][upper_bead_idx]}"
+                logger.debug(
+                    f"Calculated distance for [main_chain_{lower_bead_idx}] -> [main_chain_{upper_bead_idx}]"
                 )
-        logger.info("Distance map initialized successfully")
 
     def __getitem__(self, key: int) -> defaultdict[int, SparsePauliOp]:
         return self._distance_map[key]

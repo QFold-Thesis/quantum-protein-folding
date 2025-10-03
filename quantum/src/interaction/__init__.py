@@ -1,5 +1,5 @@
-from .hp_interaction import HPInteraction
 from .interaction import Interaction
+from .hp_interaction import HPInteraction
 from .mj_interaction import MJInteraction
 
-__all__ = ["HPInteraction", "Interaction", "MJInteraction"]
+__all__ = ["Interaction", "HPInteraction", "MJInteraction"]
