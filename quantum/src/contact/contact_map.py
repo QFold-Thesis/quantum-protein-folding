@@ -1,7 +1,8 @@
 from collections import defaultdict
 
-from qiskit.quantum_info import SparsePauliOp  # pyright: ignore[reportMissingTypeStubs]
+from qiskit.quantum_info import SparsePauliOp
 
+from constants import MIN_DISTANCE_BETWEEN_CONTACTS
 from logger import get_logger
 from protein import Protein
 from protein.bead import Bead
@@ -12,11 +13,6 @@ from utils.qubit_utils import (
 )
 
 logger = get_logger()
-
-
-MIN_DISTANCE_BETWEEN_CONTACTS = (
-    5  # Minimum bonds between two beads to consider a contact
-)
 
 
 class ContactMap:
@@ -37,7 +33,7 @@ class ContactMap:
         # )
         """
 
-        self._contacts_detected: int = 0
+        self.contacts_detected: int = 0
         self._protein: Protein = protein
 
         self._num_contact_qubits: int = pow(len(self._protein.main_chain) - 1, 2)
@@ -46,17 +42,17 @@ class ContactMap:
         )
 
         try:
-            self.initialize_contact_map()
+            self._initialize_contact_map()
         except Exception:
             logger.exception("Error in initializing contact map")
             raise
 
         else:
             logger.debug(
-                f"Contact map initialized successfully. Contacts detected: {self._contacts_detected}"
+                f"Contact map initialized successfully. Contacts detected: {self.contacts_detected}"
             )
 
-    def initialize_contact_map(self):
+    def _initialize_contact_map(self):
         """Initializes all contact maps to empty dictionaries."""
         main_chain_length: int = len(self._protein.main_chain)
 
@@ -81,7 +77,7 @@ class ContactMap:
                 self.main_main_contacts[lower_bead.index][upper_bead.index] = (
                     contact_operator
                 )
-                self._contacts_detected += 1
+                self.contacts_detected += 1
 
     def _create_main_main_contact(
         self, upper_bead: Bead, lower_bead: Bead
@@ -96,6 +92,6 @@ class ContactMap:
         )
 
         logger.debug(
-            f"Created main-main contact between beads {upper_bead.index} and {lower_bead.index} | Z index: {z_op_index} | Num qubits: {self._num_contact_qubits}"
+            f"Created main-main contact between beads main_chain_{upper_bead.index} -> main_chain_{lower_bead.index} | Z index: {z_op_index} | Num qubits: {self._num_contact_qubits}"
         )
         return convert_to_qubits(contact_operator)

@@ -1,16 +1,23 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import numpy as np
-from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
+from qiskit.quantum_info import (
     Pauli,
     SparsePauliOp,
 )
 
 from constants import (
+    MAIN_CHAIN_FIFTH_FIXED_POSITION,
+    MAIN_CHAIN_FIXED_POSITIONS,
     NORM_FACTOR,
     SIGN_FLIP_SECOND_QUBIT_INDEX,
     SIGN_FLIP_SIXTH_QUBIT_INDEX,
 )
+
+if TYPE_CHECKING:
+    from numpy.typing import NDArray
 
 
 def build_full_identity(num_qubits: int) -> SparsePauliOp:
@@ -44,27 +51,27 @@ def build_pauli_z_operator(num_qubits: int, pauli_z_indices: set[int]) -> Sparse
 
 
 def convert_to_qubits(pauli_op: SparsePauliOp) -> SparsePauliOp:
-    num_qubits: int = int(pauli_op.num_qubits)  # pyright: ignore[reportArgumentType]
+    if pauli_op.num_qubits is None:
+        msg = "pauli_op.num_qubits is None, cannot convert to qubits."
+        raise ValueError(msg)
+
+    num_qubits: int = int(pauli_op.num_qubits)
     full_id: SparsePauliOp = SparsePauliOp.from_list([("I" * num_qubits, 1.0)])
 
     return NORM_FACTOR * (full_id - pauli_op)
 
 
 def fix_qubits(
-    operator: int | SparsePauliOp | Pauli,
+    operator: SparsePauliOp,
     *,
     has_side_chain_second_bead: bool = False,
-) -> int | SparsePauliOp | Pauli:
+) -> SparsePauliOp:
     """
     Assigns predefined values for turns qubits on positions 0, 1, 2, 3, 5 in the main chain.
     Qubits on these position are considered fixed and not subject to optimization.
     """
-    # return if operator is int (might be 0 because it is initialized as operator = 0)
-    if not isinstance(operator, (SparsePauliOp, Pauli)):
-        return operator
-
     # Normalize operators to SparsePauliOp
-    coeffs: np.ndarray = np.array([1.0])
+    coeffs: NDArray[np.float64] = np.array([1.0])
     if isinstance(operator, Pauli):
         operator = SparsePauliOp([operator], coeffs)
 
@@ -80,9 +87,9 @@ def fix_qubits(
         ).simplify()
 
     new_paulis: list[Pauli] = []
-    new_coeffs: np.ndarray = np.array([])
+    new_coeffs: NDArray[np.float64] = np.array([])
 
-    for idx, pauli in enumerate(operator.paulis):  # pyright: ignore[reportArgumentType]
+    for idx, pauli in enumerate(operator.paulis):
         table_z = np.copy(pauli.z)
         table_x = np.copy(pauli.x)
         coeff = operator.coeffs[idx]
@@ -102,7 +109,7 @@ def fix_qubits(
 
 
 def _calc_updated_coeffs(
-    table_z: np.ndarray, coeff: float, *, has_side_chain_second_bead: bool
+    table_z: NDArray[np.bool], coeff: float, *, has_side_chain_second_bead: bool
 ) -> float:
     """
     Update coefficients based on fixed qubit positions. Negate if appropriate.
@@ -123,21 +130,26 @@ def _calc_updated_coeffs(
 
 
 def _preset_binary_vals(
-    table_z: np.ndarray, *, has_side_chain_second_bead: bool
+    table_z: NDArray[np.bool], *, has_side_chain_second_bead: bool
 ) -> None:
-    main_beads_indices = [0, 1, 2, 3]
+    main_beads_indices = MAIN_CHAIN_FIXED_POSITIONS.copy()
     if not has_side_chain_second_bead:
-        main_beads_indices.append(5)
+        main_beads_indices.append(MAIN_CHAIN_FIFTH_FIXED_POSITION)
+
     for index in main_beads_indices:
         _preset_single_binary_val(table_z, index)
 
 
-def _preset_single_binary_val(table_z: np.ndarray, index: int) -> None:
+def _preset_single_binary_val(table_z: NDArray[np.bool], index: int) -> None:
     if index < len(table_z):
         table_z[index] = False
 
 
 def pad_to_n_qubits(op: SparsePauliOp, target: int) -> SparsePauliOp:
+    if op.num_qubits is None:
+        msg = "op.num_qubits is None, cannot pad operator."
+        raise ValueError(msg)
+
     if op.num_qubits == target:
         return op
     pad = target - op.num_qubits
@@ -149,6 +161,10 @@ def find_unused_qubits(op: SparsePauliOp) -> list[int]:
     """
     Return indices of qubits that are identity (I) in every term of the operator.
     """
+    if op.num_qubits is None:
+        msg = "op.num_qubits is None, cannot find unused qubits."
+        raise ValueError(msg)
+
     if op.num_qubits == 0 or len(op.paulis) == 0:
         return []
     used_mask = np.any(op.paulis.z, axis=0)
@@ -162,6 +178,10 @@ def remove_unused_qubits(
     Remove qubits that are identity in all terms.
 
     """
+    if op.num_qubits is None:
+        msg = "op.num_qubits is None, cannot remove unused qubits."
+        raise ValueError(msg)
+
     unused = find_unused_qubits(op)
     if not unused:
         return op.copy()
@@ -176,3 +196,8 @@ def remove_unused_qubits(
     ]
 
     return SparsePauliOp(new_paulis, coeffs=op.coeffs).simplify()
+
+
+def create_empty_sparse_pauli_op(num_qubits: int) -> SparsePauliOp:
+    """Creates an empty SparsePauliOp."""
+    return SparsePauliOp.from_list([("I" * num_qubits, 0.0)])

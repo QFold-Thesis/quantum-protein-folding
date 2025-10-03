@@ -1,4 +1,4 @@
-from qiskit.quantum_info import SparsePauliOp  # pyright: ignore[reportMissingTypeStubs]
+from qiskit.quantum_info import SparsePauliOp
 
 from constants import CONFORMATION_ENCODING
 from enums import ConformationEncoding

@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from enums import ConformationEncoding
@@ -14,9 +15,7 @@ HP_INTERACTION_MATRIX_FILEPATH: Path = (
 
 CONFORMATION_ENCODING: ConformationEncoding = ConformationEncoding.DENSE
 
-
 QUBITS_PER_TURN: int = CONFORMATION_ENCODING.value
-
 
 EMPTY_SIDECHAIN_PLACEHOLDER: str = "_"
 
@@ -37,3 +36,12 @@ HP_HH_CONTACT_ENERGY: float = -1.0
 HP_NON_HH_CONTACT_ENERGY: float = 0.0
 
 GLOBAL_LOGGER_NAME: str = "global_logger"
+
+LOGGER_DEFAULT_LEVEL: int = logging.DEBUG
+
+MIN_DISTANCE_BETWEEN_CONTACTS: int = (
+    5  # Minimum bonds between two beads to consider a contact
+)
+
+MAIN_CHAIN_FIXED_POSITIONS: list[int] = [0, 1, 2, 3, 5]
+MAIN_CHAIN_FIFTH_FIXED_POSITION: int = 5

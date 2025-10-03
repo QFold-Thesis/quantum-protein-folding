@@ -1,4 +1,3 @@
-import logging
 from collections.abc import Iterator
 
 from logger import get_logger
@@ -6,7 +5,7 @@ from protein.bead import Bead
 from protein.bead.main_bead import MainBead
 from protein.chain import Chain
 
-logger: logging.Logger = get_logger()
+logger = get_logger()
 
 
 class MainChain(Chain):

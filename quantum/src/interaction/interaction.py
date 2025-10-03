@@ -15,7 +15,7 @@ class Interaction(ABC):
 
     @abstractmethod
     def __init__(self, interaction_matrix_path: Path) -> None:
-        self.interaction_matrix_path: Path = interaction_matrix_path
+        self._interaction_matrix_path: Path = interaction_matrix_path
 
     @abstractmethod
     def get_energy(self, *args: Any, **kwargs: Any) -> float:

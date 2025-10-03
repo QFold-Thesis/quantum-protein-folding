@@ -1,6 +1,6 @@
 import logging
 
-from constants import GLOBAL_LOGGER_NAME
+from constants import GLOBAL_LOGGER_NAME, LOGGER_DEFAULT_LEVEL
 
 
 def get_logger(name: str = GLOBAL_LOGGER_NAME) -> logging.Logger:
@@ -13,5 +13,5 @@ def get_logger(name: str = GLOBAL_LOGGER_NAME) -> logging.Logger:
         )
         handler.setFormatter(formatter)
         logger.addHandler(handler)
-        logger.setLevel(logging.DEBUG)
+        logger.setLevel(LOGGER_DEFAULT_LEVEL)
     return logger
