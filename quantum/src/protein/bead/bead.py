@@ -1,18 +1,13 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from qiskit.quantum_info import SparsePauliOp
 
 from constants import CONFORMATION_ENCODING, QUBITS_PER_TURN
 from enums import SubLattice
 from exceptions import ConformationEncodingError
 from logger import get_logger
 from utils.qubit_utils import build_full_identity, build_turn_qubit
-
-if TYPE_CHECKING:
-    from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
-        SparsePauliOp,
-    )
 
 logger = get_logger()
 
