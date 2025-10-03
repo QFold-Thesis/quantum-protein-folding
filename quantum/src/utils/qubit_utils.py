@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import numpy as np
 from qiskit.quantum_info import (
     Pauli,
@@ -13,6 +15,9 @@ from constants import (
     SIGN_FLIP_SECOND_QUBIT_INDEX,
     SIGN_FLIP_SIXTH_QUBIT_INDEX,
 )
+
+if TYPE_CHECKING:
+    from numpy.typing import NDArray
 
 
 def build_full_identity(num_qubits: int) -> SparsePauliOp:
@@ -66,7 +71,7 @@ def fix_qubits(
     Qubits on these position are considered fixed and not subject to optimization.
     """
     # Normalize operators to SparsePauliOp
-    coeffs: np.ndarray = np.array([1.0])
+    coeffs: NDArray[np.float64] = np.array([1.0])
     if isinstance(operator, Pauli):
         operator = SparsePauliOp([operator], coeffs)
 
@@ -82,7 +87,7 @@ def fix_qubits(
         ).simplify()
 
     new_paulis: list[Pauli] = []
-    new_coeffs: np.ndarray = np.array([])
+    new_coeffs: NDArray[np.float64] = np.array([])
 
     for idx, pauli in enumerate(operator.paulis):
         table_z = np.copy(pauli.z)
@@ -104,7 +109,7 @@ def fix_qubits(
 
 
 def _calc_updated_coeffs(
-    table_z: np.ndarray, coeff: float, *, has_side_chain_second_bead: bool
+    table_z: NDArray[np.bool], coeff: float, *, has_side_chain_second_bead: bool
 ) -> float:
     """
     Update coefficients based on fixed qubit positions. Negate if appropriate.
@@ -125,7 +130,7 @@ def _calc_updated_coeffs(
 
 
 def _preset_binary_vals(
-    table_z: np.ndarray, *, has_side_chain_second_bead: bool
+    table_z: NDArray[np.bool], *, has_side_chain_second_bead: bool
 ) -> None:
     main_beads_indices = MAIN_CHAIN_FIXED_POSITIONS.copy()
     if not has_side_chain_second_bead:
@@ -135,7 +140,7 @@ def _preset_binary_vals(
         _preset_single_binary_val(table_z, index)
 
 
-def _preset_single_binary_val(table_z: np.ndarray, index: int) -> None:
+def _preset_single_binary_val(table_z: NDArray[np.bool], index: int) -> None:
     if index < len(table_z):
         table_z[index] = False
 
