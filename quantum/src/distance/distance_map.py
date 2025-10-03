@@ -32,7 +32,7 @@ class DistanceMap:
             logger.exception(f"Error occurred while calculating distances for main_chain: {e}")
             raise e
         else:
-            logger.info("Distance map for main_chain initialized successfully.")
+            logger.debug(f"Distance map for main_chain initialized successfully with {self._main_chain_distances_detected} distances detected.")
 
     def _calc_distances_main_chain(self) -> None:
         for lower_bead_idx in range(self._main_chain_len):
