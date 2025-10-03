@@ -28,16 +28,19 @@ class DistanceMap:
 
         try:
             self._calc_distances_main_chain()
-        except Exception as e:
-            logger.exception(f"Error occurred while calculating distances for main_chain: {e}")
-            raise e
+        except Exception:
+            logger.exception(
+                "Error occurred while calculating distances for main_chain"
+            )
+            raise
         else:
-            logger.debug(f"Distance map for main_chain initialized successfully with {self._main_chain_distances_detected} distances detected.")
+            logger.debug(
+                f"Distance map for main_chain initialized successfully with {self._main_chain_distances_detected} distances detected."
+            )
 
     def _calc_distances_main_chain(self) -> None:
         for lower_bead_idx in range(self._main_chain_len):
             for upper_bead_idx in range(lower_bead_idx + 1, self._main_chain_len):
-
                 axes_vector: list[SparsePauliOp] = [
                     create_empty_sparse_pauli_op(self._pauli_op_len)
                     for _ in range(DIST_VECTOR_AXES)
@@ -46,7 +49,9 @@ class DistanceMap:
                 for k in range(lower_bead_idx, upper_bead_idx):
                     indic_funcs = self._protein.main_chain[k].turn_funcs()
                     if indic_funcs is None:
-                        logger.debug(f"No turn functions for bead {k}, skipping calculating distance...")
+                        logger.debug(
+                            f"No turn functions for bead {k}, skipping calculating distance..."
+                        )
                         continue
 
                     sub_lattice_sign: int = (-1) ** k

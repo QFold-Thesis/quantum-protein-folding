@@ -62,7 +62,7 @@ def setup_vqe_optimization(
 ) -> tuple[SamplingVQE, list[Any], list[Any]]:
     """Setup VQE optimization components."""
     optimizer = COBYLA(maxiter=50)
-    ansatz = real_amplitudes(num_qubits=compressed_h.num_qubits, reps=1)  # pyright: ignore[reportArgumentType]
+    ansatz = real_amplitudes(num_qubits=compressed_h.num_qubits, reps=1)
 
     counts: list[Any] = []
     values: list[Any] = []

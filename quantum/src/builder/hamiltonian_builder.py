@@ -1,19 +1,25 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
-from qiskit.quantum_info import SparsePauliOp
-
 from constants import BOUNDING_CONSTANT, MJ_ENERGY_MULTIPLIER, QUBITS_PER_TURN
-from contact.contact_map import ContactMap
-from distance.distance_map import DistanceMap
 from enums import Penalties
-from interaction.interaction import Interaction
 from logger import get_logger
-from protein import Protein
-from protein.bead import Bead
-from utils.qubit_utils import build_full_identity, create_empty_sparse_pauli_op, fix_qubits, pad_to_n_qubits
+from utils.qubit_utils import (
+    build_full_identity,
+    create_empty_sparse_pauli_op,
+    fix_qubits,
+    pad_to_n_qubits,
+)
 
 if TYPE_CHECKING:
+    from qiskit.quantum_info import SparsePauliOp
+
+    from contact.contact_map import ContactMap
+    from distance.distance_map import DistanceMap
+    from interaction.interaction import Interaction
+    from protein import Protein
+    from protein.bead import Bead
     from protein.chain import MainChain
 
 logger = get_logger()
@@ -64,9 +70,11 @@ class HamiltonianBuilder:
         main_chain: MainChain = self.protein.main_chain
         chain_len: int = len(main_chain)
 
-        h_backbone_num_qubits: int = pow((chain_len - 1), 2) + (chain_len - 1) * QUBITS_PER_TURN
+        h_backbone_num_qubits: int = (
+            pow((chain_len - 1), 2) + (chain_len - 1) * QUBITS_PER_TURN
+        )
         h_backbone: SparsePauliOp = create_empty_sparse_pauli_op(h_backbone_num_qubits)
-        
+
         for i in range(len(main_chain) - 4):
             for j in range(i + 4, len(main_chain)):
                 if (j - i) % 2 == 0:
@@ -102,9 +110,11 @@ class HamiltonianBuilder:
 
     def _add_backtracking_penalty(self) -> SparsePauliOp:
         main_chain: MainChain = self.protein.main_chain
-        
+
         h_backtrack_num_qubits: int = (len(main_chain) - 1) * QUBITS_PER_TURN
-        h_backtrack: SparsePauliOp = create_empty_sparse_pauli_op(h_backtrack_num_qubits)
+        h_backtrack: SparsePauliOp = create_empty_sparse_pauli_op(
+            h_backtrack_num_qubits
+        )
 
         for i in range(1, len(main_chain) - 2):
             h_backtrack += Penalties.BACK_PENALTY * self.get_turn_operators(
@@ -114,12 +124,12 @@ class HamiltonianBuilder:
         return fix_qubits(h_backtrack)
 
     def get_turn_operators(self, lower_bead: Bead, upper_bead: Bead) -> SparsePauliOp:
-        lower_turn_funcs: None | tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp] = (
-            lower_bead.turn_funcs()
-        )
-        upper_turn_funcs: None | tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp] = (
-            upper_bead.turn_funcs()
-        )
+        lower_turn_funcs: (
+            None | tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp]
+        ) = lower_bead.turn_funcs()
+        upper_turn_funcs: (
+            None | tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp]
+        ) = upper_bead.turn_funcs()
 
         if lower_turn_funcs is None or upper_turn_funcs is None:
             logger.debug(
@@ -135,7 +145,7 @@ class HamiltonianBuilder:
 
         for lower_bead_idx, upper_bead_idx in zip(lower_turn_funcs, upper_turn_funcs):
             turn_operators += lower_bead_idx @ upper_bead_idx
-        
+
         return fix_qubits(turn_operators)
 
     def get_first_neighbor_hamiltonian(
