@@ -33,7 +33,7 @@ class ContactMap:
         # )
         """
 
-        self._contacts_detected: int = 0
+        self.contacts_detected: int = 0
         self._protein: Protein = protein
 
         self._num_contact_qubits: int = pow(len(self._protein.main_chain) - 1, 2)
@@ -49,7 +49,7 @@ class ContactMap:
 
         else:
             logger.debug(
-                f"Contact map initialized successfully. Contacts detected: {self._contacts_detected}"
+                f"Contact map initialized successfully. Contacts detected: {self.contacts_detected}"
             )
 
     def _initialize_contact_map(self):
@@ -77,7 +77,7 @@ class ContactMap:
                 self.main_main_contacts[lower_bead.index][upper_bead.index] = (
                     contact_operator
                 )
-                self._contacts_detected += 1
+                self.contacts_detected += 1
 
     def _create_main_main_contact(
         self, upper_bead: Bead, lower_bead: Bead

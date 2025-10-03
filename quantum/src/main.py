@@ -18,7 +18,9 @@ from utils.qubit_utils import remove_unused_qubits
 logger = get_logger()
 
 
-def setup_folding_system(main_chain: str, side_chain: str) -> tuple[Protein, MJInteraction, ContactMap, DistanceMap]:
+def setup_folding_system(
+    main_chain: str, side_chain: str
+) -> tuple[Protein, MJInteraction, ContactMap, DistanceMap]:
     """Setup the protein folding system components."""
     protein = Protein(
         main_protein_sequence=main_chain, side_protein_sequence=side_chain
@@ -36,7 +38,7 @@ def build_and_compress_hamiltonian(
     protein: Protein,
     interaction: Interaction,
     contact_map: ContactMap,
-    distance_map: DistanceMap
+    distance_map: DistanceMap,
 ) -> tuple[SparsePauliOp, SparsePauliOp]:
     """Build and compress the Hamiltonian."""
     h_builder = HamiltonianBuilder(
@@ -55,10 +57,12 @@ def build_and_compress_hamiltonian(
     return hamiltonian, compressed_h
 
 
-def setup_vqe_optimization(compressed_h: SparsePauliOp) -> tuple[SamplingVQE, list[Any], list[Any]]:
+def setup_vqe_optimization(
+    compressed_h: SparsePauliOp,
+) -> tuple[SamplingVQE, list[Any], list[Any]]:
     """Setup VQE optimization components."""
     optimizer = COBYLA(maxiter=50)
-    ansatz = real_amplitudes(num_qubits=compressed_h.num_qubits, reps=1) # pyright: ignore[reportArgumentType]
+    ansatz = real_amplitudes(num_qubits=compressed_h.num_qubits, reps=1)  # pyright: ignore[reportArgumentType]
 
     counts: list[Any] = []
     values: list[Any] = []
@@ -82,13 +86,15 @@ def main() -> None:
     main_chain: str = "APRLRFY"
     side_chain: str = EMPTY_SIDECHAIN_PLACEHOLDER * len(main_chain)
 
-    protein, interaction, contact_map, distance_map = setup_folding_system(main_chain, side_chain)
+    protein, interaction, contact_map, distance_map = setup_folding_system(
+        main_chain, side_chain
+    )
 
     hamiltonian, compressed_h = build_and_compress_hamiltonian(
         protein=protein,
         interaction=interaction,
         contact_map=contact_map,
-        distance_map=distance_map
+        distance_map=distance_map,
     )
 
     logger.debug("Compressed hamiltonian:\n%s", compressed_h)

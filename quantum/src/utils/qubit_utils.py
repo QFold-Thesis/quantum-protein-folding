@@ -175,3 +175,8 @@ def remove_unused_qubits(
     ]
 
     return SparsePauliOp(new_paulis, coeffs=op.coeffs).simplify()
+
+
+def create_empty_sparse_pauli_op(num_qubits: int) -> SparsePauliOp:
+    """Creates an empty SparsePauliOp."""
+    return SparsePauliOp.from_list([("I" * num_qubits, 0.0)])
