@@ -76,7 +76,12 @@ def setup_vqe_optimization(
     counts: list[Any] = []
     values: list[Any] = []
 
-    def _store_intermediate_result(eval_count: int, _parameters: np.ndarray[Any, Any], mean: float, _std: dict[str, Any]) -> None:
+    def _store_intermediate_result(
+        eval_count: int,
+        _parameters: np.ndarray[Any, Any],
+        mean: float,
+        _std: dict[str, Any],
+    ) -> None:
         counts.append(eval_count)
         values.append(mean)
 

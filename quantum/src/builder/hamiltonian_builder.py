@@ -56,7 +56,6 @@ class HamiltonianBuilder:
             if hamiltonian.num_qubits is not None
         )
 
-
         padded_hamiltonians: list[SparsePauliOp] = [
             pad_to_n_qubits(hamiltonian, target_qubits)
             for hamiltonian in part_hamiltonians
