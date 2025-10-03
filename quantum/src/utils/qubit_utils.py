@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import numpy as np
-from qiskit.quantum_info import (  # pyright: ignore[reportMissingTypeStubs]
+from qiskit.quantum_info import (
     Pauli,
     SparsePauliOp,
 )

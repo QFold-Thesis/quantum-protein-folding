@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from qiskit.quantum_info import SparsePauliOp  # pyright: ignore[reportMissingTypeStubs]
+from qiskit.quantum_info import SparsePauliOp
 
 from constants import MIN_DISTANCE_BETWEEN_CONTACTS
 from logger import get_logger
