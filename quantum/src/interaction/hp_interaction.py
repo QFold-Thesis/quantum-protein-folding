@@ -38,7 +38,7 @@ from constants import (
     HP_INTERACTION_MATRIX_FILEPATH,
     HP_NON_HH_CONTACT_ENERGY,
 )
-from interaction.interaction import Interaction
+from interaction import Interaction
 from logger import get_logger
 
 logger = get_logger()
@@ -50,8 +50,8 @@ class HPInteraction(Interaction):
         interaction_matrix_path: Path = HP_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
         super().__init__(interaction_matrix_path)
-        self.hydrophobic_symbols: list[str] = self._load_hydrophobic_symbols(
-            self.interaction_matrix_path
+        self._hydrophobic_symbols: list[str] = self._load_hydrophobic_symbols(
+            self._interaction_matrix_path
         )
 
     def _load_hydrophobic_symbols(
@@ -80,7 +80,7 @@ class HPInteraction(Interaction):
             return hydros
 
     def _is_hydrophobic(self, symbol: str) -> bool:
-        return symbol in self.hydrophobic_symbols
+        return symbol in self._hydrophobic_symbols
 
     def get_energy(self, symbol_i: str, symbol_j: str) -> float:
         """
@@ -96,7 +96,6 @@ class HPInteraction(Interaction):
                 else HP_NON_HH_CONTACT_ENERGY
             )
         except Exception:
-            logger.exception(
-                f"Error computing HP energy for pair: {symbol_i}, {symbol_j}"
-            )
-            raise
+            msg: str = f"Error computing HP energy for pair: {symbol_i}, {symbol_j}"
+            logger.exception(msg)
+            raise RuntimeError(msg)
