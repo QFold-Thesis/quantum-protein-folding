@@ -1,5 +1,6 @@
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import numpy as np
 from qiskit.circuit.library import real_amplitudes
 from qiskit.primitives import StatevectorSampler as Sampler
 from qiskit.quantum_info import SparsePauliOp
@@ -14,6 +15,9 @@ from interaction import HPInteraction, Interaction, MJInteraction
 from logger import get_logger
 from protein import Protein
 from utils.qubit_utils import remove_unused_qubits
+
+if TYPE_CHECKING:
+    from qiskit import QuantumCircuit
 
 logger = get_logger()
 
@@ -62,12 +66,17 @@ def setup_vqe_optimization(
 ) -> tuple[SamplingVQE, list[Any], list[Any]]:
     """Setup VQE optimization components."""
     optimizer = COBYLA(maxiter=50)
-    ansatz = real_amplitudes(num_qubits=compressed_h.num_qubits, reps=1)
+
+    if compressed_h.num_qubits is None:
+        msg: str = "Hamiltonian number of qubits is None."
+        raise ValueError(msg)
+
+    ansatz: QuantumCircuit = real_amplitudes(num_qubits=compressed_h.num_qubits, reps=1)
 
     counts: list[Any] = []
     values: list[Any] = []
 
-    def _store_intermediate_result(eval_count, parameters, mean, std):  # noqa: ARG001
+    def _store_intermediate_result(eval_count: int, _parameters: np.ndarray[Any, Any], mean: float, _std: dict[str, Any]) -> None:
         counts.append(eval_count)
         values.append(mean)
 

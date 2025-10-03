@@ -44,11 +44,19 @@ class HamiltonianBuilder:
         h_backtrack: SparsePauliOp = self._add_backtracking_penalty()
 
         part_hamiltonians: list[SparsePauliOp] = [h_backbone, h_backtrack]
+
+        for hamiltonian in part_hamiltonians:
+            if hamiltonian.num_qubits is None:
+                msg = "One of the part Hamiltonians has num_qubits set to None."
+                raise ValueError(msg)
+
         target_qubits: int = max(
             int(hamiltonian.num_qubits)
             for hamiltonian in part_hamiltonians
             if hamiltonian.num_qubits is not None
         )
+
+
         padded_hamiltonians: list[SparsePauliOp] = [
             pad_to_n_qubits(hamiltonian, target_qubits)
             for hamiltonian in part_hamiltonians
@@ -163,6 +171,10 @@ class HamiltonianBuilder:
         energy: float = self.interaction.get_energy(symbol_lower, symbol_upper)
         x: SparsePauliOp = self.distance_map[lower_bead_idx][upper_bead_idx]
 
+        if x.num_qubits is None:
+            msg = "x.num_qubits is None, cannot build first neighbor Hamiltonian."
+            raise ValueError(msg)
+
         expression: SparsePauliOp = lambda_0 * (
             x - build_full_identity(x.num_qubits)
         ) + (MJ_ENERGY_MULTIPLIER * energy * build_full_identity(x.num_qubits))
@@ -180,6 +192,10 @@ class HamiltonianBuilder:
 
         energy: float = self.interaction.get_energy(symbol_lower, symbol_upper)
         x: SparsePauliOp = self.distance_map[lower_bead_idx][upper_bead_idx]
+
+        if x.num_qubits is None:
+            msg = "x.num_qubits is None, cannot build second neighbor Hamiltonian."
+            raise ValueError(msg)
 
         expression: SparsePauliOp = lambda_1 * (
             2 * build_full_identity(x.num_qubits) - x
