@@ -53,18 +53,14 @@ def convert_to_qubits(pauli_op: SparsePauliOp) -> SparsePauliOp:
 
 
 def fix_qubits(
-    operator: int | SparsePauliOp | Pauli,
+    operator: SparsePauliOp,
     *,
     has_side_chain_second_bead: bool = False,
-) -> int | SparsePauliOp | Pauli:
+) -> SparsePauliOp:
     """
     Assigns predefined values for turns qubits on positions 0, 1, 2, 3, 5 in the main chain.
     Qubits on these position are considered fixed and not subject to optimization.
     """
-    # return if operator is int (might be 0 because it is initialized as operator = 0)
-    if not isinstance(operator, (SparsePauliOp, Pauli)):
-        return operator
-
     # Normalize operators to SparsePauliOp
     coeffs: np.ndarray = np.array([1.0])
     if isinstance(operator, Pauli):
@@ -84,7 +80,7 @@ def fix_qubits(
     new_paulis: list[Pauli] = []
     new_coeffs: np.ndarray = np.array([])
 
-    for idx, pauli in enumerate(operator.paulis):  # pyright: ignore[reportArgumentType]
+    for idx, pauli in enumerate(operator.paulis):
         table_z = np.copy(pauli.z)
         table_x = np.copy(pauli.x)
         coeff = operator.coeffs[idx]
