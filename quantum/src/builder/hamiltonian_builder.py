@@ -72,7 +72,7 @@ class HamiltonianBuilder:
         Builds the Hamiltonian term corresponding to backbone_backbone (BB-BB) interactions.
         Includes both 1st neighbor and 2nd neighbor contributions (with shifts i±1, j±1).
         """
-        logger.info("Creating h_bbbb term (BB-BB interactions)...")
+        logger.info("Creating h_backbone term (BB-BB interactions)")
 
         main_chain: MainChain = self.protein.main_chain
         chain_len: int = len(main_chain)
@@ -112,10 +112,13 @@ class HamiltonianBuilder:
 
                 h_backbone = fix_qubits(h_backbone)
 
-        logger.info(f"Finished creating h_bbbb term: {h_backbone}")
+        logger.info(
+            f"Finished creating h_backbone term with {h_backbone.num_qubits} qubits."
+        )
         return h_backbone
 
     def _add_backtracking_penalty(self) -> SparsePauliOp:
+        logger.debug("Creating h_backtrack term")
         main_chain: MainChain = self.protein.main_chain
 
         h_backtrack_num_qubits: int = (len(main_chain) - 1) * QUBITS_PER_TURN
@@ -124,10 +127,14 @@ class HamiltonianBuilder:
         )
 
         for i in range(1, len(main_chain) - 2):
+            logger.debug(f"Adding backtracking penalty between beads {i} and {i + 1}")
             h_backtrack += Penalties.BACK_PENALTY * self.get_turn_operators(
                 main_chain[i], main_chain[i + 1]
             )
 
+        logger.debug(
+            f"Finished creating h_backtrack term with {h_backtrack.num_qubits} qubits."
+        )
         return fix_qubits(h_backtrack)
 
     def get_turn_operators(self, lower_bead: Bead, upper_bead: Bead) -> SparsePauliOp:

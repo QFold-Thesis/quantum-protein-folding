@@ -22,6 +22,26 @@ if TYPE_CHECKING:
 logger = get_logger()
 
 
+def __print_best_results(raw_result: dict[str, Any]) -> None:
+    """Debug function only - prints the best results from VQE output."""
+    logger.info("\n")
+    logger.info("Results:")
+    logger.info("=" * 60)
+
+    eigenvalue = float(raw_result.eigenvalue) # type: ignore  # noqa: PGH003
+    logger.info(f"Minimum Eigenvalue: {eigenvalue:.6f}")
+    logger.info(f"Folding Energy: {eigenvalue:.6f}")
+
+    if raw_result.best_measurement is not None: # type: ignore  # noqa: PGH003
+        logger.info(f"Bitstring: {raw_result.best_measurement['bitstring']}") # type: ignore  # noqa: PGH003
+        logger.info(f"Probability: {raw_result.best_measurement['probability']:.6f}") # type: ignore  # noqa: PGH003
+        logger.info(f"State: {raw_result.best_measurement['state']}") # type: ignore  # noqa: PGH003
+        logger.info(f"Value: {raw_result.best_measurement['value']}") # type: ignore  # noqa: PGH003
+
+
+    logger.info("=" * 60)
+
+
 def setup_folding_system(
     main_chain: str, side_chain: str
 ) -> tuple[Protein, MJInteraction, ContactMap, DistanceMap]:
@@ -104,23 +124,19 @@ def main() -> None:
         main_chain, side_chain
     )
 
-    hamiltonian, compressed_h = build_and_compress_hamiltonian(
+    _, compressed_h = build_and_compress_hamiltonian(
         protein=protein,
         interaction=interaction,
         contact_map=contact_map,
         distance_map=distance_map,
     )
 
-    logger.debug("Compressed hamiltonian:\n%s", compressed_h)
-
-    logger.debug("Hamiltonian:\n%s", hamiltonian)
-
     vqe, _, _ = setup_vqe_optimization(compressed_h)
 
     logger.debug("Starting VQE optimization...")
     raw_result = vqe.compute_minimum_eigenvalue(compressed_h)
 
-    logger.debug(raw_result)
+    __print_best_results(raw_result) # type: ignore  # noqa: PGH003
 
 
 if __name__ == "__main__":

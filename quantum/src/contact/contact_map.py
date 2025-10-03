@@ -92,6 +92,6 @@ class ContactMap:
         )
 
         logger.debug(
-            f"Created main-main contact between beads {upper_bead.index} and {lower_bead.index} | Z index: {z_op_index} | Num qubits: {self._num_contact_qubits}"
+            f"Created main-main contact between beads main_chain_{upper_bead.index} -> main_chain_{lower_bead.index} | Z index: {z_op_index} | Num qubits: {self._num_contact_qubits}"
         )
         return convert_to_qubits(contact_operator)

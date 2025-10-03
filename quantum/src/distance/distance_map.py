@@ -71,7 +71,7 @@ class DistanceMap:
                 self._main_chain_distances_detected += 1
 
                 logger.debug(
-                    f"Calculated distance for [main_chain_{lower_bead_idx}] -> [main_chain_{upper_bead_idx}]"
+                    f"Calculated distance for main_chain_{lower_bead_idx} -> main_chain_{upper_bead_idx} | Num qubits: {self._distance_map[lower_bead_idx][upper_bead_idx].num_qubits}"
                 )
 
     def __getitem__(self, key: int) -> defaultdict[int, SparsePauliOp]:
