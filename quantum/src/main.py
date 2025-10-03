@@ -28,16 +28,15 @@ def __print_best_results(raw_result: dict[str, Any]) -> None:
     logger.info("Results:")
     logger.info("=" * 60)
 
-    eigenvalue = float(raw_result.eigenvalue) # type: ignore  # noqa: PGH003
+    eigenvalue = float(raw_result.eigenvalue)  # type: ignore  # noqa: PGH003
     logger.info(f"Minimum Eigenvalue: {eigenvalue:.6f}")
     logger.info(f"Folding Energy: {eigenvalue:.6f}")
 
-    if raw_result.best_measurement is not None: # type: ignore  # noqa: PGH003
-        logger.info(f"Bitstring: {raw_result.best_measurement['bitstring']}") # type: ignore  # noqa: PGH003
-        logger.info(f"Probability: {raw_result.best_measurement['probability']:.6f}") # type: ignore  # noqa: PGH003
-        logger.info(f"State: {raw_result.best_measurement['state']}") # type: ignore  # noqa: PGH003
-        logger.info(f"Value: {raw_result.best_measurement['value']}") # type: ignore  # noqa: PGH003
-
+    if raw_result.best_measurement is not None:  # type: ignore  # noqa: PGH003
+        logger.info(f"Bitstring: {raw_result.best_measurement['bitstring']}")  # type: ignore  # noqa: PGH003
+        logger.info(f"Probability: {raw_result.best_measurement['probability']:.6f}")  # type: ignore  # noqa: PGH003
+        logger.info(f"State: {raw_result.best_measurement['state']}")  # type: ignore  # noqa: PGH003
+        logger.info(f"Value: {raw_result.best_measurement['value']}")  # type: ignore  # noqa: PGH003
 
     logger.info("=" * 60)
 
@@ -136,7 +135,7 @@ def main() -> None:
     logger.debug("Starting VQE optimization...")
     raw_result = vqe.compute_minimum_eigenvalue(compressed_h)
 
-    __print_best_results(raw_result) # type: ignore  # noqa: PGH003
+    __print_best_results(raw_result)  # type: ignore  # noqa: PGH003
 
 
 if __name__ == "__main__":
