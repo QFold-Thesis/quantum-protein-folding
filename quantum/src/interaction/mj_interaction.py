@@ -22,9 +22,9 @@ from pathlib import Path
 import numpy as np
 
 from constants import MJ_INTERACTION_MATRIX_FILEPATH
+from exceptions import UnsupportedAminoAcidSymbolError
 from interaction import Interaction
 from logger import get_logger
-from exceptions import UnsupportedAminoAcidSymbolError
 
 logger = get_logger()
 
@@ -74,10 +74,10 @@ class MJInteraction(Interaction):
         key = f"{symbol_i}{symbol_j}"
         try:
             return self._energy_pairs[key]
-        except KeyError:
+        except KeyError as e:
             msg: str = f"Missing MJ energy for pair '{key}'"
-            raise UnsupportedAminoAcidSymbolError(msg)
-        except Exception:
+            raise UnsupportedAminoAcidSymbolError(msg) from e
+        except Exception as e:
             msg: str = f"Error computing MJ energy for pair: {symbol_i}, {symbol_j}"
             logger.exception(msg)
-            raise RuntimeError(msg)
+            raise RuntimeError(msg) from e

@@ -55,6 +55,4 @@ class MainBead(Bead):
         ).simplify()
 
     def _dense_turn_fun_3(self) -> SparsePauliOp:
-        return (
-            self.turn_qubits[0] @ self.turn_qubits[1]
-        ).simplify()
+        return (self.turn_qubits[0] @ self.turn_qubits[1]).simplify()
