@@ -1,0 +1,10 @@
+[project]
+name = "quantum-protein-folding"
+version = "0.1.0"
+description = "Quantum approach to a protein folding problem"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "qiskit>=2.2.1",
+    "qiskit-algorithms>=0.4.0",
+]
