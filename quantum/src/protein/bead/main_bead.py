@@ -4,7 +4,7 @@ from constants import CONFORMATION_ENCODING
 from enums import ConformationEncoding
 from exceptions import ConformationEncodingError
 from protein.bead import Bead
-from chain.side_chain import SideChain
+from protein.chain.side_chain import SideChain
 
 
 class MainBead(Bead):

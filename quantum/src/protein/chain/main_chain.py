@@ -1,9 +1,18 @@
-from collections.abc import Iterator
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from logger import get_logger
-from protein.bead import Bead
 from protein.bead.main_bead import MainBead
-from protein.chain import Chain, SideChain
+
+from .chain import Chain
+
+if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import Iterator
+
+    from protein.bead import Bead
+
+    from .side_chain import SideChain
 
 logger = get_logger()
 
@@ -27,6 +36,9 @@ class MainChain(Chain):
         ]
 
     def _create_side_chain(self, index: int) -> SideChain:
+        # Local import to avoid circular import at module load time
+        from .side_chain import SideChain
+
         side_chain_sequence = self.side_protein_sequences[index]
         return SideChain(protein_sequence=side_chain_sequence)
 

@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from logger import get_logger
 from protein.bead.side_bead import SideBead
-from protein.chain import Chain
+
+from .chain import Chain
 
 logger = get_logger()
 
