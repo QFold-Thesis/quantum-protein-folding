@@ -4,11 +4,13 @@ from constants import CONFORMATION_ENCODING
 from enums import ConformationEncoding
 from exceptions import ConformationEncodingError
 from protein.bead import Bead
+from chain.side_chain import SideChain
 
 
 class MainBead(Bead):
-    def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:
+    def __init__(self, symbol: str, index: int, parent_chain_len: int, side_chain: SideChain) -> None:
         super().__init__(symbol=symbol, index=index, parent_chain_len=parent_chain_len)
+        self.side_chain = side_chain
 
     def turn_0(self) -> SparsePauliOp:
         if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
