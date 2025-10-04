@@ -1,3 +1,11 @@
+"""
+Utilities for building the Hamiltonian of a protein for quantum simulations.
+
+This module provides the HamiltonianBuilder class, which constructs Hamiltonian
+operators for a given protein, including backbone interactions, backtracking
+penalties, and neighbor-based contact terms, using distance and MJ interaction maps.
+"""
+
 from typing import TYPE_CHECKING
 
 from qiskit.quantum_info import SparsePauliOp
@@ -19,6 +27,11 @@ logger = get_logger()
 
 
 class HamiltonianBuilder:
+    """
+    Constructs Hamiltonian operators for a given protein, including
+    backbone interactions and backtracking penalties.
+    """
+
     def __init__(
         self,
         protein: Protein,
@@ -26,6 +39,10 @@ class HamiltonianBuilder:
         distance_map: DistanceMap,
         contact_map: ContactMap,
     ):
+        """
+        Initializes the HamiltonianBuilder with required protein data
+        and interaction maps.
+        """
         self.protein: Protein = protein
         self.interaction: Interaction = interaction
         self.distance_map: DistanceMap = distance_map
@@ -96,6 +113,10 @@ class HamiltonianBuilder:
         return hamiltonian
 
     def add_backtracking_penalty(self) -> SparsePauliOp:
+        """
+        Adds a penalty term to the Hamiltonian to discourage backtracking
+        in the main chain configuration.
+        """
         main_chain: MainChain = self.protein.main_chain
         h_back: SparsePauliOp = 0
         for i in range(1, len(main_chain) - 2):
@@ -106,6 +127,10 @@ class HamiltonianBuilder:
         return fix_qubits(h_back)
 
     def get_turn_operators(self, lower_bead: Bead, upper_bead: Bead) -> SparsePauliOp:
+        """
+        Adds a penalty term to the Hamiltonian to discourage backtracking
+        in the main chain configuration.
+        """
         turn_operators: SparsePauliOp = sum(
             lower_bead_idx @ upper_bead_idx
             for lower_bead_idx, upper_bead_idx in zip(
@@ -121,6 +146,10 @@ class HamiltonianBuilder:
         upper_bead_idx: int,
         lambda_1: float,
     ) -> SparsePauliOp:
+        """
+        Computes the Hamiltonian contribution for first-neighbor bead pairs,
+        combining distance-based and Miyazawa-Jernigan contact energies.
+        """
         lambda_0: float = (
             BOUNDING_CONSTANT * (upper_bead_idx - lower_bead_idx + 1) * lambda_1
         )
@@ -139,6 +168,10 @@ class HamiltonianBuilder:
         upper_bead_idx: int,
         lambda_1: float,
     ) -> SparsePauliOp:
+        """
+        Computes the Hamiltonian contribution for second-neighbor bead pairs,
+        including distance-based and MJ interaction terms.
+        """
         symbol_lower: str = self.protein.main_chain.get_symbol_at(lower_bead_idx)
         symbol_upper: str = self.protein.main_chain.get_symbol_at(upper_bead_idx)
         energy: float = self.interaction.get_energy(symbol_lower, symbol_upper)
