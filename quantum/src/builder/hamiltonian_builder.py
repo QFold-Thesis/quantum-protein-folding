@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 from constants import BOUNDING_CONSTANT, MJ_ENERGY_MULTIPLIER, QUBITS_PER_TURN
 from enums import Penalties
+from exceptions import InvalidOperatorError
 from logger import get_logger
 from utils.qubit_utils import (
     build_full_identity,
@@ -48,7 +49,7 @@ class HamiltonianBuilder:
         for hamiltonian in part_hamiltonians:
             if hamiltonian.num_qubits is None:
                 msg = "One of the part Hamiltonians has num_qubits set to None."
-                raise ValueError(msg)
+                raise InvalidOperatorError(msg)
 
         target_qubits: int = max(
             int(hamiltonian.num_qubits)
@@ -179,7 +180,7 @@ class HamiltonianBuilder:
 
         if x.num_qubits is None:
             msg = "x.num_qubits is None, cannot build first neighbor Hamiltonian."
-            raise ValueError(msg)
+            raise InvalidOperatorError(msg)
 
         expression: SparsePauliOp = lambda_0 * (
             x - build_full_identity(x.num_qubits)
@@ -201,7 +202,7 @@ class HamiltonianBuilder:
 
         if x.num_qubits is None:
             msg = "x.num_qubits is None, cannot build second neighbor Hamiltonian."
-            raise ValueError(msg)
+            raise InvalidOperatorError(msg)
 
         expression: SparsePauliOp = lambda_1 * (
             2 * build_full_identity(x.num_qubits) - x

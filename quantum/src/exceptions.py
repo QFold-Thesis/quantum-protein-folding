@@ -34,3 +34,14 @@ class UnsupportedAminoAcidSymbolError(Exception):
     ) -> None:
         logger.exception(message)
         super().__init__(message)
+
+
+class InvalidOperatorError(Exception):
+    """Exception raised when an invalid quantum operator is encountered."""
+
+    def __init__(
+        self,
+        message: str = "Invalid quantum operator encountered. Make sure that the operator is valid.",
+    ) -> None:
+        logger.exception(message)
+        super().__init__(message)

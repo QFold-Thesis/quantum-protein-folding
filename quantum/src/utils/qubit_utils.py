@@ -15,6 +15,7 @@ from constants import (
     SIGN_FLIP_SECOND_QUBIT_INDEX,
     SIGN_FLIP_SIXTH_QUBIT_INDEX,
 )
+from exceptions import InvalidOperatorError
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
@@ -53,7 +54,7 @@ def build_pauli_z_operator(num_qubits: int, pauli_z_indices: set[int]) -> Sparse
 def convert_to_qubits(pauli_op: SparsePauliOp) -> SparsePauliOp:
     if pauli_op.num_qubits is None:
         msg = "pauli_op.num_qubits is None, cannot convert to qubits."
-        raise ValueError(msg)
+        raise InvalidOperatorError(msg)
 
     num_qubits: int = int(pauli_op.num_qubits)
     full_id: SparsePauliOp = SparsePauliOp.from_list([("I" * num_qubits, 1.0)])
@@ -148,7 +149,7 @@ def _preset_single_binary_val(table_z: NDArray[np.bool], index: int) -> None:
 def pad_to_n_qubits(op: SparsePauliOp, target: int) -> SparsePauliOp:
     if op.num_qubits is None:
         msg = "op.num_qubits is None, cannot pad operator."
-        raise ValueError(msg)
+        raise InvalidOperatorError(msg)
 
     if op.num_qubits == target:
         return op
@@ -163,7 +164,7 @@ def find_unused_qubits(op: SparsePauliOp) -> list[int]:
     """
     if op.num_qubits is None:
         msg = "op.num_qubits is None, cannot find unused qubits."
-        raise ValueError(msg)
+        raise InvalidOperatorError(msg)
 
     if op.num_qubits == 0 or len(op.paulis) == 0:
         return []
@@ -180,7 +181,7 @@ def remove_unused_qubits(
     """
     if op.num_qubits is None:
         msg = "op.num_qubits is None, cannot remove unused qubits."
-        raise ValueError(msg)
+        raise InvalidOperatorError(msg)
 
     unused = find_unused_qubits(op)
     if not unused:
