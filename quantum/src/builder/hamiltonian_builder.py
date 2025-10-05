@@ -2,13 +2,17 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from constants import BOUNDING_CONSTANT, MJ_ENERGY_MULTIPLIER, QUBITS_PER_TURN
+from constants import (
+    BOUNDING_CONSTANT,
+    EMPTY_OP_COEFF,
+    MJ_ENERGY_MULTIPLIER,
+    QUBITS_PER_TURN,
+)
 from enums import Penalties
 from exceptions import InvalidOperatorError
 from logger import get_logger
 from utils.qubit_utils import (
-    build_full_identity,
-    create_empty_sparse_pauli_op,
+    build_identity_op,
     fix_qubits,
     pad_to_n_qubits,
 )
@@ -60,7 +64,9 @@ class HamiltonianBuilder:
             for hamiltonian in part_hamiltonians
         ]
 
-        total_hamiltonian: SparsePauliOp = create_empty_sparse_pauli_op(target_qubits)
+        total_hamiltonian: SparsePauliOp = build_identity_op(
+            target_qubits, EMPTY_OP_COEFF
+        )
         for hamiltonian in padded_hamiltonians:
             total_hamiltonian += hamiltonian
 
@@ -79,7 +85,9 @@ class HamiltonianBuilder:
         h_backbone_num_qubits: int = (
             pow((chain_len - 1), 2) + (chain_len - 1) * QUBITS_PER_TURN
         )
-        h_backbone: SparsePauliOp = create_empty_sparse_pauli_op(h_backbone_num_qubits)
+        h_backbone: SparsePauliOp = build_identity_op(
+            h_backbone_num_qubits, EMPTY_OP_COEFF
+        )
 
         for i in range(len(main_chain) - 4):
             for j in range(i + 4, len(main_chain)):
@@ -121,8 +129,8 @@ class HamiltonianBuilder:
         main_chain: MainChain = self.protein.main_chain
 
         h_backtrack_num_qubits: int = (len(main_chain) - 1) * QUBITS_PER_TURN
-        h_backtrack: SparsePauliOp = create_empty_sparse_pauli_op(
-            h_backtrack_num_qubits
+        h_backtrack: SparsePauliOp = build_identity_op(
+            h_backtrack_num_qubits, EMPTY_OP_COEFF
         )
 
         for i in range(1, len(main_chain) - 2):
@@ -148,12 +156,13 @@ class HamiltonianBuilder:
             logger.debug(
                 f"One of the beads {lower_bead.symbol}|{lower_bead.index} or {upper_bead.symbol}|{upper_bead.index} has no turn functions. Skipping turn operator calculation."
             )
-            return create_empty_sparse_pauli_op(
-                (len(self.protein.main_chain) - 1) * QUBITS_PER_TURN
+            return build_identity_op(
+                (len(self.protein.main_chain) - 1) * QUBITS_PER_TURN,
+                EMPTY_OP_COEFF,
             )
 
-        turn_operators: SparsePauliOp = create_empty_sparse_pauli_op(
-            (len(self.protein.main_chain) - 1) * QUBITS_PER_TURN
+        turn_operators: SparsePauliOp = build_identity_op(
+            (len(self.protein.main_chain) - 1) * QUBITS_PER_TURN, EMPTY_OP_COEFF
         )
 
         for lower_bead_idx, upper_bead_idx in zip(lower_turn_funcs, upper_turn_funcs):
@@ -180,9 +189,9 @@ class HamiltonianBuilder:
             msg = "x.num_qubits is None, cannot build first neighbor Hamiltonian."
             raise InvalidOperatorError(msg)
 
-        expression: SparsePauliOp = lambda_0 * (
-            x - build_full_identity(x.num_qubits)
-        ) + (MJ_ENERGY_MULTIPLIER * energy * build_full_identity(x.num_qubits))
+        expression: SparsePauliOp = lambda_0 * (x - build_identity_op(x.num_qubits)) + (
+            MJ_ENERGY_MULTIPLIER * energy * build_identity_op(x.num_qubits)
+        )
 
         return fix_qubits(expression)
 
@@ -203,7 +212,7 @@ class HamiltonianBuilder:
             raise InvalidOperatorError(msg)
 
         expression: SparsePauliOp = lambda_1 * (
-            2 * build_full_identity(x.num_qubits) - x
-        ) + (MJ_ENERGY_MULTIPLIER * energy * build_full_identity(x.num_qubits))
+            2 * build_identity_op(x.num_qubits) - x
+        ) + (MJ_ENERGY_MULTIPLIER * energy * build_identity_op(x.num_qubits))
 
         return fix_qubits(expression)

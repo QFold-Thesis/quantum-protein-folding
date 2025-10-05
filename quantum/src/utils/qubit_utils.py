@@ -9,6 +9,7 @@ from qiskit.quantum_info import (
 )
 
 from constants import (
+    IDENTITY_OP_COEFF,
     MAIN_CHAIN_FIFTH_FIXED_POSITION,
     MAIN_CHAIN_FIXED_POSITIONS,
     NORM_FACTOR,
@@ -21,10 +22,12 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 
-def build_full_identity(num_qubits: int) -> SparsePauliOp:
+def build_identity_op(
+    num_qubits: int, coeff: float = IDENTITY_OP_COEFF
+) -> SparsePauliOp:
     """Builds a full identity Pauli operator for a given number of qubits."""
     identity_string: str = "I" * num_qubits
-    return SparsePauliOp.from_list([(identity_string, 1.0)])
+    return SparsePauliOp.from_list([(identity_string, coeff)])
 
 
 def build_turn_qubit(z_index: int, num_qubits: int) -> SparsePauliOp:
@@ -33,7 +36,7 @@ def build_turn_qubit(z_index: int, num_qubits: int) -> SparsePauliOp:
         [("Z", [z_index], 1.0)], num_qubits=num_qubits
     )
 
-    full_identity: SparsePauliOp = build_full_identity(num_qubits=num_qubits)
+    full_identity: SparsePauliOp = build_identity_op(num_qubits=num_qubits)
 
     return NORM_FACTOR * (full_identity - z_operator)
 
@@ -154,7 +157,7 @@ def pad_to_n_qubits(op: SparsePauliOp, target: int) -> SparsePauliOp:
     if op.num_qubits == target:
         return op
     pad = target - op.num_qubits
-    id_pad = build_full_identity(pad)
+    id_pad = build_identity_op(pad)
     return id_pad ^ op
 
 
@@ -197,8 +200,3 @@ def remove_unused_qubits(
     ]
 
     return SparsePauliOp(new_paulis, coeffs=op.coeffs).simplify()
-
-
-def create_empty_sparse_pauli_op(num_qubits: int) -> SparsePauliOp:
-    """Creates an empty SparsePauliOp."""
-    return SparsePauliOp.from_list([("I" * num_qubits, 0.0)])

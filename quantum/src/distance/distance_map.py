@@ -2,10 +2,13 @@ from collections import defaultdict
 
 from qiskit.quantum_info import SparsePauliOp
 
-from constants import DIST_VECTOR_AXES, QUBITS_PER_TURN
+from constants import DIST_VECTOR_AXES, EMPTY_OP_COEFF, QUBITS_PER_TURN
 from logger import get_logger
 from protein import Protein
-from utils.qubit_utils import create_empty_sparse_pauli_op, fix_qubits
+from utils.qubit_utils import (
+    build_identity_op,
+    fix_qubits,
+)
 
 logger = get_logger()
 
@@ -19,7 +22,7 @@ class DistanceMap:
         self._distance_map: defaultdict[int, defaultdict[int, SparsePauliOp]] = (
             defaultdict(
                 lambda: defaultdict(
-                    lambda: create_empty_sparse_pauli_op(self._pauli_op_len)
+                    lambda: build_identity_op(self._pauli_op_len, EMPTY_OP_COEFF)
                 )
             )
         )
@@ -42,7 +45,7 @@ class DistanceMap:
         for lower_bead_idx in range(self._main_chain_len):
             for upper_bead_idx in range(lower_bead_idx + 1, self._main_chain_len):
                 axes_vector: list[SparsePauliOp] = [
-                    create_empty_sparse_pauli_op(self._pauli_op_len)
+                    build_identity_op(self._pauli_op_len, EMPTY_OP_COEFF)
                     for _ in range(DIST_VECTOR_AXES)
                 ]
 

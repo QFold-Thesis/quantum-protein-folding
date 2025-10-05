@@ -47,3 +47,7 @@ MAIN_CHAIN_FIXED_POSITIONS: list[int] = [0, 1, 2, 3, 5]
 MAIN_CHAIN_FIFTH_FIXED_POSITION: int = 5
 
 INTERACTION_TYPE: InteractionType = InteractionType.MJ
+
+IDENTITY_OP_COEFF: float = 1.0
+
+EMPTY_OP_COEFF: float = 0.0

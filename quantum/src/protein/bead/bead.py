@@ -9,7 +9,7 @@ from constants import CONFORMATION_ENCODING, QUBITS_PER_TURN
 from enums import SubLattice
 from exceptions import ConformationEncodingError
 from logger import get_logger
-from utils.qubit_utils import build_full_identity, build_turn_qubit
+from utils.qubit_utils import build_identity_op, build_turn_qubit
 
 if TYPE_CHECKING:
     from qiskit.quantum_info import SparsePauliOp
@@ -27,7 +27,7 @@ class Bead(ABC):
         self._num_turn_qubits: int = (parent_chain_len - 1) * QUBITS_PER_TURN
         self._has_turn_qubits: bool = index != (parent_chain_len - 1)
 
-        self._full_identity: SparsePauliOp = build_full_identity(
+        self._full_identity: SparsePauliOp = build_identity_op(
             num_qubits=self._num_turn_qubits
         )
 

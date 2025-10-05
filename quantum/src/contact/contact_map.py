@@ -7,7 +7,7 @@ from logger import get_logger
 from protein import Protein
 from protein.bead import Bead
 from utils.qubit_utils import (
-    build_full_identity,
+    build_identity_op,
     build_pauli_z_operator,
     convert_to_qubits,
 )
@@ -37,7 +37,7 @@ class ContactMap:
         self._protein: Protein = protein
 
         self._num_contact_qubits: int = pow(len(self._protein.main_chain) - 1, 2)
-        self._full_identity: SparsePauliOp = build_full_identity(
+        self._full_identity: SparsePauliOp = build_identity_op(
             num_qubits=self._num_contact_qubits
         )
 
