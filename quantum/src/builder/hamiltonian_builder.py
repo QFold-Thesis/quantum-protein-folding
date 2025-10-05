@@ -165,7 +165,9 @@ class HamiltonianBuilder:
             (len(self.protein.main_chain) - 1) * QUBITS_PER_TURN, EMPTY_OP_COEFF
         )
 
-        for lower_bead_idx, upper_bead_idx in zip(lower_turn_funcs, upper_turn_funcs, strict=True):
+        for lower_bead_idx, upper_bead_idx in zip(
+            lower_turn_funcs, upper_turn_funcs, strict=True
+        ):
             turn_operators += lower_bead_idx @ upper_bead_idx
 
         return fix_qubits(turn_operators)
