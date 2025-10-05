@@ -8,9 +8,11 @@ from qiskit_algorithms import SamplingVQE
 from qiskit_algorithms.optimizers import COBYLA
 
 from builder import HamiltonianBuilder
-from constants import EMPTY_SIDECHAIN_PLACEHOLDER
+from constants import EMPTY_SIDECHAIN_PLACEHOLDER, INTERACTION_TYPE
 from contact import ContactMap
 from distance import DistanceMap
+from enums import InteractionType
+from exceptions import InvalidInteractionTypeError
 from interaction import HPInteraction, Interaction, MJInteraction
 from logger import get_logger
 from protein import Protein
@@ -48,13 +50,18 @@ def setup_folding_system(
     protein = Protein(
         main_protein_sequence=main_chain, side_protein_sequence=side_chain
     )
-    mj_interaction = MJInteraction()
-    _ = HPInteraction()
+
+    if INTERACTION_TYPE == InteractionType.MJ:
+        interaction: Interaction = MJInteraction()
+    elif INTERACTION_TYPE == InteractionType.HP:
+        interaction: Interaction = HPInteraction()
+    else:
+        raise InvalidInteractionTypeError
 
     contact_map = ContactMap(protein=protein)
     distance_map = DistanceMap(protein=protein)
 
-    return protein, mj_interaction, contact_map, distance_map
+    return protein, interaction, contact_map, distance_map
 
 
 def build_and_compress_hamiltonian(

@@ -52,8 +52,7 @@ class HamiltonianBuilder:
                 raise InvalidOperatorError(msg)
 
         target_qubits: int = max(
-            int(hamiltonian.num_qubits)
-            for hamiltonian in part_hamiltonians
+            int(hamiltonian.num_qubits) for hamiltonian in part_hamiltonians
         )
 
         padded_hamiltonians: list[SparsePauliOp] = [

@@ -45,3 +45,14 @@ class InvalidOperatorError(Exception):
     ) -> None:
         logger.exception(message)
         super().__init__(message)
+
+
+class InvalidInteractionTypeError(Exception):
+    """Exception raised when an invalid interaction type is encountered."""
+
+    def __init__(
+        self,
+        message: str = "Invalid interaction type. Make sure that the interaction type is of type InteractionType.",
+    ) -> None:
+        logger.exception(message)
+        super().__init__(message)

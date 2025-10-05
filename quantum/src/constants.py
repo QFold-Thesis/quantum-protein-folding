@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from enums import ConformationEncoding
+from enums import ConformationEncoding, InteractionType
 
 ROOT_PROJECT_PATH: Path = Path(__file__).parent.parent
 
@@ -45,3 +45,5 @@ MIN_DISTANCE_BETWEEN_CONTACTS: int = (
 
 MAIN_CHAIN_FIXED_POSITIONS: list[int] = [0, 1, 2, 3, 5]
 MAIN_CHAIN_FIFTH_FIXED_POSITION: int = 5
+
+INTERACTION_TYPE: InteractionType = InteractionType.MJ
