@@ -43,7 +43,7 @@ def __print_best_results(raw_result: dict[str, Any]) -> None:
 
 def setup_folding_system(
     main_chain: str, side_chain: str
-) -> tuple[Protein, MJInteraction, ContactMap, DistanceMap]:
+) -> tuple[Protein, Interaction, ContactMap, DistanceMap]:
     """Setup the protein folding system components."""
     protein = Protein(
         main_protein_sequence=main_chain, side_protein_sequence=side_chain
