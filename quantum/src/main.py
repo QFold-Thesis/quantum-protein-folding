@@ -137,12 +137,19 @@ def main() -> None:
         distance_map=distance_map,
     )
 
-    vqe, _, _ = setup_vqe_optimization(compressed_h)
+    if (
+        compressed_h.num_qubits is None
+        or len(compressed_h.paulis) == 0
+        or np.allclose(compressed_h.coeffs, 0)
+    ):
+        logger.info("Compressed Hamiltonian is empty or zero — skipping VQE.")
+    else:
+        vqe, _, _ = setup_vqe_optimization(compressed_h)
 
-    logger.debug("Starting VQE optimization...")
-    raw_result = vqe.compute_minimum_eigenvalue(compressed_h)
+        logger.debug("Starting VQE optimization...")
+        raw_result = vqe.compute_minimum_eigenvalue(compressed_h)
 
-    __print_best_results(raw_result)  # type: ignore  # noqa: PGH003
+        __print_best_results(raw_result)  # type: ignore  # noqa: PGH003
 
 
 if __name__ == "__main__":
