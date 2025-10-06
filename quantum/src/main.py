@@ -42,11 +42,11 @@ def __print_best_results(raw_result: dict[str, Any]) -> None:
 
 
 def setup_folding_system(
-    main_chain: str, side_chain: str
+    main_chain: str, side_chains: list[str]
 ) -> tuple[Protein, MJInteraction, ContactMap, DistanceMap]:
     """Setup the protein folding system components."""
     protein = Protein(
-        main_protein_sequence=main_chain, side_protein_sequence=side_chain
+        main_protein_sequence=main_chain, side_protein_sequences=side_chains
     )
     mj_interaction = MJInteraction()
     _ = HPInteraction()
@@ -117,10 +117,11 @@ def setup_vqe_optimization(
 
 def main() -> None:
     main_chain: str = "APRLRFY"
-    side_chain: str = EMPTY_SIDECHAIN_PLACEHOLDER * len(main_chain)
+    side_chains: list[str] = ["_", "_", "K", "_", "E", "_", "_"]
+    #side_chains: list[str] = [EMPTY_SIDECHAIN_PLACEHOLDER] * len(main_chain)
 
     protein, interaction, contact_map, distance_map = setup_folding_system(
-        main_chain, side_chain
+        main_chain, side_chains
     )
 
     _, compressed_h = build_and_compress_hamiltonian(

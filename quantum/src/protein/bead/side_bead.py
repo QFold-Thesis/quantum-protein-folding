@@ -16,22 +16,19 @@ class SideBead(Bead):
                 (self._full_identity - self.turn_qubits[0])
                 @ (self._full_identity - self.turn_qubits[1])
             )
-            ^ self._full_identity
         ).simplify()
 
     def turn_1(self) -> SparsePauliOp:
         return (
             (self.turn_qubits[1] @ (self.turn_qubits[1] - self.turn_qubits[0]))
-            ^ self._full_identity
         ).simplify()
 
     def turn_2(self) -> SparsePauliOp:
         return (
             (self.turn_qubits[0] @ (self.turn_qubits[0] - self.turn_qubits[1]))
-            ^ self._full_identity
         ).simplify()
 
     def turn_3(self) -> SparsePauliOp:
         return (
-            self.turn_qubits[0] @ self.turn_qubits[1] ^ self._full_identity
+            self.turn_qubits[0] @ self.turn_qubits[1]
         ).simplify()

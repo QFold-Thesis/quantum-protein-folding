@@ -1,0 +1,28 @@
+# Main-Main Contact Map
+# Generated: 2025-10-01T15:27:31+00:00
+# Protein length: 7
+# Contacts detected: 2
+# Legend: X = contact, . = no contact (matrix is symmetric; diagonal blank)
+
+Indices :   0   1   2   3   4   5   6
+Symbols :   A   P   R   L   R   F   Y
+
+ 0(A) |    .  .  .  .  X  . 
+ 1(P) | .     .  .  .  .  X 
+ 2(R) | .  .     .  .  .  . 
+ 3(L) | .  .  .     .  .  . 
+ 4(R) | .  .  .  .     .  . 
+ 5(F) | X  .  .  .  .     . 
+ 6(Y) | .  X  .  .  .  .    
+
+# Explicit contact pairs (upper_index, lower_index, z_op_index)
+  5,   0,     5
+  6,   1,    12
+
+# Raw main_main_contacts dump (upper_index -> lower_index: SparsePauliOp)
+upper 5:
+  lower 0: SparsePauliOp(['IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII', 'IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIZIIIII'],
+              coeffs=[ 0.5+0.j, -0.5+0.j])
+upper 6:
+  lower 1: SparsePauliOp(['IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII', 'IIIIIIIIIIIIIIIIIIIIIIIZIIIIIIIIIIII'],
+              coeffs=[ 0.5+0.j, -0.5+0.j])

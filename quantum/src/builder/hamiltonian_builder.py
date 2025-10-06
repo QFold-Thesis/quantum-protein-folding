@@ -175,7 +175,9 @@ class HamiltonianBuilder:
         symbol_upper: str = self.protein.main_chain.get_symbol_at(upper_bead_idx)
 
         energy: float = self.interaction.get_energy(symbol_lower, symbol_upper)
-        x: SparsePauliOp = self.distance_map[lower_bead_idx][upper_bead_idx]
+        lower_bead: Bead = self.protein.main_chain[lower_bead_idx]
+        upper_bead: Bead = self.protein.main_chain[upper_bead_idx]
+        x: SparsePauliOp = self.distance_map[lower_bead][upper_bead]
 
         if x.num_qubits is None:
             msg = "x.num_qubits is None, cannot build first neighbor Hamiltonian."
@@ -197,7 +199,9 @@ class HamiltonianBuilder:
         symbol_upper: str = self.protein.main_chain.get_symbol_at(upper_bead_idx)
 
         energy: float = self.interaction.get_energy(symbol_lower, symbol_upper)
-        x: SparsePauliOp = self.distance_map[lower_bead_idx][upper_bead_idx]
+        lower_bead: Bead = self.protein.main_chain[lower_bead_idx]
+        upper_bead: Bead = self.protein.main_chain[upper_bead_idx]
+        x: SparsePauliOp = self.distance_map[lower_bead][upper_bead]
 
         if x.num_qubits is None:
             msg = "x.num_qubits is None, cannot build second neighbor Hamiltonian."

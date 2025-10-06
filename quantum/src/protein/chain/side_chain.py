@@ -23,8 +23,5 @@ class SideChain(Chain):
                 parent_chain_len=len(protein_sequence),
             )
             for index, bead in enumerate(protein_sequence)
-            if bead != EMPTY_SIDECHAIN_PLACEHOLDER
+            #if bead != EMPTY_SIDECHAIN_PLACEHOLDER
         ]
-
-    def __str__(self) -> str:
-        return "".join(bead.symbol for bead in self.beads)
