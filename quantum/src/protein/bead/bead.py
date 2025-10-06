@@ -3,16 +3,16 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
+from qiskit.quantum_info import SparsePauliOp
+
 from constants import CONFORMATION_ENCODING, QUBITS_PER_TURN
-from enums import ConformationEncoding, SubLattice
+from enums import SubLattice
 from exceptions import ConformationEncodingError
 from logger import get_logger
-from utils.qubit_utils import build_full_identity, build_turn_qubit
+from utils.qubit_utils import build_identity_op, build_turn_qubit
 
 if TYPE_CHECKING:
-    from qiskit.quantum_info import (
-        SparsePauliOp,
-    )
+    from qiskit.quantum_info import SparsePauliOp
 
 logger = get_logger()
 
@@ -27,7 +27,7 @@ class Bead(ABC):
         self._num_turn_qubits: int = (parent_chain_len - 1) * QUBITS_PER_TURN
         self._has_turn_qubits: bool = index != (parent_chain_len - 1)
 
-        self._full_identity: SparsePauliOp = build_full_identity(
+        self._full_identity: SparsePauliOp = build_identity_op(
             num_qubits=self._num_turn_qubits
         )
 
@@ -42,51 +42,24 @@ class Bead(ABC):
         if not self._has_turn_qubits:
             return
 
-        if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
-            self.turn_qubits = (
-                build_turn_qubit(
-                    num_qubits=self._num_turn_qubits,
-                    z_index=QUBITS_PER_TURN * self.index,
-                ),
-                build_turn_qubit(
-                    num_qubits=self._num_turn_qubits,
-                    z_index=QUBITS_PER_TURN * self.index + 1,
-                ),
-            )
-            logger.debug(
-                f"Initialized {len(self.turn_qubits)} turn qubits for Bead {self.symbol} | {self.index} ({CONFORMATION_ENCODING.name} encoding)."
-            )
-            return
+        if None in (CONFORMATION_ENCODING, QUBITS_PER_TURN):
+            raise ConformationEncodingError
 
-        if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
-            self.turn_qubits = (
-                build_turn_qubit(
-                    num_qubits=self._num_turn_qubits,
-                    z_index=QUBITS_PER_TURN * self.index,
-                ),
-                build_turn_qubit(
-                    num_qubits=self._num_turn_qubits,
-                    z_index=QUBITS_PER_TURN * self.index + 1,
-                ),
-                build_turn_qubit(
-                    num_qubits=self._num_turn_qubits,
-                    z_index=QUBITS_PER_TURN * self.index + 2,
-                ),
-                build_turn_qubit(
-                    num_qubits=self._num_turn_qubits,
-                    z_index=QUBITS_PER_TURN * self.index + 3,
-                ),
+        self.turn_qubits = tuple(
+            build_turn_qubit(
+                num_qubits=self._num_turn_qubits,
+                z_index=QUBITS_PER_TURN * self.index + i,
             )
-            logger.debug(
-                f"Initialized {len(self.turn_qubits)} turn qubits for Bead {self.symbol} | {self.index} ({CONFORMATION_ENCODING.name} encoding)."
-            )
-            return
-        raise ConformationEncodingError
+            for i in range(QUBITS_PER_TURN)
+        )
+        logger.debug(
+            f"Initialized {len(self.turn_qubits)} turn qubits for Bead {self.symbol} | {self.index} ({CONFORMATION_ENCODING.name} encoding)."
+        )
 
     def turn_funcs(
         self,
     ) -> None | tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp]:
-        if self.turn_qubits is None:
+        if not self.turn_qubits or not self._has_turn_qubits:
             return None
         return (self.turn_0(), self.turn_1(), self.turn_2(), self.turn_3())
 

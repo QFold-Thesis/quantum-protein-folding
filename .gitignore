@@ -1,10 +1,12 @@
-
 # Quantum protein folding project - specific ignores
 .idea/
 plots/
 test.py
 
 temp/
+
+.DS_Store
+.vscode/
 
 
 # Byte-compiled / optimized / DLL files

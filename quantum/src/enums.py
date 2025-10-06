@@ -21,3 +21,10 @@ class Penalties(IntEnum):
     OVERLAP_PENALTY = 10
     CHIRALITY_PENALTY = 10
     BACK_PENALTY = 10
+
+
+class InteractionType(IntEnum):
+    """Enum representing interaction types."""
+
+    MJ = 0
+    HP = 1

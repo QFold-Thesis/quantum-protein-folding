@@ -1,11 +1,9 @@
-import logging
-
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from logger import get_logger
 from protein.bead.side_bead import SideBead
 from protein.chain import Chain
 
-logger: logging.Logger = get_logger()
+logger = get_logger()
 
 
 class SideChain(Chain):

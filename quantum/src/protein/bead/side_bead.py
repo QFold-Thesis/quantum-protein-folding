@@ -1,4 +1,4 @@
-from qiskit.quantum_info import SparsePauliOp  # pyright: ignore[reportMissingTypeStubs]
+from qiskit.quantum_info import SparsePauliOp
 
 from logger import get_logger
 from protein.bead import Bead

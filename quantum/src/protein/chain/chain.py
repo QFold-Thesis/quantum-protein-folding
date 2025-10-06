@@ -10,8 +10,6 @@ class Chain(ABC):
     def __init__(self, protein_sequence: str) -> None:
         self.beads: list[Bead] = []
 
-    # for now - let's keep turn qubits only in beads
-
     def get_symbol_at(self, index: int) -> str:
         """
         Returns the bead symbol at the given chain index.

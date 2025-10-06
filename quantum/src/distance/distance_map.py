@@ -1,69 +1,87 @@
 from collections import defaultdict
 
-from constants import DIST_VECTOR_AXES
+from qiskit.quantum_info import SparsePauliOp
+
+from constants import DIST_VECTOR_AXES, EMPTY_OP_COEFF, QUBITS_PER_TURN
 from logger import get_logger
 from protein import Protein
-from utils.qubit_utils import fix_qubits
+from utils.qubit_utils import (
+    build_identity_op,
+    fix_qubits,
+)
 
 logger = get_logger()
 
 
 class DistanceMap:
     def __init__(self, protein: Protein):
-        self.protein = protein
-        self.distance_map = defaultdict(lambda: defaultdict(int))
-        self._distances_vector: list[defaultdict] = [
-            defaultdict(lambda: defaultdict(int)) for _ in range(DIST_VECTOR_AXES)
-        ]
-        self._calc_distances_main_chain()
+        self._protein: Protein = protein
+        self._main_chain_len: int = len(self._protein.main_chain)
 
-    def _calc_distances_main_chain(self):
-        logger.debug("Creating distance map for main chain")
-
-        main_chain_len = len(self.protein.main_chain)
-
-        for lower_bead_idx in range(main_chain_len):
-            for upper_bead_idx in range(lower_bead_idx + 1, main_chain_len):
-                logger.debug(
-                    "Processing pair main_chain_%s -> main_chain_%s",
-                    lower_bead_idx,
-                    upper_bead_idx,
+        self._pauli_op_len: int = (self._main_chain_len - 1) * QUBITS_PER_TURN
+        self._distance_map: defaultdict[int, defaultdict[int, SparsePauliOp]] = (
+            defaultdict(
+                lambda: defaultdict(
+                    lambda: build_identity_op(self._pauli_op_len, EMPTY_OP_COEFF)
                 )
+            )
+        )
+
+        self._main_chain_distances_detected: int = 0
+
+        try:
+            self._calc_distances_main_chain()
+        except Exception:
+            logger.exception(
+                "Error occurred while calculating distances for main_chain"
+            )
+            raise
+        else:
+            logger.debug(
+                f"Distance map for main_chain initialized successfully with {self._main_chain_distances_detected} distances detected."
+            )
+
+    def _calc_distances_main_chain(self) -> None:
+        for lower_bead_idx in range(self._main_chain_len):
+            for upper_bead_idx in range(lower_bead_idx + 1, self._main_chain_len):
+                axes_vector: list[SparsePauliOp] = [
+                    build_identity_op(self._pauli_op_len, EMPTY_OP_COEFF)
+                    for _ in range(DIST_VECTOR_AXES)
+                ]
+
                 for k in range(lower_bead_idx, upper_bead_idx):
-                    indic_funcs = self.protein.main_chain[k].turn_funcs()
-                    sub_lattice_sign = (-1) ** k
-
-                    for indic_fun_x, dist_vector in zip(
-                        indic_funcs, self._distances_vector
-                    ):
-                        dist_vector[lower_bead_idx][upper_bead_idx] += (
-                            sub_lattice_sign * indic_fun_x
+                    indic_funcs = self._protein.main_chain[k].turn_funcs()
+                    if indic_funcs is None:
+                        logger.debug(
+                            f"No turn functions for bead {k}, skipping calculating distance..."
                         )
+                        continue
 
-                for dist_vector in self._distances_vector:
-                    dist_vector[lower_bead_idx][upper_bead_idx] = fix_qubits(
-                        dist_vector[lower_bead_idx][upper_bead_idx]
+                    sub_lattice_sign: int = (-1) ** k
+
+                    for axis_idx, indic_fun_x in enumerate(indic_funcs):
+                        axes_vector[axis_idx] += sub_lattice_sign * indic_fun_x
+
+                for axis_idx in range(len(axes_vector)):
+                    axes_vector[axis_idx] = fix_qubits(axes_vector[axis_idx])
+                    self._distance_map[lower_bead_idx][upper_bead_idx] += (
+                        axes_vector[axis_idx] ** 2
                     )
 
-                for dist_vector in self._distances_vector:
-                    self.distance_map[lower_bead_idx][upper_bead_idx] += (
-                        dist_vector[lower_bead_idx][upper_bead_idx] ** 2
-                    )
-
-                self.distance_map[lower_bead_idx][upper_bead_idx] = fix_qubits(
-                    self.distance_map[lower_bead_idx][upper_bead_idx]
+                self._distance_map[lower_bead_idx][upper_bead_idx] = fix_qubits(
+                    self._distance_map[lower_bead_idx][upper_bead_idx]
                 )
+                self._main_chain_distances_detected += 1
 
                 logger.debug(
-                    f"main_chain_{lower_bead_idx} -> main_chain_{upper_bead_idx}: {self.distance_map[lower_bead_idx][upper_bead_idx]}"
+                    f"Calculated distance for main_chain_{lower_bead_idx} -> main_chain_{upper_bead_idx} | Num qubits: {self._distance_map[lower_bead_idx][upper_bead_idx].num_qubits}"
                 )
-        logger.debug("Distance map initialized successfully")
 
-    def __getitem__(self, key):
-        return self.distance_map[key]
+    def __getitem__(self, key: int) -> defaultdict[int, SparsePauliOp]:
+        return self._distance_map[key]
 
-    def __setitem__(self, key, value):
-        self.distance_map[key] = value
+    def __setitem__(self, key: int, value: defaultdict[int, SparsePauliOp]) -> None:
+        self._distance_map[key] = value
 
-    def __len__(self):
-        return len(self.distance_map)
+    def __len__(self) -> int:
+        return len(self._distance_map)
