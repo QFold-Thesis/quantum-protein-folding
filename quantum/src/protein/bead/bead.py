@@ -59,7 +59,7 @@ class Bead(ABC):
     def turn_funcs(
         self,
     ) -> None | tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp]:
-        if len(self.turn_qubits) == 0 or not self._has_turn_qubits:
+        if not self.turn_qubits or not self._has_turn_qubits:
             return None
         return (self.turn_0(), self.turn_1(), self.turn_2(), self.turn_3())
 

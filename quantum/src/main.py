@@ -12,7 +12,7 @@ from constants import EMPTY_SIDECHAIN_PLACEHOLDER, INTERACTION_TYPE
 from contact import ContactMap
 from distance import DistanceMap
 from enums import InteractionType
-from exceptions import InvalidInteractionTypeError
+from exceptions import InvalidInteractionTypeError, InvalidOperatorError
 from interaction import HPInteraction, Interaction, MJInteraction
 from logger import get_logger
 from protein import Protein
@@ -95,7 +95,7 @@ def setup_vqe_optimization(
 
     if compressed_h.num_qubits is None:
         msg: str = "Hamiltonian number of qubits is None."
-        raise ValueError(msg)
+        raise InvalidOperatorError(msg)
 
     ansatz: QuantumCircuit = real_amplitudes(num_qubits=compressed_h.num_qubits, reps=1)
 
