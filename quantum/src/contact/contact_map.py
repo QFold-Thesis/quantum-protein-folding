@@ -35,7 +35,16 @@ class ContactMap:
     """
 
     def __init__(self, protein: Protein):
-        """Initializes the contact map for the given protein."""
+        """
+        Initializes the contact map for the given protein.
+
+        Args:
+            protein (Protein): The Protein object that includes all information about protein.
+
+        Raises:
+            Exception: If contact map initialization fails.
+
+        """
         self.main_main_contacts: dict[int, dict[int, SparsePauliOp]] = defaultdict(
             lambda: defaultdict()
         )
@@ -101,7 +110,17 @@ class ContactMap:
     def _create_main_main_contact(
         self, upper_bead: Bead, lower_bead: Bead
     ) -> SparsePauliOp:
-        """Creates a contact operator between two main chain beads."""
+        """
+        Creates a contact operator between two main chain beads.
+
+        Args:
+            lower_bead (Bead): The bead from the main chain at the lower index.
+            upper_bead (Bead): The bead from the main chain at the upper index.
+
+        Returns:
+            SparsePauliOp: Pauli-Z operator for the contact between the two beads.
+
+        """
         z_op_index: int = (lower_bead.index) * (len(self._protein.main_chain) - 1) + (
             upper_bead.index
         )

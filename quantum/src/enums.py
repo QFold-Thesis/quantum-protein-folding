@@ -1,6 +1,4 @@
-"""
-Defines key enumerations for modeling protein folding constraints and encodings.
-"""
+"""Defines key enumerations for modeling protein folding constraints and encodings."""
 
 from enum import IntEnum
 

@@ -7,6 +7,7 @@ penalties, and neighbor-based contact terms, using distance and MJ interaction m
 """
 
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from constants import (
@@ -38,10 +39,7 @@ logger = get_logger()
 
 
 class HamiltonianBuilder:
-    """
-    Constructs Hamiltonian operators for a given protein, including
-    backbone interactions and backtracking penalties.
-    """
+    """Constructs Hamiltonian operators for a given protein, including backbone interactions and backtracking penalties."""
 
     def __init__(
         self,
@@ -53,6 +51,13 @@ class HamiltonianBuilder:
         """
         Initializes the HamiltonianBuilder with required protein data
         and interaction maps.
+
+        Args:
+            protein (Protein): The Protein object that includes all information about protein.
+            interaction (Interaction): Interaction model between beads of the protein.
+            distance_map (DistanceMap): Matrix of pairwise distances between residues.
+            contact_map (ContactMap): Matrix indicating residue-residue contacts.
+
         """
         self.protein: Protein = protein
         self.interaction: Interaction = interaction
@@ -60,7 +65,19 @@ class HamiltonianBuilder:
         self.contact_map: ContactMap = contact_map
 
     def sum_hamiltonians(self) -> SparsePauliOp:
-        """Build and sum all Hamiltonian components, padding to a common qubit size."""
+        """
+        Build and sum all Hamiltonian components, padding to a common qubit size.
+
+        Constructs the backbone and backtracking terms, checks qubit consistency,
+        pads them to the same qubit count, and sums them into a single Hamiltonian.
+
+        Returns:
+            SparsePauliOp: The total Hamiltonian operator, simplified and ready for use.
+
+        Raises:
+            InvalidOperatorError: If any part Hamiltonian has `num_qubits` set to None.
+
+        """
         h_backbone: SparsePauliOp = self._build_backbone_contact_term()
         h_backtrack: SparsePauliOp = self._add_backtracking_penalty()
 
@@ -92,6 +109,10 @@ class HamiltonianBuilder:
         """
         Builds the Hamiltonian term corresponding to backbone_backbone (BB-BB) interactions.
         Includes both 1st neighbor and 2nd neighbor contributions (with shifts i±1, j±1).
+
+        Returns:
+            SparsePauliOp: Hamiltonian term representing BB-BB interactions.
+
         """
         logger.info("Creating h_backbone term (BB-BB interactions)")
 
@@ -144,6 +165,10 @@ class HamiltonianBuilder:
         """
         Adds a penalty term to the Hamiltonian to discourage backtracking
         in the main chain configuration.
+
+        Returns:
+            SparsePauliOp: Hamiltonian term representing backtracking penalties.
+
         """
         logger.debug("Creating h_backtrack term")
 
@@ -168,6 +193,14 @@ class HamiltonianBuilder:
         """
         Adds a penalty term to the Hamiltonian to discourage backtracking
         in the main chain configuration.
+
+        Args:
+            lower_bead (Bead): The bead from the main chain at the lower index.
+            upper_bead (Bead): The bead from the main chain at the upper index.
+
+        Returns:
+            SparsePauliOp: Quantum operator representing the backtracking penalty between the two beads.
+
         """
         lower_turn_funcs: (
             None | tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp]
@@ -205,6 +238,18 @@ class HamiltonianBuilder:
         """
         Computes the Hamiltonian contribution for first-neighbor bead pairs,
         combining distance-based and Miyazawa-Jernigan contact energies.
+
+        Args:
+            lower_bead_idx (int): Index of the lower bead in the main chain.
+            upper_bead_idx (int): Index of the upper bead in the main chain.
+            lambda_1 (float): Penalty coefficient for first neighbor interaction.
+
+        Returns:
+            SparsePauliOp: Quantum operator representing the first neighbor Hamiltonian term.
+
+        Raises:
+            InvalidOperatorError: If the number of qubits in the operator is None.
+
         """
         lambda_0: float = (
             BOUNDING_CONSTANT * (upper_bead_idx - lower_bead_idx + 1) * lambda_1
@@ -233,7 +278,19 @@ class HamiltonianBuilder:
     ) -> SparsePauliOp:
         """
         Computes the Hamiltonian contribution for second-neighbor bead pairs,
-        including distance-based and MJ interaction terms.
+        including distance-based and Miyazawa-Jernigan interaction terms.
+
+        Args:
+            lower_bead_idx (int): Index of the lower bead in the main chain.
+            upper_bead_idx (int): Index of the upper bead in the main chain.
+            lambda_1 (float): Penalty coefficient for second neighbor interaction.
+
+        Returns:
+            SparsePauliOp: Quantum operator representing the second neighbor Hamiltonian term.
+
+        Raises:
+            InvalidOperatorError: If the number of qubits in the operator is None.
+
         """
         symbol_lower: str = self.protein.main_chain.get_symbol_at(lower_bead_idx)
         symbol_upper: str = self.protein.main_chain.get_symbol_at(upper_bead_idx)
