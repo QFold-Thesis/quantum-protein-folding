@@ -9,7 +9,7 @@ from utils.setup_utils import (
     setup_folding_system,
     setup_vqe_optimization,
 )
-from utils.visualizer_utils import generate_coords_from_bitstring
+from utils.visualizer_utils import generate_coords_from_bitstring, visualize_3d
 
 if TYPE_CHECKING:
     from qiskit_algorithms import SamplingMinimumEigensolverResult
@@ -43,6 +43,8 @@ def main() -> None:
     coords = generate_coords_from_bitstring(bitstring=interpreted_results.bitstring)
     for idx, (residue, coord) in enumerate(zip(main_chain, coords)):
         logger.info(f"Residue {idx} ({residue})\n{coord}")
+
+    visualize_3d(coords)
 
 if __name__ == "__main__":
     main()

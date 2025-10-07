@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from enums import ConformationEncoding, InteractionType
+from enums import ConformationEncoding, InteractionType, TurnDirection
 
 ROOT_PROJECT_PATH: Path = Path(__file__).parent.parent
 
@@ -51,3 +51,17 @@ INTERACTION_TYPE: InteractionType = InteractionType.MJ
 IDENTITY_OP_COEFF: float = 1.0
 
 EMPTY_OP_COEFF: float = 0.0
+
+SPARSE_TURN_INDICATORS: dict[TurnDirection, str] = {
+    TurnDirection.DIR_1: "0001",
+    TurnDirection.DIR_2: "0010",
+    TurnDirection.DIR_3: "0100",
+    TurnDirection.DIR_4: "1000",
+}
+
+DENSE_TURN_INDICATORS: dict[TurnDirection, str] = {
+    TurnDirection.DIR_1: "00",
+    TurnDirection.DIR_2: "01",
+    TurnDirection.DIR_3: "10",
+    TurnDirection.DIR_4: "11",
+}
