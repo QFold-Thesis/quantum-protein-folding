@@ -28,3 +28,12 @@ class InteractionType(IntEnum):
 
     MJ = 0
     HP = 1
+
+
+class TurnDirection(IntEnum):
+    """Enum representing turn directions on a tetrahedral lattice."""
+
+    DIR_1 = 0
+    DIR_2 = 1
+    DIR_3 = 2
+    DIR_4 = 3

@@ -5,6 +5,10 @@ test.py
 
 temp/
 
+quantum/output/*
+!quantum/output/.gitkeep
+
+
 .DS_Store
 .vscode/
 
