@@ -20,8 +20,7 @@ def main() -> None:
     side_chain: str = EMPTY_SIDECHAIN_PLACEHOLDER * len(main_chain)
 
     protein, interaction, contact_map, distance_map = setup_folding_system(
-        main_chain=main_chain,
-        side_chain=side_chain
+        main_chain=main_chain, side_chain=side_chain
     )
 
     _, compressed_h = build_and_compress_hamiltonian(
@@ -39,7 +38,9 @@ def main() -> None:
         compressed_h
     )
 
-    process_results(raw_results=raw_results, main_chain=main_chain, side_chain=side_chain)
+    process_results(
+        raw_results=raw_results, main_chain=main_chain, side_chain=side_chain
+    )
 
 
 if __name__ == "__main__":

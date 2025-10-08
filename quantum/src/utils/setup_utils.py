@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
@@ -8,7 +9,7 @@ from qiskit_algorithms import SamplingMinimumEigensolverResult, SamplingVQE
 from qiskit_algorithms.optimizers import COBYLA
 
 from builder import HamiltonianBuilder
-from constants import INTERACTION_TYPE
+from constants import INTERACTION_TYPE, OUTPUT_DATA_DIR
 from contact import ContactMap
 from distance import DistanceMap
 from enums import InteractionType
@@ -16,16 +17,18 @@ from exceptions import InvalidInteractionTypeError, InvalidOperatorError
 from interaction import HPInteraction, Interaction, MJInteraction
 from logger import get_logger
 from protein import Protein
-from utils.plot_utils import visualize_3d
 from utils.qubit_utils import remove_unused_qubits
 from utils.result_interpretation_utils import (
     VQEOutput,
     create_xyz_file,
+    dump_results_to_files,
     generate_coords_from_bitstring,
     interpret_raw_vqe_output,
 )
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from qiskit import QuantumCircuit
 
 logger = get_logger()
@@ -110,17 +113,30 @@ def setup_vqe_optimization(
     return vqe, counts, values
 
 
-def process_results(raw_results: SamplingMinimumEigensolverResult, main_chain: str, side_chain: str) -> None:
+def process_results(
+    raw_results: SamplingMinimumEigensolverResult, main_chain: str, side_chain: str
+) -> None:
+    logger.info("Processing VQE results...")
+
+    timestamp: str = datetime.now(tz=timezone.utc).strftime("%Y%m%d_%H%M%S")
+    dirpath: Path = OUTPUT_DATA_DIR / f"{timestamp}-{main_chain}-{side_chain}"
+
+    dirpath.mkdir(parents=True, exist_ok=False)
+
     interpreted_results: VQEOutput = interpret_raw_vqe_output(raw_results)
+
     logger.info(f"VQE optimization results: \n{interpreted_results}")
+    logger.info(f"Raw results: \n{raw_results}")
 
     coords = generate_coords_from_bitstring(
         bitstring=interpreted_results.bitstring,
         main_chain=main_chain,
         side_chain=side_chain,
     )
-    create_xyz_file(
-        coords=coords
+
+    create_xyz_file(coords=coords, dirpath=dirpath)
+
+    dump_results_to_files(
+        raw_results=raw_results, vqe_output=interpreted_results, dirpath=dirpath
     )
 
-    visualize_3d(coords)

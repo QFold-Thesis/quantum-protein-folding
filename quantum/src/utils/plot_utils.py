@@ -8,7 +8,7 @@ logger = get_logger()
 
 
 def visualize_3d(coords, color="blue", figsize=(8, 8)):
-    coords = np.array(coords)
+    coords = np.array(corrd.position for corrd in coords)
 
     fig = plt.figure(figsize=figsize)
     ax = fig.add_subplot(111, projection="3d")
