@@ -141,4 +141,4 @@ def process_results(
         raw_results=raw_results, vqe_output=interpreted_results, dirpath=dirpath
     )
 
-    visualize_3d(coords=coords)
+    visualize_3d(coords=coords, dirpath=dirpath)
