@@ -4,7 +4,7 @@ import numpy as np
 from qiskit.circuit.library import real_amplitudes
 from qiskit.primitives import StatevectorSampler as Sampler
 from qiskit.quantum_info import SparsePauliOp
-from qiskit_algorithms import SamplingVQE
+from qiskit_algorithms import SamplingMinimumEigensolverResult, SamplingVQE
 from qiskit_algorithms.optimizers import COBYLA
 
 from builder import HamiltonianBuilder
@@ -16,7 +16,14 @@ from exceptions import InvalidInteractionTypeError, InvalidOperatorError
 from interaction import HPInteraction, Interaction, MJInteraction
 from logger import get_logger
 from protein import Protein
+from utils.plot_utils import visualize_3d
 from utils.qubit_utils import remove_unused_qubits
+from utils.result_interpretation_utils import (
+    VQEOutput,
+    create_xyz_file,
+    generate_coords_from_bitstring,
+    interpret_raw_vqe_output,
+)
 
 if TYPE_CHECKING:
     from qiskit import QuantumCircuit
@@ -101,3 +108,19 @@ def setup_vqe_optimization(
     )
 
     return vqe, counts, values
+
+
+def process_results(raw_results: SamplingMinimumEigensolverResult, main_chain: str, side_chain: str) -> None:
+    interpreted_results: VQEOutput = interpret_raw_vqe_output(raw_results)
+    logger.info(f"VQE optimization results: \n{interpreted_results}")
+
+    coords = generate_coords_from_bitstring(
+        bitstring=interpreted_results.bitstring,
+        main_chain=main_chain,
+        side_chain=side_chain,
+    )
+    create_xyz_file(
+        coords=coords
+    )
+
+    visualize_3d(coords)

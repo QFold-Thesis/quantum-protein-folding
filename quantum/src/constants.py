@@ -65,3 +65,9 @@ DENSE_TURN_INDICATORS: dict[TurnDirection, str] = {
     TurnDirection.DIR_3: "10",
     TurnDirection.DIR_4: "11",
 }
+
+XYZ_FILE_LINE_START_INDEX: int = 2  # First two lines are header in .xyz files
+
+XYZ_FILE_PARTS_PER_LINE: int = 4  # Each line has symbol, x, y, z
+
+OUTPUT_DATA_DIR: Path = ROOT_PROJECT_PATH / "output"
