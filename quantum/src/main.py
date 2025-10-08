@@ -1,4 +1,3 @@
-
 from typing import TYPE_CHECKING
 
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
@@ -35,7 +34,9 @@ def main() -> None:
     vqe, _, _ = setup_vqe_optimization(compressed_h)
 
     logger.debug("Starting VQE optimization...")
-    raw_results: SamplingMinimumEigensolverResult = vqe.compute_minimum_eigenvalue(compressed_h)
+    raw_results: SamplingMinimumEigensolverResult = vqe.compute_minimum_eigenvalue(
+        compressed_h
+    )
 
     interpreted_results: VQEOutput = interpret_raw_vqe_output(raw_results)
     logger.info(f"VQE optimization results: \n{interpreted_results}")
@@ -45,6 +46,7 @@ def main() -> None:
         logger.info(f"Residue {idx} ({residue})\n{coord}")
 
     visualize_3d(coords)
+
 
 if __name__ == "__main__":
     main()

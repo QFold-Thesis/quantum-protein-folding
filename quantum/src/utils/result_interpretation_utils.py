@@ -30,9 +30,9 @@ def interpret_raw_vqe_output(raw_output: SamplingMinimumEigensolverResult) -> VQ
     bitstring: str | None = best_measurement.get("bitstring")
     probability: float | None = best_measurement.get("probability")
     state: str | None = best_measurement.get("state")
-    value: np.complex128 | None = best_measurement.get("value")
+    energy_value: np.complex128 | None = best_measurement.get("value")
 
-    if None in (bitstring, probability, state, value):
+    if None in (bitstring, probability, state, energy_value):
         msg = "Incomplete best measurement data in VQE output."
         raise ValueError(msg)
 
@@ -40,5 +40,5 @@ def interpret_raw_vqe_output(raw_output: SamplingMinimumEigensolverResult) -> VQ
         bitstring=bitstring,
         probability=probability,
         state=state,
-        energy_value=value
+        energy_value=energy_value,
     )
