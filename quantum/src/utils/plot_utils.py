@@ -2,69 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
 
-from constants import (
-    CONFORMATION_ENCODING,
-    DENSE_TURN_INDICATORS,
-    QUBITS_PER_TURN,
-    SPARSE_TURN_INDICATORS,
-)
-from enums import ConformationEncoding, TurnDirection
-from exceptions import ConformationEncodingError
 from logger import get_logger
 
 logger = get_logger()
-
-
-def _preprocess_bitstring(
-    bitstring: str, turn_encoding: dict[TurnDirection, str]
-) -> str:
-    return "".join(
-        reversed(
-            bitstring
-            + turn_encoding[TurnDirection.DIR_1]
-            + turn_encoding[TurnDirection.DIR_2]
-        )
-    )
-
-
-def generate_coords_from_bitstring(bitstring: str):
-    if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
-        turn_encoding = DENSE_TURN_INDICATORS
-    elif CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
-        turn_encoding = SPARSE_TURN_INDICATORS
-    else:
-        raise ConformationEncodingError
-
-    bitstring = _preprocess_bitstring(bitstring, turn_encoding)
-
-    tetra_dirs = np.array(
-        [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]], dtype=float
-    )
-    tetra_dirs /= np.linalg.norm(tetra_dirs[0])
-
-    bitstring_to_direction = {
-        bitstring: direction.value for direction, bitstring in turn_encoding.items()
-    }
-
-    turns_length = len(bitstring) // QUBITS_PER_TURN
-    chunks = [
-        bitstring[i * QUBITS_PER_TURN : (i + 1) * QUBITS_PER_TURN]
-        for i in range(turns_length)
-    ]
-
-    pos = np.array([0.0, 0.0, 0.0])
-    coords = [tuple(float(x) for x in pos)]
-
-    for ch in chunks:
-        if ch not in bitstring_to_direction:
-            logger.warning(f"Unknown turn encoding: {ch}")
-            continue
-        direction_idx = bitstring_to_direction[ch]
-        direction = tetra_dirs[direction_idx]
-        pos = pos + direction
-        coords.append(tuple(float(x) for x in pos))
-
-    return coords
 
 
 def visualize_3d(coords, color="blue", figsize=(8, 8)):

@@ -2,13 +2,17 @@ from typing import TYPE_CHECKING
 
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from logger import get_logger
-from utils.result_interpretation_utils import VQEOutput, interpret_raw_vqe_output
+from utils.plot_utils import visualize_3d
+from utils.result_interpretation_utils import (
+    VQEOutput,
+    generate_coords_from_bitstring,
+    interpret_raw_vqe_output,
+)
 from utils.setup_utils import (
     build_and_compress_hamiltonian,
     setup_folding_system,
     setup_vqe_optimization,
 )
-from utils.visualizer_utils import generate_coords_from_bitstring, visualize_3d
 
 if TYPE_CHECKING:
     from qiskit_algorithms import SamplingMinimumEigensolverResult
