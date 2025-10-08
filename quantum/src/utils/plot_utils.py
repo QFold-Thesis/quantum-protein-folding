@@ -144,9 +144,15 @@ def _save_rotating_gif(scene: PlotScene, cfg: RotGifConfig, *, dirpath: Path) ->
         ax_anim: Axes3D = fig_anim.add_subplot(111, projection="3d")  # type: ignore[assignment]
         ax_anim3d = cast(Any, ax_anim)
 
-        ax_anim3d.set_xlim(float(scene.mid[0] - scene.max_range), float(scene.mid[0] + scene.max_range))
-        ax_anim3d.set_ylim(float(scene.mid[1] - scene.max_range), float(scene.mid[1] + scene.max_range))
-        ax_anim3d.set_zlim(float(scene.mid[2] - scene.max_range), float(scene.mid[2] + scene.max_range))
+        ax_anim3d.set_xlim(
+            float(scene.mid[0] - scene.max_range), float(scene.mid[0] + scene.max_range)
+        )
+        ax_anim3d.set_ylim(
+            float(scene.mid[1] - scene.max_range), float(scene.mid[1] + scene.max_range)
+        )
+        ax_anim3d.set_zlim(
+            float(scene.mid[2] - scene.max_range), float(scene.mid[2] + scene.max_range)
+        )
         if scene.lattice_points_arr.size > 0:
             ax_anim3d.scatter(
                 scene.lattice_points_arr[:, 0],
@@ -159,7 +165,9 @@ def _save_rotating_gif(scene: PlotScene, cfg: RotGifConfig, *, dirpath: Path) ->
                 label="Tetrahedral lattice",
             )
         _draw_chain(ax_anim3d, scene.coords_arr, scene.bead_colors)
-        _annotate_beads(ax_anim3d, scene.coords_arr, scene.coords, float(scene.max_range * 0.06))
+        _annotate_beads(
+            ax_anim3d, scene.coords_arr, scene.coords, float(scene.max_range * 0.06)
+        )
         ax_anim3d.set_xlabel("X")
         ax_anim3d.set_ylabel("Y")
         ax_anim3d.set_zlabel("Z")
@@ -261,7 +269,6 @@ def visualize_3d(
     ax3d.set_zlabel("Z")
     ax3d.set_title("3D Protein Folding on Tetrahedral Lattice")
 
-    # Static view for the interactive window
     elev: float = 20.0
     azim_start: float = -60.0
     gif_frames: int = 120
@@ -270,7 +277,6 @@ def visualize_3d(
     ax3d.legend(loc="upper left")
     plt.tight_layout()
 
-    # Build GIF on a separate figure so the shown window remains static
     scene = PlotScene(
         coords_arr=coords_arr,
         coords=coords,

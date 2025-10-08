@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
@@ -119,7 +119,7 @@ def process_results(
 ) -> None:
     logger.info("Processing VQE results...")
 
-    timestamp: str = datetime.now(tz=timezone.utc).strftime("%Y%m%d_%H%M%S")
+    timestamp: str = datetime.now(tz=UTC).strftime("%Y%m%d_%H%M%S")
     dirpath: Path = OUTPUT_DATA_DIR / f"{timestamp}-{main_chain}-{side_chain}"
 
     dirpath.mkdir(parents=True, exist_ok=False)
