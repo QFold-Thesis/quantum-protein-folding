@@ -4,6 +4,16 @@ from constants import GLOBAL_LOGGER_NAME, LOGGER_DEFAULT_LEVEL
 
 
 def get_logger(name: str = GLOBAL_LOGGER_NAME) -> logging.Logger:
+    """
+    Creates and configures a logger instance.
+
+    Args:
+        name (str): Name of the logger. Defaults to `GLOBAL_LOGGER_NAME`.
+
+    Returns:
+        logging.Logger: Configured logger instance.
+
+    """
     logger = logging.getLogger(name)
     if not logger.hasHandlers():
         handler = logging.StreamHandler()

@@ -1,3 +1,8 @@
+"""
+Defines custom exceptions for protein folding simulations,
+including errors for conformation encoding, chain length, and amino acid validity.
+"""
+
 from logger import get_logger
 
 logger = get_logger()
