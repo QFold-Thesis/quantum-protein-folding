@@ -212,7 +212,7 @@ def dump_results_to_files(
 def _sanitize_for_json(obj: Any) -> Any:
     seen: set[int] = set()
 
-    def _inner(x: Any) -> Any:
+    def _inner(x: Any) -> Any:  # noqa: PLR0911, PLR0912
         obj_id = id(x)
         if obj_id in seen:
             try:
@@ -221,13 +221,17 @@ def _sanitize_for_json(obj: Any) -> Any:
                 return "<recursion>"
         seen.add(obj_id)
 
-        if dataclasses.is_dataclass(x):
+        if dataclasses.is_dataclass(x) and not isinstance(x, type):
             x = dataclasses.asdict(x)
 
         if isinstance(x, np.ndarray):
             return x.tolist()
-        if isinstance(x, (np.integer, np.floating, np.bool_)):
-            return x.item()
+        if isinstance(x, np.integer):
+            return int(x.item())
+        if isinstance(x, np.floating):
+            return float(x.item())
+        if isinstance(x, np.bool_):
+            return bool(x.item())
         if isinstance(x, (np.complexfloating, complex)):
             return {"real": float(x.real), "imag": float(x.imag)}
 

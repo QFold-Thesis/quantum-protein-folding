@@ -17,6 +17,7 @@ from exceptions import InvalidInteractionTypeError, InvalidOperatorError
 from interaction import HPInteraction, Interaction, MJInteraction
 from logger import get_logger
 from protein import Protein
+from utils.plot_utils import visualize_3d
 from utils.qubit_utils import remove_unused_qubits
 from utils.result_interpretation_utils import (
     VQEOutput,
@@ -140,3 +141,4 @@ def process_results(
         raw_results=raw_results, vqe_output=interpreted_results, dirpath=dirpath
     )
 
+    visualize_3d(coords=coords)

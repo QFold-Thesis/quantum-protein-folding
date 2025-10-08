@@ -1,39 +1,64 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, cast
+
 import matplotlib.pyplot as plt
 import numpy as np
-from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
 
 from logger import get_logger
+
+if TYPE_CHECKING:
+    from mpl_toolkits.mplot3d import Axes3D
+    from numpy.typing import NDArray
+    from result_interpretation_utils import BeadPosition
 
 logger = get_logger()
 
 
-def visualize_3d(coords, color="blue", figsize=(8, 8)):
-    coords = np.array(corrd.position for corrd in coords)
+def visualize_3d(
+    coords: list[BeadPosition],
+    *,
+    color: str = "blue",
+    figsize: tuple[int, int] = (8, 8),
+) -> None:
+    if len(coords) == 0:
+        logger.warning("visualize_3d received empty coords; nothing to plot.")
+        return
+
+    coords_arr: NDArray[np.float64] = np.array(
+        [bp.position for bp in coords], dtype=float
+    )
 
     fig = plt.figure(figsize=figsize)
-    ax = fig.add_subplot(111, projection="3d")
+    ax: Axes3D = fig.add_subplot(111, projection="3d")  # type: ignore[assignment]
+    ax3d = cast(Any, ax)
 
-    base_dirs = np.array(
-        [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]], dtype=float
+    base_dirs: NDArray[np.float64] = np.array(
+        [[1.0, 1.0, 1.0], [1.0, -1.0, -1.0], [-1.0, 1.0, -1.0], [-1.0, -1.0, 1.0]],
+        dtype=float,
     )
-    base_dirs /= np.linalg.norm(base_dirs[0])
+    base_dirs = base_dirs / float(np.linalg.norm(base_dirs[0]))
 
-    lattice_points = []
-    n = 4
+    lattice_points: list[NDArray[np.float64]] = []
+    n: int = 4
     for i in range(-n, n + 1):
         for j in range(-n, n + 1):
             for k in range(-n, n + 1):
-                point = i * base_dirs[0] + j * base_dirs[1] + k * base_dirs[2]
+                point: NDArray[np.float64] = (
+                    i * base_dirs[0] + j * base_dirs[1] + k * base_dirs[2]
+                )
                 lattice_points.append(point)
-    lattice_points = np.unique(np.round(lattice_points, 3), axis=0)
+    lattice_points_arr: NDArray[np.float64] = np.unique(
+        np.round(np.vstack(lattice_points), 3), axis=0
+    )
 
-    center = np.mean(coords, axis=0)
-    lattice_points += center
+    center: NDArray[np.float64] = np.mean(coords_arr, axis=0)
+    lattice_points_arr = lattice_points_arr + center
 
-    ax.scatter(
-        lattice_points[:, 0],
-        lattice_points[:, 1],
-        lattice_points[:, 2],
+    ax3d.scatter(
+        lattice_points_arr[:, 0],
+        lattice_points_arr[:, 1],
+        lattice_points_arr[:, 2],
         s=25,
         color="lightgray",
         alpha=0.35,
@@ -41,40 +66,51 @@ def visualize_3d(coords, color="blue", figsize=(8, 8)):
         label="Tetrahedral lattice",
     )
 
-    ax.plot(
-        coords[:, 0],
-        coords[:, 1],
-        coords[:, 2],
-        "-",
+    ax3d.plot(
+        coords_arr[:, 0],
+        coords_arr[:, 1],
+        coords_arr[:, 2],
+        linestyle="-",
         color=color,
         lw=3,
         alpha=0.9,
         label="Protein chain",
     )
-    ax.scatter(
-        coords[:, 0],
-        coords[:, 1],
-        coords[:, 2],
+    ax3d.scatter(
+        coords_arr[:, 0],
+        coords_arr[:, 1],
+        coords_arr[:, 2],
         s=70,
         color=color,
         edgecolor="black",
         alpha=0.9,
     )
 
-    for i, (x, y, z) in enumerate(coords):
-        ax.text(x, y, z, str(i), color="black", fontsize=8, ha="center", va="center")
+    for i, (x, y, z) in enumerate(coords_arr):
+        ax3d.text(
+            float(x),
+            float(y),
+            float(z),
+            str(i),
+            color="black",
+            fontsize=8,
+            ha="center",
+            va="center",
+        )
 
-    max_range = (coords.max(axis=0) - coords.min(axis=0)).max() / 2.0
-    mid = coords.mean(axis=0)
-    ax.set_xlim(mid[0] - max_range, mid[0] + max_range)
-    ax.set_ylim(mid[1] - max_range, mid[1] + max_range)
-    ax.set_zlim(mid[2] - max_range, mid[2] + max_range)
+    max_range: float = float(
+        (coords_arr.max(axis=0) - coords_arr.min(axis=0)).max() / 2.0
+    )
+    mid: NDArray[np.float64] = coords_arr.mean(axis=0)
+    ax3d.set_xlim(float(mid[0] - max_range), float(mid[0] + max_range))
+    ax3d.set_ylim(float(mid[1] - max_range), float(mid[1] + max_range))
+    ax3d.set_zlim(float(mid[2] - max_range), float(mid[2] + max_range))
 
-    ax.set_xlabel("X")
-    ax.set_ylabel("Y")
-    ax.set_zlabel("Z")
-    ax.set_title("3D Protein Folding on Tetrahedral (Diamond) Lattice")
+    ax3d.set_xlabel("X")
+    ax3d.set_ylabel("Y")
+    ax3d.set_zlabel("Z")
+    ax3d.set_title("3D Protein Folding on Tetrahedral (Diamond) Lattice")
 
-    ax.legend(loc="upper left")
+    ax3d.legend(loc="upper left")
     plt.tight_layout()
     plt.show()
