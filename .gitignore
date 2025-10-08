@@ -5,8 +5,8 @@ test.py
 
 temp/
 
-output/*
-!output/.gitkeep
+quantum/output/*
+!quantum/output/.gitkeep
 
 
 .DS_Store
