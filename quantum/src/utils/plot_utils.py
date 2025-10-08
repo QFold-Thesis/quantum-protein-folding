@@ -5,8 +5,8 @@ from typing import TYPE_CHECKING, Any, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
-from quantum.src.constants import GIF_FILENAME
 
+from constants import GIF_FILENAME
 from logger import get_logger
 
 if TYPE_CHECKING:
@@ -35,6 +35,25 @@ class AxesLimits:
     x: tuple[float, float]
     y: tuple[float, float]
     z: tuple[float, float]
+
+
+@dataclass(slots=True)
+class RotGifConfig:
+    figsize: tuple[int, int]
+    elev: float
+    azim_start: float
+    frames: int
+    fps: int
+
+
+@dataclass(slots=True)
+class PlotScene:
+    coords_arr: NDArray[np.float64]
+    coords: list[BeadPosition]
+    lattice_points_arr: NDArray[np.float64]
+    bead_colors: NDArray[np.floating]
+    mid: NDArray[np.float64]
+    max_range: float
 
 
 def _build_lattice_points(
@@ -117,13 +136,71 @@ def _annotate_beads(
         )
 
 
+def _save_rotating_gif(scene: PlotScene, cfg: RotGifConfig, *, dirpath: Path) -> None:
+    try:
+        from matplotlib import animation
+
+        fig_anim = cast(Any, plt).figure(figsize=cfg.figsize)
+        ax_anim: Axes3D = fig_anim.add_subplot(111, projection="3d")  # type: ignore[assignment]
+        ax_anim3d = cast(Any, ax_anim)
+
+        ax_anim3d.set_xlim(float(scene.mid[0] - scene.max_range), float(scene.mid[0] + scene.max_range))
+        ax_anim3d.set_ylim(float(scene.mid[1] - scene.max_range), float(scene.mid[1] + scene.max_range))
+        ax_anim3d.set_zlim(float(scene.mid[2] - scene.max_range), float(scene.mid[2] + scene.max_range))
+        if scene.lattice_points_arr.size > 0:
+            ax_anim3d.scatter(
+                scene.lattice_points_arr[:, 0],
+                scene.lattice_points_arr[:, 1],
+                scene.lattice_points_arr[:, 2],
+                s=20,
+                color="lightgray",
+                alpha=0.3,
+                depthshade=False,
+                label="Tetrahedral lattice",
+            )
+        _draw_chain(ax_anim3d, scene.coords_arr, scene.bead_colors)
+        _annotate_beads(ax_anim3d, scene.coords_arr, scene.coords, float(scene.max_range * 0.06))
+        ax_anim3d.set_xlabel("X")
+        ax_anim3d.set_ylabel("Y")
+        ax_anim3d.set_zlabel("Z")
+        ax_anim3d.set_title("3D Protein Folding on Tetrahedral Lattice")
+        ax_anim3d.view_init(elev=cfg.elev, azim=cfg.azim_start)
+        plt.tight_layout()
+
+        def _animate(frame: int) -> list[Any]:
+            ax_anim3d.view_init(
+                elev=cfg.elev,
+                azim=cfg.azim_start + (360.0 * frame / cfg.frames),
+            )
+            return []
+
+        anim = animation.FuncAnimation(
+            fig_anim,
+            _animate,
+            frames=cfg.frames,
+            interval=int(1000 / cfg.fps),
+            blit=False,
+        )
+
+        path_str = str(dirpath / GIF_FILENAME)
+        try:
+            anim.save(path_str, writer="pillow", fps=cfg.fps)
+        except Exception as e:
+            logger.warning(f"Falling back to default writer for GIF due to: {e}")
+            anim.save(path_str, fps=cfg.fps)
+        logger.info(f"Saved rotating GIF to: {path_str}")
+        plt.close(fig_anim)
+    except Exception:
+        logger.exception("Failed to create GIF")
+
+
 def visualize_3d(
     coords: list[BeadPosition],
     *,
+    dirpath: Path,
     figsize: tuple[int, int] = (8, 8),
     cmap: str = "viridis",
     show: bool = True,
-    dirpath: Path,
 ) -> None:
     if len(coords) == 0:
         logger.warning("visualize_3d received empty coords; nothing to plot.")
@@ -133,7 +210,7 @@ def visualize_3d(
         [bp.position for bp in coords], dtype=float
     )
 
-    fig = plt.figure(figsize=figsize)
+    fig = cast(Any, plt).figure(figsize=figsize)
     ax: Axes3D = fig.add_subplot(111, projection="3d")  # type: ignore[assignment]
     ax3d = cast(Any, ax)
 
@@ -177,7 +254,6 @@ def visualize_3d(
     bead_colors = cmap_obj(t)
 
     _draw_chain(ax3d, coords_arr, bead_colors)
-
     _annotate_beads(ax3d, coords_arr, coords, float(max_range * 0.06))
 
     ax3d.set_xlabel("X")
@@ -185,6 +261,7 @@ def visualize_3d(
     ax3d.set_zlabel("Z")
     ax3d.set_title("3D Protein Folding on Tetrahedral Lattice")
 
+    # Static view for the interactive window
     elev: float = 20.0
     azim_start: float = -60.0
     gif_frames: int = 120
@@ -193,33 +270,23 @@ def visualize_3d(
     ax3d.legend(loc="upper left")
     plt.tight_layout()
 
-    try:
-        from matplotlib import animation
-
-        def _animate(frame: int) -> list[Any]:
-            ax3d.view_init(
-                elev=elev,
-                azim=azim_start + (360.0 * frame / gif_frames),
-            )
-            return []
-
-        anim = animation.FuncAnimation(
-            fig,
-            _animate,
-            frames=gif_frames,
-            interval=int(1000 / gif_fps),
-            blit=False,
-        )
-
-        path_str = str(dirpath / GIF_FILENAME)
-        try:
-            anim.save(path_str, writer="pillow", fps=gif_fps)
-        except Exception as e:
-            logger.warning(f"Falling back to default writer for GIF due to: {e}")
-            anim.save(path_str, fps=gif_fps)
-        logger.info(f"Saved rotating GIF to: {path_str}")
-    except Exception:
-        logger.exception("Failed to create GIF")
+    # Build GIF on a separate figure so the shown window remains static
+    scene = PlotScene(
+        coords_arr=coords_arr,
+        coords=coords,
+        lattice_points_arr=lattice_points_arr,
+        bead_colors=bead_colors,
+        mid=mid,
+        max_range=max_range,
+    )
+    cfg = RotGifConfig(
+        figsize=figsize,
+        elev=elev,
+        azim_start=azim_start,
+        frames=gif_frames,
+        fps=gif_fps,
+    )
+    _save_rotating_gif(scene, cfg, dirpath=dirpath)
 
     if show:
         cast(Any, plt).show()
