@@ -4,8 +4,8 @@ from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from logger import get_logger
 from utils.setup_utils import (
     build_and_compress_hamiltonian,
-    process_results,
     setup_folding_system,
+    setup_result_analysis,
     setup_vqe_optimization,
 )
 
@@ -38,9 +38,12 @@ def main() -> None:
         compressed_h
     )
 
-    process_results(
-        raw_results=raw_results, main_chain=main_chain, side_chain=side_chain
+    result_interpreter, result_visualizer = setup_result_analysis(
+        raw_results=raw_results, protein=protein
     )
+
+    result_interpreter.save_to_files()
+    result_visualizer.generate_plots()
 
 
 if __name__ == "__main__":

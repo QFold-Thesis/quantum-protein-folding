@@ -17,15 +17,9 @@ from exceptions import InvalidInteractionTypeError, InvalidOperatorError
 from interaction import HPInteraction, Interaction, MJInteraction
 from logger import get_logger
 from protein import Protein
-from utils.plot_utils import visualize_2d, visualize_3d
+from result.interpreter import ResultInterpreter
+from result.visualizer import ResultVisualizer
 from utils.qubit_utils import remove_unused_qubits
-from utils.result_interpretation_utils import (
-    VQEOutput,
-    create_xyz_file,
-    dump_results_to_files,
-    generate_coords_from_bitstring,
-    interpret_raw_vqe_output,
-)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -114,32 +108,13 @@ def setup_vqe_optimization(
     return vqe, counts, values
 
 
-def process_results(
-    raw_results: SamplingMinimumEigensolverResult, main_chain: str, side_chain: str
-) -> None:
-    logger.info("Processing VQE results...")
-
+def setup_result_analysis(raw_results: SamplingMinimumEigensolverResult, protein: Protein) -> tuple[ResultInterpreter, ResultVisualizer]:
     timestamp: str = datetime.now(tz=UTC).strftime("%Y%m%d_%H%M%S")
-    dirpath: Path = OUTPUT_DATA_DIR / f"{timestamp}-{main_chain}-{side_chain}"
+    dirpath: Path = OUTPUT_DATA_DIR / f"{timestamp}-{protein.main_chain}-{protein.side_chain}"
+    dirpath.mkdir(parents=True, exist_ok=True)
 
-    dirpath.mkdir(parents=True, exist_ok=False)
+    result_interpreter: ResultInterpreter = ResultInterpreter(dirpath=dirpath, raw_results=raw_results, protein=protein)
+    result_visualizer: ResultVisualizer = ResultVisualizer(dirpath=dirpath)
 
-    interpreted_results: VQEOutput = interpret_raw_vqe_output(raw_results)
+    return result_interpreter, result_visualizer
 
-    logger.info(f"VQE optimization results: \n{interpreted_results}")
-    logger.info(f"Raw results: \n{raw_results}")
-
-    coords = generate_coords_from_bitstring(
-        bitstring=interpreted_results.bitstring,
-        main_chain=main_chain,
-        side_chain=side_chain,
-    )
-
-    create_xyz_file(coords=coords, dirpath=dirpath)
-
-    dump_results_to_files(
-        raw_results=raw_results, vqe_output=interpreted_results, dirpath=dirpath
-    )
-
-    visualize_3d(coords=coords, dirpath=dirpath)
-    visualize_2d(coords=coords, dirpath=dirpath)

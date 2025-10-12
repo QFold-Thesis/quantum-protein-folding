@@ -1,161 +1,22 @@
 from __future__ import annotations
 
 import dataclasses
+import json
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import numpy as np
 
 from constants import (
-    CONFORMATION_ENCODING,
-    DENSE_TURN_INDICATORS,
-    QUBITS_PER_TURN,
-    RAW_RESULTS_FILENAME,
-    SPARSE_TURN_INDICATORS,
-    VQE_OUTPUT_FILENAME,
     XYZ_FILE_LINE_START_INDEX,
     XYZ_FILE_PARTS_PER_LINE,
     XYZ_FILENAME,
 )
-from enums import ConformationEncoding, TurnDirection
-from exceptions import ConformationEncodingError
 from logger import get_logger
-
-if TYPE_CHECKING:
-    from qiskit_algorithms import SamplingMinimumEigensolverResult
-import json
+from result.models import BeadPosition
 
 logger = get_logger()
-
-
-@dataclass
-class VQEOutput:
-    bitstring: str
-    probability: float
-    state: str
-    energy_value: np.complex128
-
-    def __repr__(self) -> str:
-        return (
-            f"VQEOutput(bitstring={self.bitstring},\n"
-            f"  probability={self.probability},\n"
-            f"  state={self.state},\n"
-            f"  energy_value={self.energy_value})"
-        )
-
-
-@dataclass
-class BeadPosition:
-    index: int
-    symbol: str
-    x: float
-    y: float
-    z: float
-
-    @property
-    def position(self) -> tuple[float, float, float]:
-        return (self.x, self.y, self.z)
-
-
-def interpret_raw_vqe_output(raw_output: SamplingMinimumEigensolverResult) -> VQEOutput:
-    best_measurement = raw_output.best_measurement
-
-    if not best_measurement:
-        msg = "No best measurement found in VQE output."
-        raise ValueError(msg)
-
-    bitstring: str | None = best_measurement.get("bitstring")
-    probability: float | None = best_measurement.get("probability")
-    state: str | None = best_measurement.get("state")
-    energy_value: np.complex128 | None = best_measurement.get("value")
-
-    if None in (bitstring, probability, state, energy_value):
-        msg = "Incomplete best measurement data in VQE output."
-        raise ValueError(msg)
-
-    return VQEOutput(
-        bitstring=bitstring,
-        probability=probability,
-        state=state,
-        energy_value=energy_value,
-    )
-
-
-def _preprocess_bitstring(
-    bitstring: str, turn_encoding: dict[TurnDirection, str]
-) -> str:
-    """Preprocesses the bitstring by appending initial turns and reversing it."""
-    return "".join(
-        reversed(
-            bitstring
-            + turn_encoding[TurnDirection.DIR_1]
-            + turn_encoding[TurnDirection.DIR_2]
-        )
-    )
-
-
-def generate_coords_from_bitstring(
-    bitstring: str,
-    main_chain: str,
-    side_chain: str,  # noqa: ARG001
-) -> list[BeadPosition]:
-    if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
-        turn_encoding = DENSE_TURN_INDICATORS
-    elif CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
-        turn_encoding = SPARSE_TURN_INDICATORS
-    else:
-        raise ConformationEncodingError
-
-    bitstring = _preprocess_bitstring(bitstring, turn_encoding)
-
-    tetra_dirs = np.array(
-        [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]], dtype=float
-    )
-    tetra_dirs /= np.linalg.norm(tetra_dirs[0])
-
-    bitstring_to_direction = {
-        bitstring: direction.value for direction, bitstring in turn_encoding.items()
-    }
-
-    turns_length = len(bitstring) // QUBITS_PER_TURN
-    turns = [
-        bitstring[i * QUBITS_PER_TURN : (i + 1) * QUBITS_PER_TURN]
-        for i in range(turns_length)
-    ]
-
-    # initialize the starting position (first bead)
-    current_pos = np.array([0.0, 0.0, 0.0])
-    coords = [
-        BeadPosition(
-            index=0,
-            symbol=main_chain[0],
-            x=current_pos[0],
-            y=current_pos[1],
-            z=current_pos[2],
-        )
-    ]
-
-    for turn, symbol in zip(turns, main_chain[1::], strict=True):
-        if turn not in bitstring_to_direction:
-            logger.warning(f"Unknown turn encoding: {turn}")
-            continue
-        direction_idx = bitstring_to_direction[turn]
-        direction = tetra_dirs[direction_idx]
-        current_pos = current_pos + direction
-        coords.append(
-            BeadPosition(
-                index=len(coords),
-                symbol=symbol,
-                x=current_pos[0],
-                y=current_pos[1],
-                z=current_pos[2],
-            )
-        )
-
-    return coords
-
 
 def create_xyz_file(coords: list[BeadPosition], dirpath: Path) -> Path:
     filepath: Path = dirpath / XYZ_FILENAME
@@ -193,32 +54,13 @@ def read_xyz_file(filepath: Path) -> list[BeadPosition]:
     return coords
 
 
-def dump_results_to_files(
-    raw_results: SamplingMinimumEigensolverResult, vqe_output: VQEOutput, dirpath: Path
-) -> None:
-    raw_results_filepath: Path = dirpath / RAW_RESULTS_FILENAME
-    vqe_output_filepath: Path = dirpath / VQE_OUTPUT_FILENAME
-
-    raw_results_data = _sanitize_for_json(raw_results)
-    vqe_output_data = _sanitize_for_json(vqe_output)
-
-    with raw_results_filepath.open("w", encoding="utf-8") as f:
-        json.dump(raw_results_data, f, indent=2, ensure_ascii=False)
-
-    with vqe_output_filepath.open("w", encoding="utf-8") as f:
-        json.dump(vqe_output_data, f, indent=2, ensure_ascii=False)
-
-
-def _sanitize_for_json(obj: Any) -> Any:
+def sanitize_for_json(obj: Any) -> Any:
     seen: set[int] = set()
 
     def _inner(x: Any) -> Any:  # noqa: PLR0911, PLR0912
         obj_id = id(x)
         if obj_id in seen:
-            try:
-                return str(x)
-            except Exception:
-                return "<recursion>"
+            return str(x)
         seen.add(obj_id)
 
         if dataclasses.is_dataclass(x) and not isinstance(x, type):

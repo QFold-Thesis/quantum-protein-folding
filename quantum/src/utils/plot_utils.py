@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import animation
 
-from constants import GIF_FILENAME, PLOT2D_FILENAME
+from constants import GIF_FILENAME, OUTPUT_DATA_DIR, PLOT2D_FILENAME, QUBITS_PER_TURN
 from logger import get_logger
 
 if TYPE_CHECKING:
@@ -139,7 +140,6 @@ def _annotate_beads(
 
 def _save_rotating_gif(scene: PlotScene, cfg: RotGifConfig, *, dirpath: Path) -> None:
     try:
-
         fig_anim = cast("Any", plt).figure(figsize=cfg.figsize)
         ax_anim: Axes3D = fig_anim.add_subplot(111, projection="3d")  # type: ignore[assignment]
         ax_anim3d = cast("Any", ax_anim)
@@ -300,69 +300,94 @@ def visualize_3d(
         plt.close(fig)
 
 
-def visualize_2d(
-    coords: list[BeadPosition],
-    *,
-    dirpath: Path,
-    figsize: tuple[int, int] = (9, 9),
-    cmap: str = "viridis",
-    show: bool = False,
-) -> None:
-    if len(coords) == 0:
-        logger.warning("visualize_2d received empty coords; nothing to plot.")
-        return
+def visualize_2d(turn_sequence: str) -> Path:
+    bits_per = int(QUBITS_PER_TURN)
+    if len(turn_sequence) % bits_per != 0:
+        usable_len = len(turn_sequence) - (len(turn_sequence) % bits_per)
+        turns_bits = [
+            turn_sequence[i : i + bits_per] for i in range(0, usable_len, bits_per)
+        ]
+    else:
+        turns_bits = [
+            turn_sequence[i : i + bits_per]
+            for i in range(0, len(turn_sequence), bits_per)
+        ]
 
-    coords_arr: NDArray[np.float64] = np.array([bp.position for bp in coords], dtype=float)
-
-    v: NDArray[np.float64] = -np.array([6.0, 4.0, 1.0], dtype=float)
-    v /= float(np.linalg.norm(v))
-    tmp_up: NDArray[np.float64] = np.array([0.0, 0.0, 1.0], dtype=float)
-    up_dot_threshold = 0.98
-    if abs(float(np.dot(v, tmp_up))) > up_dot_threshold:
-        tmp_up = np.array([0.0, 1.0, 0.0], dtype=float)
-    right = np.cross(tmp_up, v)
-    right /= float(np.linalg.norm(right))
-    up = np.cross(v, right)
-
-    screen_mat = np.vstack([right, up])
-    proj: NDArray[np.float64] = coords_arr @ screen_mat.T
-
-    max_range_2d: float = float((proj.max(axis=0) - proj.min(axis=0)).max() / 2.0)
-    mid2d: NDArray[np.float64] = proj.mean(axis=0)
-
-    fig2 = cast("Any", plt).figure(figsize=figsize)
-    ax2 = fig2.add_subplot(111)
-
-    cmap_obj = plt.get_cmap(cmap)
-    t = np.linspace(0.0, 1.0, proj.shape[0])
-    bead_colors = cmap_obj(t)
-
-    min_points_for_line = 2
-    if proj.shape[0] >= min_points_for_line:
-        ax2.plot(proj[:, 0], proj[:, 1], "-", lw=2.5, color=bead_colors[0])
-    ax2.scatter(proj[:, 0], proj[:, 1], s=60, c=bead_colors, edgecolors="black", zorder=3)
-
-    offset_mag = max(1e-6, 0.06 * max_range_2d)
-    offset2d = (offset_mag / np.sqrt(2.0)) * np.array([1.0, 1.0])
-    for i, (x, y) in enumerate(proj):
-        ax2.text(float(x + offset2d[0]), float(y + offset2d[1]), coords[i].symbol,
-                 fontsize=9, fontweight="bold", ha="center", va="center", color="black")
-
-    ax2.set_aspect("equal", adjustable="box")
-    ax2.set_xlim(float(mid2d[0] - max_range_2d), float(mid2d[0] + max_range_2d))
-    ax2.set_ylim(float(mid2d[1] - max_range_2d), float(mid2d[1] + max_range_2d))
-    ax2.axis("off")
-    ax2.set_title("2D Projection of Protein Folding")
-    fig2.tight_layout()
-
-    out_path = dirpath / PLOT2D_FILENAME
     try:
-        fig2.savefig(out_path, dpi=200, bbox_inches="tight")
-        logger.info(f"Saved 2D projection to: {out_path}")
+        turns = [int(b, 2) for b in turns_bits]
+    except ValueError:
+        raise ValueError(
+            "turn_sequence must contain only '0' and '1' characters in groups of QUBITS_PER_TURN"
+        )
+
+    # Simple 2D direction mapping for the 4 possible turn values
+    dir_map = np.array([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0], [0.0, -1.0]], dtype=float)
+
+    # Build 2D positions purely from turns (start at origin)
+    positions = [np.array([0.0, 0.0], dtype=float)]
+    for t in turns:
+        idx = int(t) % dir_map.shape[0]
+        positions.append(positions[-1] + dir_map[idx])
+    pts = np.vstack(positions)
+
+    # Colors: cycle through a stable qualitative map
+    cmap = plt.get_cmap("tab10")
+    colors = [cmap(i % 10) for i in range(pts.shape[0])]
+
+    fig = cast("Any", plt).figure(figsize=(8, 6))
+    ax = fig.add_subplot(111)
+
+    # Plot connecting lines
+    if pts.shape[0] >= 2:
+        ax.plot(
+            pts[:, 0], pts[:, 1], linestyle="-", color="#444444", linewidth=2, zorder=1
+        )
+
+    # Bigger circular beads with edge
+    ax.scatter(
+        pts[:, 0],
+        pts[:, 1],
+        s=300,
+        c=colors,
+        edgecolors="black",
+        linewidths=0.8,
+        zorder=2,
+    )
+
+    # Labels: index starting at 1 centered in the circle
+    for i, (x, y) in enumerate(pts):
+        ax.text(
+            float(x),
+            float(y),
+            str(i + 1),
+            ha="center",
+            va="center",
+            fontsize=10,
+            fontweight="bold",
+            color="white",
+            zorder=3,
+        )
+
+    # Make sure all beads fit with padding
+    x_min, x_max = float(pts[:, 0].min()), float(pts[:, 0].max())
+    y_min, y_max = float(pts[:, 1].min()), float(pts[:, 1].max())
+    x_span = x_max - x_min if x_max > x_min else 1.0
+    y_span = y_max - y_min if y_max > y_min else 1.0
+    pad = 0.25 * max(x_span, y_span)
+    ax.set_xlim(x_min - pad, x_max + pad)
+    ax.set_ylim(y_min - pad, y_max + pad)
+
+    ax.set_aspect("equal", adjustable="box")
+    ax.axis("off")
+
+    out_path = OUTPUT_DATA_DIR / PLOT2D_FILENAME
+    try:
+        fig.tight_layout()
+        fig.savefig(out_path, dpi=200, bbox_inches="tight")
+        logger.info(f"Saved turn-sequence 2D diagram to: {out_path}")
     except Exception:
-        logger.exception("Failed to save 2D projection image")
+        logger.exception("Failed to save turn-sequence 2D diagram")
     finally:
-        if show:
-            cast("Any", plt).show()
-        else:
-            plt.close(fig2)
+        plt.close(fig)
+
+    return out_path
