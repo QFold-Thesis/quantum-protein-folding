@@ -137,7 +137,7 @@ def generate_coords_from_bitstring(
         )
     ]
 
-    for turn, symbol in zip(turns, main_chain[1::]):
+    for turn, symbol in zip(turns, main_chain[1::], strict=True):
         if turn not in bitstring_to_direction:
             logger.warning(f"Unknown turn encoding: {turn}")
             continue
