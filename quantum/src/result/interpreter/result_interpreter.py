@@ -58,10 +58,10 @@ class ResultInterpreter:
             raise ConformationEncodingError
 
         self.vqe_output: SparseVQEOutput = self._interpret_raw_vqe_results()
-        formatted_bitstring: str = self._preprocess_bitstring(self.vqe_output.bitstring)
+        self.formatted_bitstring: str = self._preprocess_bitstring(self.vqe_output.bitstring)
 
         self.coordinates_3d: list[BeadPosition] = self._generate_3d_coordinates(
-            bitstring=formatted_bitstring,
+            bitstring=self.formatted_bitstring,
         )
 
     def save_to_files(self) -> None:
@@ -161,7 +161,9 @@ class ResultInterpreter:
         )
 
     def _dump_result_dict_to_json(
-        self, filename: str, results_dict: SparseVQEOutput | SamplingMinimumEigensolverResult
+        self,
+        filename: str,
+        results_dict: SparseVQEOutput | SamplingMinimumEigensolverResult,
     ) -> None:
         results_filepath: Path = self.dirpath / filename
 

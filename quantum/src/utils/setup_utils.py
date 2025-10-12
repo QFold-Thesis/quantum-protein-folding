@@ -108,13 +108,18 @@ def setup_vqe_optimization(
     return vqe, counts, values
 
 
-def setup_result_analysis(raw_results: SamplingMinimumEigensolverResult, protein: Protein) -> tuple[ResultInterpreter, ResultVisualizer]:
-    timestamp: str = datetime.now(tz=UTC).strftime("%Y%m%d_%H%M%S")
-    dirpath: Path = OUTPUT_DATA_DIR / f"{timestamp}-{protein.main_chain}-{protein.side_chain}"
+def setup_result_analysis(
+    raw_results: SamplingMinimumEigensolverResult, protein: Protein
+) -> tuple[ResultInterpreter, ResultVisualizer]:
+    timestamp: str = datetime.now(tz=UTC).strftime("%Y-%m-%d_%H-%M-%S")
+    dirpath: Path = (
+        OUTPUT_DATA_DIR / f"{timestamp}_{protein.main_chain!s}-{protein.side_chain!s}"
+    )
     dirpath.mkdir(parents=True, exist_ok=True)
 
-    result_interpreter: ResultInterpreter = ResultInterpreter(dirpath=dirpath, raw_results=raw_results, protein=protein)
+    result_interpreter: ResultInterpreter = ResultInterpreter(
+        dirpath=dirpath, raw_results=raw_results, protein=protein
+    )
     result_visualizer: ResultVisualizer = ResultVisualizer(dirpath=dirpath)
 
     return result_interpreter, result_visualizer
-

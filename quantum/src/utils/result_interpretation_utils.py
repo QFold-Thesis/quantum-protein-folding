@@ -18,6 +18,7 @@ from result.models import BeadPosition
 
 logger = get_logger()
 
+
 def create_xyz_file(coords: list[BeadPosition], dirpath: Path) -> Path:
     filepath: Path = dirpath / XYZ_FILENAME
 
