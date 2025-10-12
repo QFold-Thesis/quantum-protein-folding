@@ -58,7 +58,9 @@ class ResultInterpreter:
             raise ConformationEncodingError
 
         self.vqe_output: SparseVQEOutput = self._interpret_raw_vqe_results()
-        self.formatted_bitstring: str = self._preprocess_bitstring(self.vqe_output.bitstring)
+        self.formatted_bitstring: str = self._preprocess_bitstring(
+            self.vqe_output.bitstring
+        )
 
         self.coordinates_3d: list[BeadPosition] = self._generate_3d_coordinates(
             bitstring=self.formatted_bitstring,

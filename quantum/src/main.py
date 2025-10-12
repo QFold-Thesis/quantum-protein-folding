@@ -46,7 +46,7 @@ def main() -> None:
 
     result_visualizer.generate_plots(
         coords=result_interpreter.coordinates_3d,
-        turn_sequence=result_interpreter.formatted_bitstring
+        turn_sequence=result_interpreter.formatted_bitstring,
     )
 
 
