@@ -18,16 +18,6 @@ logger = get_logger()
 
 
 class ResultVisualizer:
-    """
-    Create 3D and 2D visualizations of a protein conformation.
-
-    - 3D: static window (no rotation) plus a rotating GIF saved to disk.
-    - 2D: simple diagram derived directly from the final turn sequence.
-
-    Configuration is intentionally minimal (no customization): only dirpath is
-    required; other plot parameters are sensible defaults.
-    """
-
     def __init__(self, dirpath: Path) -> None:
         self.dirpath: Path = dirpath
 
