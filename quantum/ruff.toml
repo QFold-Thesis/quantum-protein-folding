@@ -1,5 +1,8 @@
 lint.select = ["ALL"]
 
+[lint.per-file-ignores]
+"tests/*.py" = ["S101"]
+
 lint.ignore = [
     #### modules
     "ANN", # flake8-annotations
