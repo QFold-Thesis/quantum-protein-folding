@@ -1,6 +1,6 @@
 from qiskit import QiskitError
 import pytest
-from qiskit.quantum_info import SparsePauliOp, Pauli
+from qiskit.quantum_info import SparsePauliOp
 
 from src.constants import (
     MAIN_CHAIN_FIXED_POSITIONS,
