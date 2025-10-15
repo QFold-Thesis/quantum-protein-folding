@@ -3,7 +3,7 @@ Utilities for building the Hamiltonian of a protein for quantum simulations.
 
 This module provides the HamiltonianBuilder class, which constructs Hamiltonian
 operators for a given protein, including backbone interactions, backtracking
-penalties, and neighbor-based contact terms, using distance and MJ interaction maps.
+penalties, and neighbor-based contact terms, using distance and interaction maps.
 """
 
 from __future__ import annotations
@@ -191,15 +191,18 @@ class HamiltonianBuilder:
 
     def get_turn_operators(self, lower_bead: Bead, upper_bead: Bead) -> SparsePauliOp:
         """
-        Adds a penalty term to the Hamiltonian to discourage backtracking
-        in the main chain configuration.
+        Builds the combined turn operators for two consecutive beads in the main chain.
+
+        Generates a quantum operator representing allowed directional turns
+        between two beads based on their turn functions. If either bead lacks
+        defined turn functions, an identity operator is returned.
 
         Args:
             lower_bead (Bead): The bead from the main chain at the lower index.
             upper_bead (Bead): The bead from the main chain at the upper index.
 
         Returns:
-            SparsePauliOp: Quantum operator representing the backtracking penalty between the two beads.
+            SparsePauliOp: Combined turn operator describing the interaction between the two beads.
 
         """
         lower_turn_funcs: (
@@ -237,7 +240,7 @@ class HamiltonianBuilder:
     ) -> SparsePauliOp:
         """
         Computes the Hamiltonian contribution for first-neighbor bead pairs,
-        combining distance-based and Miyazawa-Jernigan contact energies.
+        combining distance-based and interaction contact energies.
 
         Args:
             lower_bead_idx (int): Index of the lower bead in the main chain.
@@ -278,7 +281,7 @@ class HamiltonianBuilder:
     ) -> SparsePauliOp:
         """
         Computes the Hamiltonian contribution for second-neighbor bead pairs,
-        including distance-based and Miyazawa-Jernigan interaction terms.
+        including distance-based and interaction terms.
 
         Args:
             lower_bead_idx (int): Index of the lower bead in the main chain.

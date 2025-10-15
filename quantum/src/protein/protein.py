@@ -14,8 +14,7 @@ class Protein:
     """
     Represents a protein with main and side chains.
 
-    The main chain is defined as a sequence of amino acid residues, with valid types
-    [A, C, D, E, F, G, H, I, K, L, M, N, P, Q, R, S, T, V, W, Y].
+    The main chain is defined as a sequence of amino acid residues.
     Side chains are optional and can be empty; if present, they follow the same residue types.
     Side chains cannot be attached to the first or last main bead.
 
