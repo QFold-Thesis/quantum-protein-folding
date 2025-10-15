@@ -44,10 +44,7 @@ def main() -> None:
 
     result_interpreter.save_to_files()
 
-    result_visualizer.generate_plots(
-        coords=result_interpreter.coordinates_3d,
-        turn_sequence=result_interpreter.formatted_bitstring,
-    )
+    result_visualizer.generate_3d(coords=result_interpreter.coordinates_3d)
 
 
 if __name__ == "__main__":
