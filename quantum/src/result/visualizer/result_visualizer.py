@@ -8,6 +8,7 @@ if TYPE_CHECKING:
 
 import numpy as np
 from matplotlib import animation
+from matplotlib import patheffects
 from matplotlib import pyplot as plt
 
 from constants import GIF_FILENAME, PLOT2D_FILENAME, QUBITS_PER_TURN
@@ -121,32 +122,9 @@ class ResultVisualizer:
     def generate_2d(self, turn_sequence: str) -> Path:
         """Create and save a simple 2D diagram built directly from the turn sequence."""
         bits_per = int(QUBITS_PER_TURN)
-        if len(turn_sequence) % bits_per != 0:
-            usable_len = len(turn_sequence) - (len(turn_sequence) % bits_per)
-            turns_bits = [
-                turn_sequence[i : i + bits_per] for i in range(0, usable_len, bits_per)
-            ]
-        else:
-            turns_bits = [
-                turn_sequence[i : i + bits_per]
-                for i in range(0, len(turn_sequence), bits_per)
-            ]
-
-        try:
-            turns = [int(b, 2) for b in turns_bits]
-        except ValueError as exc:
-            msg = "turn_sequence must contain only '0' and '1' characters in groups of QUBITS_PER_TURN"
-            raise ValueError(msg) from exc
-
-        # Map turns to 2D steps (right, up, left, down)
-        dir_map = np.array(
-            [[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0], [0.0, -1.0]], dtype=float
-        )
-        positions = [np.array([0.0, 0.0], dtype=float)]
-        for t in turns:
-            idx = int(t) % dir_map.shape[0]
-            positions.append(positions[-1] + dir_map[idx])
-        pts = np.vstack(positions)
+        turns = self._bits_to_turns(turn_sequence, bits_per)
+        pts = self._build_positions_2d(turns)
+        offset_pts = self._deoverlap_points(pts)
 
         # Plot
         fig = cast("Any", plt).figure(figsize=(8, 6))
@@ -159,16 +137,17 @@ class ResultVisualizer:
                 pts[:, 0],
                 pts[:, 1],
                 linestyle="-",
-                color="#444444",
+                color="#666666",
                 linewidth=2,
+                alpha=0.8,
                 zorder=1,
             )
         # Beads (large circles)
         cmap2d = plt.get_cmap("tab10")
-        colors = [cmap2d(i % 10) for i in range(pts.shape[0])]
+        colors = [cmap2d(i % 10) for i in range(offset_pts.shape[0])]
         ax.scatter(
-            pts[:, 0],
-            pts[:, 1],
+            offset_pts[:, 0],
+            offset_pts[:, 1],
             s=300,
             c=colors,
             edgecolors="black",
@@ -176,7 +155,7 @@ class ResultVisualizer:
             zorder=2,
         )
         # Labels inside circles
-        for i, (x, y) in enumerate(pts):
+        for i, (x, y) in enumerate(offset_pts):
             ax.text(
                 float(x),
                 float(y),
@@ -187,16 +166,13 @@ class ResultVisualizer:
                 fontweight="bold",
                 color="white",
                 zorder=3,
+                path_effects=[
+                    patheffects.withStroke(linewidth=1.6, foreground="black")
+                ],
             )
 
-        # Fit view with padding to prevent cropping
-        x_min, x_max = float(pts[:, 0].min()), float(pts[:, 0].max())
-        y_min, y_max = float(pts[:, 1].min()), float(pts[:, 1].max())
-        x_span = x_max - x_min if x_max > x_min else 1.0
-        y_span = y_max - y_min if y_max > y_min else 1.0
-        pad = 0.25 * max(x_span, y_span)
-        ax.set_xlim(x_min - pad, x_max + pad)
-        ax.set_ylim(y_min - pad, y_max + pad)
+        # Fit view with padding to prevent cropping (consider offset points)
+        self._fit_view_2d(ax, offset_pts)
         ax.set_aspect("equal", adjustable="box")
         ax.axis("off")
 
@@ -369,3 +345,56 @@ class ResultVisualizer:
             return None
         else:
             return path
+
+    @staticmethod
+    def _bits_to_turns(turn_sequence: str, bits_per: int) -> list[int]:
+        usable_len = len(turn_sequence) - (len(turn_sequence) % bits_per)
+        chunks = [
+            turn_sequence[i : i + bits_per] for i in range(0, usable_len, bits_per)
+        ]
+        try:
+            return [int(b, 2) for b in chunks]
+        except ValueError as exc:
+            msg = "turn_sequence must contain only '0' and '1' characters in groups of QUBITS_PER_TURN"
+            raise ValueError(msg) from exc
+
+    @staticmethod
+    def _build_positions_2d(turns: list[int]) -> np.ndarray:
+        dir_map = np.array(
+            [[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0], [0.0, -1.0]], dtype=float
+        )
+        positions = np.zeros((len(turns) + 1, 2), dtype=float)
+        for i, t in enumerate(turns, start=1):
+            idx = int(t) % dir_map.shape[0]
+            positions[i] = positions[i - 1] + dir_map[idx]
+        return positions
+
+    @staticmethod
+    def _deoverlap_points(pts: np.ndarray) -> np.ndarray:
+        key_indices: dict[tuple[float, float], list[int]] = {}
+        for idx, (x, y) in enumerate(pts):
+            key = (float(x), float(y))
+            key_indices.setdefault(key, []).append(idx)
+        offset_pts = pts.copy()
+        for key, idxs in key_indices.items():
+            m = len(idxs)
+            if m <= 1:
+                continue
+            radius = 0.18 + 0.04 * (m - 2)
+            angles = np.linspace(0.0, 2.0 * np.pi, num=m, endpoint=False)
+            cos_vals = np.cos(angles)
+            sin_vals = np.sin(angles)
+            for i, idx in enumerate(idxs):
+                offset_pts[idx, 0] = key[0] + radius * cos_vals[i]
+                offset_pts[idx, 1] = key[1] + radius * sin_vals[i]
+        return offset_pts
+
+    @staticmethod
+    def _fit_view_2d(ax: Any, pts: np.ndarray) -> None:
+        x_min, x_max = float(pts[:, 0].min()), float(pts[:, 0].max())
+        y_min, y_max = float(pts[:, 1].min()), float(pts[:, 1].max())
+        x_span = x_max - x_min if x_max > x_min else 1.0
+        y_span = y_max - y_min if y_max > y_min else 1.0
+        pad = 0.25 * max(x_span, y_span)
+        ax.set_xlim(x_min - pad, x_max + pad)
+        ax.set_ylim(y_min - pad, y_max + pad)
