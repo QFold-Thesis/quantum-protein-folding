@@ -355,7 +355,7 @@ class ResultVisualizer:
         try:
             return [int(b, 2) for b in chunks]
         except ValueError as exc:
-            msg = "turn_sequence must contain only '0' and '1' characters in groups of QUBITS_PER_TURN"
+            msg: str = "turn_sequence must contain only '0' and '1' characters in groups of QUBITS_PER_TURN"
             raise ValueError(msg) from exc
 
     @staticmethod

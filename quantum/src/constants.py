@@ -86,4 +86,6 @@ INDEX_COLNAME: str = "Index"
 
 SYMBOL_COLNAME: str = "Symbol"
 
-COORDINATES_COLUMN_WIDTH: int = 12  # Width for coordinate columns in output files (sign, integer part, decimals)
+COORDINATES_COLUMN_WIDTH: int = (
+    12  # Width for coordinate columns in output files (sign, integer part, decimals)
+)

@@ -1,5 +1,5 @@
-from datetime import UTC, datetime
 import time
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
@@ -14,7 +14,7 @@ from constants import INTERACTION_TYPE, OUTPUT_DATA_DIR
 from contact import ContactMap
 from distance import DistanceMap
 from enums import InteractionType
-from exceptions import InvalidInteractionTypeError, InvalidOperatorError
+from exceptions import InvalidInteractionTypeError
 from interaction import HPInteraction, Interaction, MJInteraction
 from logger import get_logger
 from protein import Protein

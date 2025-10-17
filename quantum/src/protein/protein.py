@@ -8,7 +8,7 @@ logger = get_logger()
 class Protein:
     def __init__(self, main_protein_sequence: str, side_protein_sequence: str) -> None:
         if len(main_protein_sequence) != len(side_protein_sequence):
-            msg = "Main and side protein sequences must be of the same length."
+            msg: str = "Main and side protein sequences must be of the same length."
             logger.error(msg)
             raise ChainLengthError(msg)
 

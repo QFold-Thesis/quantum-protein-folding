@@ -83,7 +83,7 @@ class ResultInterpreter:
 
         for i, turn in enumerate(self._turn_sequence, start=1):
             logger.info(
-                f"Turn {i:>{idx_width}} - {str(turn.value):>{val_width}} ({turn.name:<{name_width}})"
+                f"Turn {i:>{idx_width}} - {turn.value!s:>{val_width}} ({turn.name:<{name_width}})"
             )
 
     def _log_coordinates_3d(self) -> None:
@@ -125,7 +125,7 @@ class ResultInterpreter:
         best_measurement = self._raw_results.best_measurement
 
         if not best_measurement:
-            msg = "No best measurement found in VQE output."
+            msg: str = "No best measurement found in VQE output."
             raise ValueError(msg)
 
         bitstring: str | None = best_measurement.get("bitstring")
@@ -134,7 +134,7 @@ class ResultInterpreter:
         energy_value: np.complex128 | None = best_measurement.get("value")
 
         if None in (bitstring, probability, state, energy_value):
-            msg = "Incomplete best measurement data in VQE output."
+            msg: str = "Incomplete best measurement data in VQE output."
             raise ValueError(msg)
 
         logger.info("VQE interpretation complete")
@@ -169,14 +169,14 @@ class ResultInterpreter:
         ]
 
         bitstring_to_direction = {
-            bitstring: direction
-            for direction, bitstring in self._turn_encoding.items()
+            bitstring: direction for direction, bitstring in self._turn_encoding.items()
         }
 
         turn_sequence: list[TurnDirection] = []
         for turn in turns:
             if turn not in bitstring_to_direction:
-                raise ConformationEncodingError(f"Unknown turn encoding for: {turn}")
+                msg: str = f"Unknown turn encoding for: {turn}"
+                raise ConformationEncodingError(msg)
             turn_sequence.append(bitstring_to_direction[turn])
 
         return turn_sequence
@@ -261,7 +261,7 @@ class ResultInterpreter:
     @property
     def coordinates_3d(self) -> list[BeadPosition]:
         return self._coordinates_3d
-    
+
     @property
     def turn_sequence(self) -> list[TurnDirection]:
         return self._turn_sequence

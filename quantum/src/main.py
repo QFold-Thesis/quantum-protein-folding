@@ -33,16 +33,15 @@ def main() -> None:
 
     vqe, _, _ = setup_vqe_optimization(num_qubits=compressed_h.num_qubits)
 
-    raw_results: SamplingMinimumEigensolverResult = run_vqe_optimization(vqe=vqe, hamiltonian=compressed_h)
+    raw_results: SamplingMinimumEigensolverResult = run_vqe_optimization(
+        vqe=vqe, hamiltonian=compressed_h
+    )
 
     result_interpreter, result_visualizer = setup_result_analysis(
-        raw_results=raw_results, 
-        protein=protein
+        raw_results=raw_results, protein=protein
     )
 
     result_interpreter.save_to_files()
-
-    # result_visualizer.generate_3d(coords=result_interpreter.coordinates_3d)
 
 
 if __name__ == "__main__":
