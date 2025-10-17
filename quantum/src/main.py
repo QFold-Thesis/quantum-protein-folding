@@ -37,15 +37,11 @@ def main() -> None:
         vqe=vqe, hamiltonian=compressed_h
     )
 
-    result_interpreter, result_visualizer = setup_result_analysis(
+    result_interpreter, _ = setup_result_analysis(
         raw_results=raw_results, protein=protein
     )
 
     result_interpreter.dump_results_to_files()
-
-    result_visualizer.visualize_3d(
-        coordinates=result_interpreter.coordinates_3d
-    )
 
 
 if __name__ == "__main__":

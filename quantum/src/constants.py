@@ -2,10 +2,9 @@ import logging
 from pathlib import Path
 
 import numpy as np
+from numpy.typing import NDArray
 
 from enums import ConformationEncoding, InteractionType, TurnDirection
-
-from numpy.typing import NDArray
 
 ROOT_PROJECT_PATH: Path = Path(__file__).parent.parent
 
@@ -94,9 +93,16 @@ COORDINATES_COLUMN_WIDTH: int = (
     12  # Width for coordinate columns in output files (sign, integer part, decimals)
 )
 
-FCC_BASIS: NDArray[np.float64] = np.array([
-    [ 1,  1,  1],
-    [ 1, -1, -1],
-    [-1,  1, -1],
-    [-1, -1,  1],
-], dtype=float)
+FCC_BASIS: NDArray[np.float64] = np.array(
+    [
+        [1, 1, 1],
+        [1, -1, -1],
+        [-1, 1, -1],
+        [-1, -1, 1],
+    ],
+    dtype=float,
+)
+
+SIDE_CHAIN_FIFTH_POSITION_INDEX: int = (
+    4  # Index of the 5th bead in zero-indexed beads list
+)

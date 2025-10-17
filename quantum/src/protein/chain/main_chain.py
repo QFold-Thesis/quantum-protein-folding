@@ -1,7 +1,4 @@
-from collections.abc import Iterator
-
 from logger import get_logger
-from protein.bead import Bead
 from protein.bead.main_bead import MainBead
 from protein.chain import Chain
 
@@ -23,15 +20,3 @@ class MainChain(Chain):
             )
             for index, bead in enumerate(protein_sequence)
         ]
-
-    def __iter__(self) -> Iterator[Bead]:
-        return iter(self.beads)
-
-    def __getitem__(self, index: int) -> Bead:
-        return self.beads[index]
-
-    def __len__(self) -> int:
-        return len(self.beads)
-
-    def __str__(self) -> str:
-        return "".join(bead.symbol for bead in self.beads)

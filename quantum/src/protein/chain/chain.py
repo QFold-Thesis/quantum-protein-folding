@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from collections.abc import Iterator
 
-if TYPE_CHECKING:
-    from protein.bead import Bead
+from protein.bead import Bead
 
 
 class Chain(ABC):
@@ -16,3 +15,15 @@ class Chain(ABC):
 
         """
         return self.beads[index].symbol
+
+    def __iter__(self) -> Iterator[Bead]:
+        return iter(self.beads)
+
+    def __getitem__(self, index: int) -> Bead:
+        return self.beads[index]
+
+    def __len__(self) -> int:
+        return len(self.beads)
+
+    def __str__(self) -> str:
+        return "".join(bead.symbol for bead in self.beads)

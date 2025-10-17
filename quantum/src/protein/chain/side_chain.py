@@ -1,5 +1,6 @@
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from logger import get_logger
+from protein.bead.placeholder_side_bead import PlaceholderSideBead
 from protein.bead.side_bead import SideBead
 from protein.chain import Chain
 
@@ -19,9 +20,11 @@ class SideChain(Chain):
                 index=index,
                 parent_chain_len=len(protein_sequence),
             )
-            for index, bead in enumerate(protein_sequence)
             if bead != EMPTY_SIDECHAIN_PLACEHOLDER
+            else PlaceholderSideBead(
+                symbol=bead,
+                index=index,
+                parent_chain_len=len(protein_sequence),
+            )
+            for index, bead in enumerate(protein_sequence)
         ]
-
-    def __str__(self) -> str:
-        return "".join(bead.symbol for bead in self.beads)

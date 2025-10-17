@@ -9,9 +9,12 @@ from constants import (
     CONFORMATION_ENCODING,
     COORDINATES_COLUMN_WIDTH,
     DENSE_TURN_INDICATORS,
+    EMPTY_SIDECHAIN_PLACEHOLDER,
+    FCC_BASIS,
     INDEX_COLNAME,
     QUBITS_PER_TURN,
     RAW_VQE_RESULTS_FILENAME,
+    SIDE_CHAIN_FIFTH_POSITION_INDEX,
     SPARSE_TURN_INDICATORS,
     SPARSE_VQE_RESULTS_FILENAME,
     SYMBOL_COLNAME,
@@ -46,12 +49,12 @@ class ResultInterpreter:
         self._dirpath: Path = dirpath
         self._raw_results: SamplingMinimumEigensolverResult = raw_vqe_results
 
-        self._main_chain_symbols: list[str] = [
-            bead.symbol for bead in protein.main_chain.beads
-        ]
-        self._side_chain_symbols: list[str] = [
-            bead.symbol for bead in protein.side_chain.beads
-        ]
+        self._protein: Protein = protein
+        self._fifth_bead_has_sidechain: bool = (
+            len(self._protein.side_chain) >= SIDE_CHAIN_FIFTH_POSITION_INDEX + 1
+            and self._protein.side_chain[SIDE_CHAIN_FIFTH_POSITION_INDEX].symbol
+            == EMPTY_SIDECHAIN_PLACEHOLDER
+        )
 
         if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
             self._turn_encoding: dict[TurnDirection, str] = DENSE_TURN_INDICATORS
@@ -68,7 +71,6 @@ class ResultInterpreter:
         self._processed_bitstring: str = self._preprocess_bitstring(
             bitstring=self._vqe_output.bitstring
         )
-        print(self._processed_bitstring)
 
         self._turn_sequence: list[TurnDirection] = self._generate_turn_sequence()
         self._log_turn_sequence()
@@ -151,15 +153,56 @@ class ResultInterpreter:
         )
 
     def _preprocess_bitstring(self, bitstring: str) -> str:
+        bitstring = "010100101"
         """Preprocesses the bitstring by appending initial turns and reversing it."""
+        target_bitstring_length: int = self._get_target_sequence_length_main_chain()
+
+        result_bitstring: str = bitstring[-target_bitstring_length:]
+
         result_bitstring: str = (
-            bitstring 
-            + self._turn_encoding[TurnDirection.DIR_0] 
-            + self._turn_encoding[TurnDirection.DIR_1]
+            result_bitstring
+            + self._turn_encoding[TurnDirection.DIR_0][::-1]
+            + self._turn_encoding[TurnDirection.DIR_1][::-1]
+        )
+        if CONFORMATION_ENCODING == ConformationEncoding.SPARSE:
+            return result_bitstring[::-1]
+        if CONFORMATION_ENCODING != ConformationEncoding.DENSE:
+            raise ConformationEncodingError
+
+        if self._fifth_bead_has_sidechain:
+            result_bitstring = (
+                result_bitstring[: -(SIDE_CHAIN_FIFTH_POSITION_INDEX + 1)]
+                + "1"
+                + result_bitstring[-(SIDE_CHAIN_FIFTH_POSITION_INDEX + 1) :]
             )
-        
-        
         return result_bitstring[::-1]
+
+    def _get_target_sequence_length_main_chain(self) -> int:
+        """
+        Calculates the target length (in bits) of the turn sequence for the main chain.
+
+        Notes:
+            Each turn is represented by a fixed number of qubits (QUBITS_PER_TURN).
+            The number of turns is N - 1, where N is the number of beads in the main chain.
+            However, by the symmetry of tetrahedral lattice we can assume that:
+
+            - The first two turns are fixed.
+            - (Sparse encoding only) If we don't have a side bead attached to the second bead, we can encode the third turn as fixed value of "1".
+
+        Returns:
+            int: Target turn sequence length for the main chain in bits.
+
+        Raises:
+            ConformationEncodingError: If the conformation encoding is not recognized.
+
+        """
+        target_length: int = QUBITS_PER_TURN * (len(self._protein.main_chain) - 3)
+        if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
+            target_length -= int(self._fifth_bead_has_sidechain)
+        elif CONFORMATION_ENCODING != ConformationEncoding.SPARSE:
+            raise ConformationEncodingError
+
+        return target_length
 
     def _generate_turn_sequence(
         self,
@@ -186,9 +229,7 @@ class ResultInterpreter:
     def _generate_3d_coordinates(
         self,
     ) -> list[BeadPosition]:
-        tetra_dirs = np.array(
-            [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]], dtype=float
-        )
+        tetra_dirs: np.ndarray = FCC_BASIS.copy()
         tetra_dirs /= np.linalg.norm(tetra_dirs[0])
 
         bitstring_to_direction = {
@@ -201,20 +242,23 @@ class ResultInterpreter:
             self._processed_bitstring[i * QUBITS_PER_TURN : (i + 1) * QUBITS_PER_TURN]
             for i in range(turns_length)
         ]
+        main_chain_symbols: list[str] = [
+            bead.symbol for bead in self._protein.main_chain.beads
+        ]
 
         # initialize the starting position (first bead)
         current_pos = np.array([0.0, 0.0, 0.0])
         coords = [
             BeadPosition(
                 index=0,
-                symbol=self._main_chain_symbols[0],
+                symbol=main_chain_symbols[0],
                 x=current_pos[0],
                 y=current_pos[1],
                 z=current_pos[2],
             )
         ]
 
-        for turn, symbol in zip(turns, self._main_chain_symbols[1::], strict=True):
+        for turn, symbol in zip(turns, main_chain_symbols[1::], strict=True):
             if turn not in bitstring_to_direction:
                 logger.warning(f"Unknown turn encoding: {turn}")
                 continue
