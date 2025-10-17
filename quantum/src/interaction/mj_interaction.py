@@ -34,6 +34,16 @@ class MJInteraction(Interaction):
         self,
         interaction_matrix_path: Path = MJ_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
+        """
+        Initialize MJInteraction instance.
+
+        Loads the MJ interaction matrix from a file and prepares a mapping of
+        residue-residue pairs to their contact energies.
+
+        Args:
+            interaction_matrix_path (Path): Path to the MJ interaction matrix file.
+
+        """
         super().__init__(interaction_matrix_path)
 
         self._energy_pairs: dict[str, float] = self._prepare_mj_interaction_matrix(
@@ -43,6 +53,22 @@ class MJInteraction(Interaction):
     def _prepare_mj_interaction_matrix(
         self, mj_filepath: Path = MJ_INTERACTION_MATRIX_FILEPATH
     ) -> dict[str, float]:
+        """
+        Prepare the MJ interaction matrix.
+
+        Reads the MJ matrix file, records valid residue symbols, and builds a
+        dictionary of symmetric residue-residue contact energies.
+
+        Args:
+            mj_filepath (Path): Path to the MJ matrix file.
+
+        Returns:
+            dict[str, float]: Dictionary mapping residue pair codes to energies.
+
+        Raises:
+            Exception: If an error occurs while loading or parsing the matrix.
+
+        """
         try:
             mj_matrix = np.loadtxt(mj_filepath, dtype=str)
 
@@ -69,6 +95,17 @@ class MJInteraction(Interaction):
     def get_energy(self, symbol_i: str, symbol_j: str) -> float:
         """
         Return MJ interaction energy for a pair of residue symbols.
+
+        Args:
+            symbol_i (str): One-letter code of the first residue.
+            symbol_j (str): One-letter code of the second residue.
+
+        Returns:
+            float: MJ interaction energy between the two residues.
+
+        Raises:
+            UnsupportedAminoAcidSymbolError: If either residue symbol is not in the MJ matrix.
+            RuntimeError: If another unexpected error occurs during computation.
 
         """
         key = f"{symbol_i}{symbol_j}"

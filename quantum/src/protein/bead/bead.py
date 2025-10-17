@@ -18,7 +18,20 @@ logger = get_logger()
 
 
 class Bead(ABC):
+    """An abstract class defining a bead of a peptide."""
+
     def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:
+        """
+        Initialize a bead instance.
+
+        Sets symbol, index, sublattice type, and initializes turn qubits if applicable.
+
+        Args:
+            symbol (str): One-letter amino acid symbol.
+            index (int): Position of the bead in the parent chain.
+            parent_chain_len (int): Total number of beads in the parent chain.
+
+        """
         self.symbol: str = symbol
         self.index: int = index
         self.turn_qubits: tuple[SparsePauliOp, ...] = ()
@@ -39,6 +52,17 @@ class Bead(ABC):
             )
 
     def _initialize_turn_qubits(self) -> None:
+        """
+        Initializes the quantum turn qubits associated with this bead based on the selected conformation encoding.
+
+        For each bead (except the last in the chain), the function builds a set of Pauli operators representing
+        directional turns in the protein structure. The number of initialized qubits depends on whether the
+        encoding is dense or sparse.
+
+        Raises:
+            ConformationEncodingError: If conformation encoding or qubit count is not set.
+
+        """
         if not self._has_turn_qubits:
             return
 
@@ -59,22 +83,30 @@ class Bead(ABC):
     def turn_funcs(
         self,
     ) -> None | tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp]:
+        """
+        Return Pauli operators representing directional turns.
+
+        Returns:
+            tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp] | None:
+                Tuple of Pauli operators for turns (0-3), or `None` if no turn qubits exist.
+
+        """
         if not self.turn_qubits or not self._has_turn_qubits:
             return None
         return (self.turn_0(), self.turn_1(), self.turn_2(), self.turn_3())
 
     @abstractmethod
     def turn_0(self) -> SparsePauliOp:
-        pass
+        """Return Pauli operator representing turn in direction 0."""
 
     @abstractmethod
     def turn_1(self) -> SparsePauliOp:
-        pass
+        """Return Pauli operator representing turn in direction 1."""
 
     @abstractmethod
     def turn_2(self) -> SparsePauliOp:
-        pass
+        """Return Pauli operator representing turn in direction 2."""
 
     @abstractmethod
     def turn_3(self) -> SparsePauliOp:
-        pass
+        """Return Pauli operator representing turn in direction 3."""
