@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+import time
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
@@ -65,25 +66,21 @@ def build_and_compress_hamiltonian(
     )
 
     hamiltonian = h_builder.sum_hamiltonians()
-    logger.debug("Original hamiltonian qubits: %d", hamiltonian.num_qubits)
+    logger.debug(f"Original hamiltonian qubits: {hamiltonian.num_qubits}")
 
     compressed_h = remove_unused_qubits(hamiltonian)
-    logger.debug("Compressed hamiltonian qubits: %d", compressed_h.num_qubits)
+    logger.debug(f"Compressed hamiltonian qubits: {compressed_h.num_qubits}")
 
     return hamiltonian, compressed_h
 
 
 def setup_vqe_optimization(
-    compressed_h: SparsePauliOp,
+    num_qubits: int,
 ) -> tuple[SamplingVQE, list[Any], list[Any]]:
     """Setup VQE optimization components."""
     optimizer = COBYLA(maxiter=50)
 
-    if compressed_h.num_qubits is None:
-        msg: str = "Hamiltonian number of qubits is None."
-        raise InvalidOperatorError(msg)
-
-    ansatz: QuantumCircuit = real_amplitudes(num_qubits=compressed_h.num_qubits, reps=1)
+    ansatz: QuantumCircuit = real_amplitudes(num_qubits=num_qubits, reps=1)
 
     counts: list[Any] = []
     values: list[Any] = []
@@ -108,12 +105,31 @@ def setup_vqe_optimization(
     return vqe, counts, values
 
 
+def run_vqe_optimization(
+    vqe: SamplingVQE,
+    hamiltonian: SparsePauliOp,
+) -> SamplingMinimumEigensolverResult:
+    """Run the VQE optimization."""
+    logger.debug("Starting VQE optimization")
+
+    start_time: float = time.perf_counter()
+
+    raw_results: SamplingMinimumEigensolverResult = vqe.compute_minimum_eigenvalue(
+        hamiltonian
+    )
+    duration: float = time.perf_counter() - start_time
+    minutes, seconds = divmod(duration, 60)
+
+    logger.debug(f"VQE optimization completed in {int(minutes)}m {seconds:.2f}s")
+    return raw_results
+
+
 def setup_result_analysis(
     raw_results: SamplingMinimumEigensolverResult, protein: Protein
 ) -> tuple[ResultInterpreter, ResultVisualizer]:
-    timestamp: str = datetime.now(tz=UTC).strftime("%Y-%m-%d_%H-%M-%S")
+    timestamp: str = datetime.now(tz=UTC).strftime("%Y_%m_%d-%H_%M_%S")
     dirpath: Path = (
-        OUTPUT_DATA_DIR / f"{timestamp}_{protein.main_chain!s}-{protein.side_chain!s}"
+        OUTPUT_DATA_DIR / f"{timestamp}-{protein.main_chain!s}-{protein.side_chain!s}"
     )
     dirpath.mkdir(parents=True, exist_ok=True)
 

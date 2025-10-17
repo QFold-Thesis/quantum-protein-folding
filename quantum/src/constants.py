@@ -81,3 +81,9 @@ SPARSE_VQE_RESULTS_FILENAME: str = "sparse_vqe_results.json"
 GIF_FILENAME: str = "conformation_3d.gif"
 
 PLOT2D_FILENAME: str = "conformation_2d.png"
+
+INDEX_COLNAME: str = "Index"
+
+SYMBOL_COLNAME: str = "Symbol"
+
+COORDINATES_COLUMN_WIDTH: int = 12  # Width for coordinate columns in output files (sign, integer part, decimals)

@@ -4,6 +4,7 @@ from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from logger import get_logger
 from utils.setup_utils import (
     build_and_compress_hamiltonian,
+    run_vqe_optimization,
     setup_folding_system,
     setup_result_analysis,
     setup_vqe_optimization,
@@ -30,21 +31,18 @@ def main() -> None:
         distance_map=distance_map,
     )
 
-    vqe, _, _ = setup_vqe_optimization(compressed_h)
+    vqe, _, _ = setup_vqe_optimization(num_qubits=compressed_h.num_qubits)
 
-    logger.debug("Starting VQE optimization...")
-
-    raw_results: SamplingMinimumEigensolverResult = vqe.compute_minimum_eigenvalue(
-        compressed_h
-    )
+    raw_results: SamplingMinimumEigensolverResult = run_vqe_optimization(vqe=vqe, hamiltonian=compressed_h)
 
     result_interpreter, result_visualizer = setup_result_analysis(
-        raw_results=raw_results, protein=protein
+        raw_results=raw_results, 
+        protein=protein
     )
 
     result_interpreter.save_to_files()
 
-    result_visualizer.generate_3d(coords=result_interpreter.coordinates_3d)
+    # result_visualizer.generate_3d(coords=result_interpreter.coordinates_3d)
 
 
 if __name__ == "__main__":
