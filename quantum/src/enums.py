@@ -33,7 +33,7 @@ class InteractionType(IntEnum):
 class TurnDirection(IntEnum):
     """Enum representing turn directions on a tetrahedral lattice."""
 
-    DIR_1 = 0
-    DIR_2 = 1
-    DIR_3 = 2
-    DIR_4 = 3
+    DIR_0 = 0
+    DIR_1 = 1
+    DIR_2 = 2
+    DIR_3 = 3

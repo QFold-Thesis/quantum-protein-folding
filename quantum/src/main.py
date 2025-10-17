@@ -41,7 +41,11 @@ def main() -> None:
         raw_results=raw_results, protein=protein
     )
 
-    result_interpreter.save_to_files()
+    result_interpreter.dump_results_to_files()
+
+    result_visualizer.visualize_3d(
+        coordinates=result_interpreter.coordinates_3d
+    )
 
 
 if __name__ == "__main__":

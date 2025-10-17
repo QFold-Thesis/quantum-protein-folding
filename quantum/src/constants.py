@@ -1,7 +1,11 @@
 import logging
 from pathlib import Path
 
+import numpy as np
+
 from enums import ConformationEncoding, InteractionType, TurnDirection
+
+from numpy.typing import NDArray
 
 ROOT_PROJECT_PATH: Path = Path(__file__).parent.parent
 
@@ -53,17 +57,17 @@ IDENTITY_OP_COEFF: float = 1.0
 EMPTY_OP_COEFF: float = 0.0
 
 SPARSE_TURN_INDICATORS: dict[TurnDirection, str] = {
-    TurnDirection.DIR_1: "0001",
-    TurnDirection.DIR_2: "0010",
-    TurnDirection.DIR_3: "0100",
-    TurnDirection.DIR_4: "1000",
+    TurnDirection.DIR_0: "0001",
+    TurnDirection.DIR_1: "0010",
+    TurnDirection.DIR_2: "0100",
+    TurnDirection.DIR_3: "1000",
 }
 
 DENSE_TURN_INDICATORS: dict[TurnDirection, str] = {
-    TurnDirection.DIR_1: "00",
-    TurnDirection.DIR_2: "01",
-    TurnDirection.DIR_3: "10",
-    TurnDirection.DIR_4: "11",
+    TurnDirection.DIR_0: "00",
+    TurnDirection.DIR_1: "01",
+    TurnDirection.DIR_2: "10",
+    TurnDirection.DIR_3: "11",
 }
 
 XYZ_FILE_LINE_START_INDEX: int = 2  # First two lines are header in .xyz files
@@ -89,3 +93,10 @@ SYMBOL_COLNAME: str = "Symbol"
 COORDINATES_COLUMN_WIDTH: int = (
     12  # Width for coordinate columns in output files (sign, integer part, decimals)
 )
+
+FCC_BASIS: NDArray[np.float64] = np.array([
+    [ 1,  1,  1],
+    [ 1, -1, -1],
+    [-1,  1, -1],
+    [-1, -1,  1],
+], dtype=float)

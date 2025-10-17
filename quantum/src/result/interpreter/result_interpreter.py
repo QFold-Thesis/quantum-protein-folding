@@ -68,6 +68,7 @@ class ResultInterpreter:
         self._processed_bitstring: str = self._preprocess_bitstring(
             bitstring=self._vqe_output.bitstring
         )
+        print(self._processed_bitstring)
 
         self._turn_sequence: list[TurnDirection] = self._generate_turn_sequence()
         self._log_turn_sequence()
@@ -151,13 +152,14 @@ class ResultInterpreter:
 
     def _preprocess_bitstring(self, bitstring: str) -> str:
         """Preprocesses the bitstring by appending initial turns and reversing it."""
-        return "".join(
-            reversed(
-                bitstring
-                + self._turn_encoding[TurnDirection.DIR_1]
-                + self._turn_encoding[TurnDirection.DIR_2]
+        result_bitstring: str = (
+            bitstring 
+            + self._turn_encoding[TurnDirection.DIR_0] 
+            + self._turn_encoding[TurnDirection.DIR_1]
             )
-        )
+        
+        
+        return result_bitstring[::-1]
 
     def _generate_turn_sequence(
         self,
@@ -231,7 +233,7 @@ class ResultInterpreter:
 
         return coords
 
-    def save_to_files(self) -> None:
+    def dump_results_to_files(self) -> None:
         create_xyz_file(self.coordinates_3d, self._dirpath)
 
         self._dump_result_dict_to_json(
