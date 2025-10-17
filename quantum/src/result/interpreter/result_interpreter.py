@@ -153,7 +153,6 @@ class ResultInterpreter:
         )
 
     def _preprocess_bitstring(self, bitstring: str) -> str:
-        bitstring = "010100101"
         """Preprocesses the bitstring by appending initial turns and reversing it."""
         target_bitstring_length: int = self._get_target_sequence_length_main_chain()
 
@@ -175,6 +174,9 @@ class ResultInterpreter:
                 + "1"
                 + result_bitstring[-(SIDE_CHAIN_FIFTH_POSITION_INDEX + 1) :]
             )
+            logger.info("Fifth bead has no sidechain. Turn 3 encoded as fixed '1' value.")
+
+        logger.info(f"Preprocessed bitstring to target length of {target_bitstring_length} bits: {result_bitstring}")
         return result_bitstring[::-1]
 
     def _get_target_sequence_length_main_chain(self) -> int:

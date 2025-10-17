@@ -30,29 +30,3 @@ class BeadPosition:
     @property
     def position(self) -> tuple[float, float, float]:
         return (self.x, self.y, self.z)
-
-
-@dataclass(slots=True)
-class AxesLimits:
-    x: tuple[float, float]
-    y: tuple[float, float]
-    z: tuple[float, float]
-
-
-@dataclass(slots=True)
-class RotGifConfig:
-    figsize: tuple[int, int]
-    elev: float
-    azim_start: float
-    frames: int
-    fps: int
-
-
-@dataclass(slots=True)
-class PlotScene:
-    coords_arr: np.ndarray
-    coords: list[BeadPosition]
-    lattice_points_arr: np.ndarray
-    bead_colors: np.ndarray
-    mid: np.ndarray
-    max_range: float
