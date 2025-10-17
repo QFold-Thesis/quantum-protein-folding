@@ -118,7 +118,7 @@ def setup_result_analysis(
     dirpath.mkdir(parents=True, exist_ok=True)
 
     result_interpreter: ResultInterpreter = ResultInterpreter(
-        dirpath=dirpath, raw_results=raw_results, protein=protein
+        dirpath=dirpath, raw_vqe_results=raw_results, protein=protein
     )
     result_visualizer: ResultVisualizer = ResultVisualizer(dirpath=dirpath)
 

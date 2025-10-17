@@ -9,9 +9,9 @@ from constants import (
     CONFORMATION_ENCODING,
     DENSE_TURN_INDICATORS,
     QUBITS_PER_TURN,
-    RAW_RESULTS_FILENAME,
+    RAW_VQE_RESULTS_FILENAME,
     SPARSE_TURN_INDICATORS,
-    VQE_OUTPUT_FILENAME,
+    SPARSE_VQE_RESULTS_FILENAME,
 )
 from enums import ConformationEncoding, TurnDirection
 from exceptions import ConformationEncodingError
@@ -38,10 +38,10 @@ class ResultInterpreter:
         self,
         protein: Protein,
         dirpath: Path,
-        raw_results: SamplingMinimumEigensolverResult,
+        raw_vqe_results: SamplingMinimumEigensolverResult,
     ) -> None:
         self.dirpath: Path = dirpath
-        self.raw_results: SamplingMinimumEigensolverResult = raw_results
+        self.raw_results: SamplingMinimumEigensolverResult = raw_vqe_results
 
         self.main_chain_symbols: list[str] = [
             bead.symbol for bead in protein.main_chain.beads
@@ -70,10 +70,10 @@ class ResultInterpreter:
         create_xyz_file(self.coordinates_3d, self.dirpath)
 
         self._dump_result_dict_to_json(
-            filename=RAW_RESULTS_FILENAME, results_dict=self.raw_results
+            filename=RAW_VQE_RESULTS_FILENAME, results_dict=self.raw_results
         )
         self._dump_result_dict_to_json(
-            filename=VQE_OUTPUT_FILENAME, results_dict=self.vqe_output
+            filename=SPARSE_VQE_RESULTS_FILENAME, results_dict=self.vqe_output
         )
 
     def _interpret_raw_vqe_results(self) -> SparseVQEOutput:

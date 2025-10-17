@@ -72,11 +72,11 @@ XYZ_FILE_PARTS_PER_LINE: int = 4  # Each line has symbol, x, y, z
 
 OUTPUT_DATA_DIR: Path = ROOT_PROJECT_PATH / "output"
 
-RAW_RESULTS_FILENAME: str = "raw_results.json"
+RAW_VQE_RESULTS_FILENAME: str = "raw_vqe_results.json"
 
 XYZ_FILENAME: str = "conformation.xyz"
 
-VQE_OUTPUT_FILENAME: str = "sparse_vqe_output.json"
+SPARSE_VQE_RESULTS_FILENAME: str = "sparse_vqe_results.json"
 
 GIF_FILENAME: str = "conformation_3d.gif"
 
