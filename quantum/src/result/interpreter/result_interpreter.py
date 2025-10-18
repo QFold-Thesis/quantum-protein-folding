@@ -394,7 +394,9 @@ class ResultInterpreter:
         try:
             with vqe_iterations_filepath.open("w", encoding="utf-8") as f:
                 f.write(f"{ITERATION_COLNAME} | Energy\n")
-                for iteration, energy in zip(self._vqe_iterations, self._vqe_energies, strict=True):
+                for iteration, energy in zip(
+                    self._vqe_iterations, self._vqe_energies, strict=True
+                ):
                     placeholder = " " if energy >= 0 else ""
                     f.write(f"{iteration:^{idx_width}} | {placeholder}{energy:.16f}\n")
         except Exception:

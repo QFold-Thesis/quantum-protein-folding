@@ -106,4 +106,3 @@ FCC_BASIS: NDArray[np.float64] = (1.0 / np.sqrt(3)) * np.array(
 SIDE_CHAIN_FIFTH_POSITION_INDEX: int = (
     4  # Index of the 5th bead in zero-indexed beads list
 )
-

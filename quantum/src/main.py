@@ -41,7 +41,7 @@ def main() -> None:
         raw_results=raw_results,
         protein=protein,
         vqe_iterations=counts,
-        vqe_energies=values
+        vqe_energies=values,
     )
 
     result_interpreter.dump_results_to_files()

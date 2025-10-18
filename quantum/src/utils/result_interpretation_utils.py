@@ -62,6 +62,10 @@ def read_xyz_file(filepath: Path) -> list[BeadPosition]:
     """
     Read bead positions from an .xyz file.
 
+    Note:
+        XYZ file format reference: https://en.wikipedia.org/wiki/XYZ_file_format
+        Since no formal standard exists, this implementation follows the most common convention.
+
     Args:
         filepath (Path): Path to the XYZ file.
 

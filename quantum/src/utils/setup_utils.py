@@ -176,7 +176,10 @@ def run_vqe_optimization(
 
 
 def setup_result_analysis(
-    raw_results: SamplingMinimumEigensolverResult, protein: Protein, vqe_iterations: list[int], vqe_energies: list[float]
+    raw_results: SamplingMinimumEigensolverResult,
+    protein: Protein,
+    vqe_iterations: list[int],
+    vqe_energies: list[float],
 ) -> tuple[ResultInterpreter, ResultVisualizer]:
     """
     Setup the result analysis components.

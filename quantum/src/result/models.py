@@ -1,6 +1,7 @@
 """
 Data models for interpreting and visualizing protein folding results.
 """
+
 from dataclasses import dataclass
 
 import numpy as np
