@@ -14,7 +14,7 @@ class SideChain(Chain):
         """
         Initialize the side chain with beads corresponding to the protein sequence.
 
-        Only residues that are not EMPTY_SIDECHAIN_PLACEHOLDER are included.
+        If a bead symbol matches the EMPTY_SIDECHAIN_PLACEHOLDER, a PlaceholderSideBead is created instead.
 
         Args:
             protein_sequence (str): Amino acid sequence of the protein side chain.
