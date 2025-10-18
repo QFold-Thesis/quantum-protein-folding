@@ -93,14 +93,8 @@ COORDINATES_COLUMN_WIDTH: int = (
     12  # Width for coordinate columns in output files (sign, integer part, decimals)
 )
 
-FCC_BASIS: NDArray[np.float64] = np.array(
-    [
-        [1, 1, 1],
-        [1, -1, -1],
-        [-1, 1, -1],
-        [-1, -1, 1],
-    ],
-    dtype=float,
+FCC_BASIS: NDArray[np.float64] = (1.0 / np.sqrt(3)) * np.array(
+    [[-1, 1, 1], [1, 1, -1], [-1, -1, -1], [1, -1, 1]]
 )
 
 SIDE_CHAIN_FIFTH_POSITION_INDEX: int = (

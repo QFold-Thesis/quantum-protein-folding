@@ -32,6 +32,7 @@ from utils.result_interpretation_utils import (
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from numpy.typing import NDArray
     from qiskit_algorithms import SamplingMinimumEigensolverResult
 
     from protein import Protein
@@ -50,7 +51,7 @@ class ResultInterpreter:
         self._raw_results: SamplingMinimumEigensolverResult = raw_vqe_results
 
         self._protein: Protein = protein
-        self._fifth_bead_has_sidechain: bool = (
+        self._fifth_bead_has_no_sidechain: bool = (
             len(self._protein.side_chain) >= SIDE_CHAIN_FIFTH_POSITION_INDEX + 1
             and self._protein.side_chain[SIDE_CHAIN_FIFTH_POSITION_INDEX].symbol
             == EMPTY_SIDECHAIN_PLACEHOLDER
@@ -168,7 +169,7 @@ class ResultInterpreter:
         if CONFORMATION_ENCODING != ConformationEncoding.DENSE:
             raise ConformationEncodingError
 
-        if self._fifth_bead_has_sidechain:
+        if self._fifth_bead_has_no_sidechain:
             result_bitstring = (
                 result_bitstring[: -(SIDE_CHAIN_FIFTH_POSITION_INDEX + 1)]
                 + "1"
@@ -204,7 +205,7 @@ class ResultInterpreter:
         """
         target_length: int = QUBITS_PER_TURN * (len(self._protein.main_chain) - 3)
         if CONFORMATION_ENCODING == ConformationEncoding.DENSE:
-            target_length -= int(self._fifth_bead_has_sidechain)
+            target_length -= int(self._fifth_bead_has_no_sidechain)
         elif CONFORMATION_ENCODING != ConformationEncoding.SPARSE:
             raise ConformationEncodingError
 
@@ -232,54 +233,38 @@ class ResultInterpreter:
 
         return turn_sequence
 
-    def _generate_3d_coordinates(
-        self,
-    ) -> list[BeadPosition]:
-        tetra_dirs: np.ndarray = FCC_BASIS.copy()
-        tetra_dirs /= np.linalg.norm(tetra_dirs[0])
+    def _generate_3d_coordinates(self) -> list[BeadPosition]:
+        tetrahedral_basis_vector: NDArray[np.float64] = FCC_BASIS.copy()
 
-        bitstring_to_direction = {
+        tetrahedral_basis_vector /= np.linalg.norm(tetrahedral_basis_vector[0])
+
+        bitstring_to_direction: dict[str, int] = {
             bitstring: direction.value
             for direction, bitstring in self._turn_encoding.items()
         }
 
-        turns_length = len(self._processed_bitstring) // QUBITS_PER_TURN
-        turns = [
+        turns_length: int = len(self._processed_bitstring) // QUBITS_PER_TURN
+        turns: list[str] = [
             self._processed_bitstring[i * QUBITS_PER_TURN : (i + 1) * QUBITS_PER_TURN]
             for i in range(turns_length)
         ]
-        main_chain_symbols: list[str] = [
-            bead.symbol for bead in self._protein.main_chain.beads
-        ]
 
-        # initialize the starting position (first bead)
-        current_pos = np.array([0.0, 0.0, 0.0])
-        coords = [
-            BeadPosition(
-                index=0,
-                symbol=main_chain_symbols[0],
-                x=current_pos[0],
-                y=current_pos[1],
-                z=current_pos[2],
-            )
-        ]
+        main_chain_symbols = [bead.symbol for bead in self._protein.main_chain.beads]
 
-        for turn, symbol in zip(turns, main_chain_symbols[1::], strict=True):
+        current_pos = np.zeros(3)
+        coords = [BeadPosition(0, main_chain_symbols[0], *current_pos)]
+
+        for i, (turn, symbol) in enumerate(
+            zip(turns, main_chain_symbols[1:], strict=True)
+        ):
             if turn not in bitstring_to_direction:
                 logger.warning(f"Unknown turn encoding: {turn}")
                 continue
-            direction_idx = bitstring_to_direction[turn]
-            direction = tetra_dirs[direction_idx]
-            current_pos = current_pos + direction
-            coords.append(
-                BeadPosition(
-                    index=len(coords),
-                    symbol=symbol,
-                    x=current_pos[0],
-                    y=current_pos[1],
-                    z=current_pos[2],
-                )
-            )
+
+            dir_idx = bitstring_to_direction[turn]
+            direction_vec = ((-1) ** i) * tetrahedral_basis_vector[dir_idx]
+            current_pos = current_pos + direction_vec
+            coords.append(BeadPosition(len(coords), symbol, *current_pos))
 
         return coords
 
