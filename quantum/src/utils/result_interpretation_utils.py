@@ -1,3 +1,8 @@
+"""
+Module providing tools to interpret and handle protein folding results, including
+XYZ file creation and JSON sanitization.
+"""
+
 from __future__ import annotations
 
 import dataclasses
@@ -20,6 +25,21 @@ logger = get_logger()
 
 
 def create_xyz_file(coords: list[BeadPosition], dirpath: Path) -> None:
+    """
+    Create an .xyz file from the given bead positions.
+
+    Note:
+        XYZ file format reference: https://en.wikipedia.org/wiki/XYZ_file_format
+        Since no formal standard exists, this implementation follows the most common convention.
+
+    Args:
+        coords (list[BeadPosition]): List of bead positions to include in the XYZ file.
+        dirpath (Path): Directory path where the XYZ file will be created.
+
+    Raises:
+        Exception: If there is an error creating the XYZ file.
+
+    """
     filepath: Path = dirpath / XYZ_FILENAME
 
     try:
@@ -39,27 +59,54 @@ def create_xyz_file(coords: list[BeadPosition], dirpath: Path) -> None:
 
 
 def read_xyz_file(filepath: Path) -> list[BeadPosition]:
+    """
+    Read bead positions from an .xyz file.
+
+    Args:
+        filepath (Path): Path to the XYZ file.
+
+    Returns:
+        list[BeadPosition]: List of bead positions read from the file.
+
+    Raises:
+        Exception: If there is an error reading the XYZ file.
+
+    """
     coords: list[BeadPosition] = []
 
-    with filepath.open() as f:
-        lines = f.readlines()
-        num_atoms = int(lines[0].strip())
+    try:
+        with filepath.open() as f:
+            lines = f.readlines()
+            num_atoms = int(lines[0].strip())
 
-        for index, line in enumerate(
-            lines[XYZ_FILE_LINE_START_INDEX : XYZ_FILE_LINE_START_INDEX + num_atoms]
-        ):
-            parts = line.split()
-            if len(parts) != XYZ_FILE_PARTS_PER_LINE:
-                logger.warning(f"Invalid line in XYZ file: {line.strip()}")
-                continue
+            for index, line in enumerate(
+                lines[XYZ_FILE_LINE_START_INDEX : XYZ_FILE_LINE_START_INDEX + num_atoms]
+            ):
+                parts = line.split()
+                if len(parts) != XYZ_FILE_PARTS_PER_LINE:
+                    logger.warning(f"Invalid line in XYZ file: {line.strip()}")
+                    continue
 
-            symbol = parts[0]
-            x, y, z = map(float, parts[1:])
-            coords.append(BeadPosition(index=index, symbol=symbol, x=x, y=y, z=z))
+                symbol = parts[0]
+                x, y, z = map(float, parts[1:])
+                coords.append(BeadPosition(index=index, symbol=symbol, x=x, y=y, z=z))
+    except Exception:
+        logger.exception("Error reading XYZ file")
+        raise
     return coords
 
 
 def sanitize_for_json(obj: Any) -> Any:
+    """
+    Recursively sanitize an object to make it JSON serializable.
+
+    Args:
+        obj (Any): The object to sanitize.
+
+    Returns:
+        Any: A JSON-serializable representation of the input object.
+
+    """
     seen: set[int] = set()
 
     def _inner(x: Any) -> Any:  # noqa: PLR0911, PLR0912

@@ -1,3 +1,11 @@
+"""
+Utilities for interpreting protein folding results.
+
+This module provides the ResultInterpreter class, which processes
+the results of quantum simulations for protein folding, including detailed VQE results,
+decoded turn sequences, and 3D coordinate mappings.
+"""
+
 from __future__ import annotations
 
 import json
@@ -43,6 +51,15 @@ logger = get_logger()
 
 
 class ResultInterpreter:
+    """
+    Interprets and processes the results of quantum protein folding simulations.
+
+    Attributes:
+        coordinates_3d (list[BeadPosition]): 3D coordinates of the protein beads.
+        turn_sequence (list[TurnDirection]): Decoded sequence of turns for the protein chain.
+
+    """
+
     def __init__(
         self,
         protein: Protein,
@@ -51,6 +68,20 @@ class ResultInterpreter:
         vqe_energies: list[float],
         vqe_iterations: list[int],
     ) -> None:
+        """
+        Initialize the ResultInterpreter with protein data and VQE results.
+
+        Args:
+            protein (Protein): The Protein object containing chain information.
+            dirpath (Path): Directory path for saving output files.
+            raw_vqe_results (SamplingMinimumEigensolverResult): Raw VQE results from quantum simulation.
+            vqe_energies (list[float]): List of VQE energy values per iteration.
+            vqe_iterations (list[int]): List of VQE iteration numbers.
+
+        Raises:
+            ConformationEncodingError: If the conformation encoding is not recognized.
+
+        """
         self._dirpath: Path = dirpath
         self._raw_results: SamplingMinimumEigensolverResult = raw_vqe_results
 
@@ -74,7 +105,7 @@ class ResultInterpreter:
         self._vqe_output: SparseVQEOutput = self._interpret_raw_vqe_results()
 
         # Note - the sole reason for the bitstring here to be passed explicitly, is to ensure that we have a single
-        # starting point for bitstring preprocessing. After preprocessing, all further methods use single, property-bitstring.
+        # starting point for bitstring preprocessing. After preprocessing, all further methods use single, property.
 
         self._processed_bitstring: str = self._preprocess_bitstring(
             bitstring=self._vqe_output.bitstring
@@ -87,6 +118,11 @@ class ResultInterpreter:
         self._log_coordinates_3d()
 
     def _log_turn_sequence(self) -> None:
+        """Logs the decoded turn sequence."""
+        if not self._turn_sequence:
+            logger.warning("No turn sequence to log.")
+            return
+
         logger.info(f"Turn sequence decoded for {len(self._turn_sequence)} turns.")
         idx_width: int = len(str(len(self._turn_sequence)))
         val_width: int = max(len(str(t.value)) for t in self._turn_sequence)
@@ -98,10 +134,12 @@ class ResultInterpreter:
             )
 
     def _log_coordinates_3d(self) -> None:
-        logger.info(f"3D coordinates generated for {len(self._coordinates_3d)} beads.")
-
+        """Logs the generated 3D coordinates."""
         if not self._coordinates_3d:
+            logger.warning("No 3D coordinates to log.")
             return
+
+        logger.info(f"3D coordinates generated for {len(self._coordinates_3d)} beads.")
 
         idx_width: int = len(str(len(self._coordinates_3d) - 1))
         symbol_width: int = max(len(b.symbol) for b in self._coordinates_3d)
@@ -111,7 +149,7 @@ class ResultInterpreter:
         sym_col: int = max(len(SYMBOL_COLNAME), symbol_width)
         c_col: int = coord_width
 
-        header = (
+        header: str = (
             f"{INDEX_COLNAME:>{idx_col}}  "
             f"{SYMBOL_COLNAME:>{sym_col}}"
             f"{'X':>{c_col}}  "
@@ -131,6 +169,16 @@ class ResultInterpreter:
             logger.info(row)
 
     def _interpret_raw_vqe_results(self) -> SparseVQEOutput:
+        """
+        Interprets the raw VQE results into a structured SparseVQEOutput.
+
+        Returns:
+            SparseVQEOutput: The interpreted VQE results.
+
+        Raises:
+            ValueError: If the best measurement data is incomplete or missing.
+
+        """
         logger.info(f"Interpreting raw VQE results for {self._dirpath}")
 
         best_measurement = self._raw_results.best_measurement
@@ -161,7 +209,24 @@ class ResultInterpreter:
         )
 
     def _preprocess_bitstring(self, bitstring: str) -> str:
-        """Preprocesses the bitstring by appending initial turns and reversing it."""
+        """
+        Preprocesses the raw bitstring from VQE results to match the expected format.
+
+        Note:
+            Bitstring preprocessing includes:
+            - Trimming to the target length.
+            - Appending fixed turn indicators for the first two turns.
+            - Handling special cases for the fifth bead's sidechain in dense encoding
+
+            For details regarding processing, see _get_target_sequence_length_main_chain.
+
+        Args:
+            bitstring (str): The raw bitstring from VQE results.
+
+        Returns:
+            str: The preprocessed bitstring ready for turn sequence decoding.
+
+        """
         target_bitstring_length: int = self._get_target_sequence_length_main_chain()
 
         result_bitstring: str = bitstring[-target_bitstring_length:]
@@ -221,6 +286,16 @@ class ResultInterpreter:
     def _generate_turn_sequence(
         self,
     ) -> list[TurnDirection]:
+        """
+        Generates the turn sequence from the processed bitstring.
+
+        Returns:
+            list[TurnDirection]: The decoded sequence of turns.
+
+        Raises:
+            ConformationEncodingError: If the decoded turns contain unknown encodings.
+
+        """
         turns_length = len(self._processed_bitstring) // QUBITS_PER_TURN
         turns = [
             self._processed_bitstring[i * QUBITS_PER_TURN : (i + 1) * QUBITS_PER_TURN]
@@ -241,6 +316,20 @@ class ResultInterpreter:
         return turn_sequence
 
     def _generate_3d_coordinates(self) -> list[BeadPosition]:
+        """
+        Generates the coordinates for the beads in the main chain in 3D tetrahedral lattice.
+
+        Note:
+            The 3D coordinates are generated based on the tetrahedral lattice structure, which is used to represent the spatial arrangement of the beads in the protein.
+            Calculations use the FCC basis vectors to determine the position of each bead based on the turn sequence and the sublattice they belong to (determined by the bead index - alternating signs).
+
+        Returns:
+            list[BeadPosition]: List of 3D coordinates for each bead in the main chain.
+
+        Raises:
+            ConformationEncodingError: If the decoded turns contain unknown encodings.
+
+        """
         tetrahedral_basis_vector: NDArray[np.float64] = FCC_BASIS.copy()
 
         tetrahedral_basis_vector /= np.linalg.norm(tetrahedral_basis_vector[0])
@@ -265,8 +354,8 @@ class ResultInterpreter:
             zip(turns, main_chain_symbols[1:], strict=True)
         ):
             if turn not in bitstring_to_direction:
-                logger.warning(f"Unknown turn encoding: {turn}")
-                continue
+                msg: str = f"Unknown turn encoding for: {turn}"
+                raise ConformationEncodingError(msg)
 
             dir_idx = bitstring_to_direction[turn]
             direction_vec = ((-1) ** i) * tetrahedral_basis_vector[dir_idx]
@@ -276,6 +365,7 @@ class ResultInterpreter:
         return coords
 
     def dump_results_to_files(self) -> None:
+        """Dumps the interpreted results to output files in the specified directory."""
         create_xyz_file(self.coordinates_3d, self._dirpath)
 
         self._dump_result_dict_to_json(
@@ -288,6 +378,16 @@ class ResultInterpreter:
         self._dump_vqe_iterations_to_file(filename=VQE_ITERATIONS_FILENAME)
 
     def _dump_vqe_iterations_to_file(self, filename: str) -> None:
+        """
+        Dumps the VQE iterations and their corresponding energies to a text file.
+
+        Args:
+            filename (str): The name of the file to save the VQE iterations and energies.
+
+        Raises:
+            Exception: If there is an error writing to the file.
+
+        """
         vqe_iterations_filepath: Path = self._dirpath / filename
 
         idx_width: int = len(ITERATION_COLNAME)
@@ -308,6 +408,17 @@ class ResultInterpreter:
         filename: str,
         results_dict: SparseVQEOutput | SamplingMinimumEigensolverResult,
     ) -> None:
+        """
+        Dumps the given results dictionary to a JSON file.
+
+        Args:
+            filename (str): The name of the file to save the results.
+            results_dict (SparseVQEOutput | SamplingMinimumEigensolverResult): The results data to be saved.
+
+        Raises:
+            Exception: If there is an error during sanitization or file writing.
+
+        """
         results_filepath: Path = self._dirpath / filename
 
         try:
@@ -322,8 +433,10 @@ class ResultInterpreter:
 
     @property
     def coordinates_3d(self) -> list[BeadPosition]:
+        """list[BeadPosition]: 3D coordinates of the protein beads."""
         return self._coordinates_3d
 
     @property
     def turn_sequence(self) -> list[TurnDirection]:
+        """list[TurnDirection]: Sequence of turns in the protein folding."""
         return self._turn_sequence
