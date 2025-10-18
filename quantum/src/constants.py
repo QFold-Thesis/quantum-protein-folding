@@ -81,6 +81,8 @@ XYZ_FILENAME: str = "conformation.xyz"
 
 SPARSE_VQE_RESULTS_FILENAME: str = "sparse_vqe_results.json"
 
+VQE_ITERATIONS_FILENAME: str = "vqe_iterations.txt"
+
 GIF_FILENAME: str = "conformation_3d.gif"
 
 PLOT2D_FILENAME: str = "conformation_2d.png"
@@ -88,6 +90,8 @@ PLOT2D_FILENAME: str = "conformation_2d.png"
 INDEX_COLNAME: str = "Index"
 
 SYMBOL_COLNAME: str = "Symbol"
+
+ITERATION_COLNAME: str = "Iteration"
 
 COORDINATES_COLUMN_WIDTH: int = (
     12  # Width for coordinate columns in output files (sign, integer part, decimals)
@@ -100,3 +104,4 @@ FCC_BASIS: NDArray[np.float64] = (1.0 / np.sqrt(3)) * np.array(
 SIDE_CHAIN_FIFTH_POSITION_INDEX: int = (
     4  # Index of the 5th bead in zero-indexed beads list
 )
+

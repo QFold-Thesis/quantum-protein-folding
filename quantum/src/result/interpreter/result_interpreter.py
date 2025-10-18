@@ -12,12 +12,14 @@ from constants import (
     EMPTY_SIDECHAIN_PLACEHOLDER,
     FCC_BASIS,
     INDEX_COLNAME,
+    ITERATION_COLNAME,
     QUBITS_PER_TURN,
     RAW_VQE_RESULTS_FILENAME,
     SIDE_CHAIN_FIFTH_POSITION_INDEX,
     SPARSE_TURN_INDICATORS,
     SPARSE_VQE_RESULTS_FILENAME,
     SYMBOL_COLNAME,
+    VQE_ITERATIONS_FILENAME,
 )
 from enums import ConformationEncoding, TurnDirection
 from exceptions import ConformationEncodingError
@@ -46,9 +48,14 @@ class ResultInterpreter:
         protein: Protein,
         dirpath: Path,
         raw_vqe_results: SamplingMinimumEigensolverResult,
+        vqe_energies: list[float],
+        vqe_iterations: list[int],
     ) -> None:
         self._dirpath: Path = dirpath
         self._raw_results: SamplingMinimumEigensolverResult = raw_vqe_results
+
+        self._vqe_energies: list[float] = vqe_energies
+        self._vqe_iterations: list[int] = vqe_iterations
 
         self._protein: Protein = protein
         self._fifth_bead_has_no_sidechain: bool = (
@@ -277,6 +284,24 @@ class ResultInterpreter:
         self._dump_result_dict_to_json(
             filename=SPARSE_VQE_RESULTS_FILENAME, results_dict=self._vqe_output
         )
+
+        self._dump_vqe_iterations_to_file(filename=VQE_ITERATIONS_FILENAME)
+
+    def _dump_vqe_iterations_to_file(self, filename: str) -> None:
+        vqe_iterations_filepath: Path = self._dirpath / filename
+
+        idx_width: int = len(ITERATION_COLNAME)
+        try:
+            with vqe_iterations_filepath.open("w", encoding="utf-8") as f:
+                f.write(f"{ITERATION_COLNAME} | Energy\n")
+                for iteration, energy in zip(self._vqe_iterations, self._vqe_energies, strict=True):
+                    placeholder = " " if energy >= 0 else ""
+                    f.write(f"{iteration:^{idx_width}} | {placeholder}{energy:.16f}\n")
+        except Exception:
+            logger.exception("Error dumping VQE iterations to file")
+            raise
+        else:
+            logger.info(f"VQE iterations saved to {vqe_iterations_filepath}")
 
     def _dump_result_dict_to_json(
         self,

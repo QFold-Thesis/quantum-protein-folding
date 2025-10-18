@@ -31,14 +31,17 @@ def main() -> None:
         distance_map=distance_map,
     )
 
-    vqe, _, _ = setup_vqe_optimization(num_qubits=compressed_h.num_qubits)
+    vqe, counts, values = setup_vqe_optimization(num_qubits=compressed_h.num_qubits)
 
     raw_results: SamplingMinimumEigensolverResult = run_vqe_optimization(
         vqe=vqe, hamiltonian=compressed_h
     )
 
     result_interpreter, _ = setup_result_analysis(
-        raw_results=raw_results, protein=protein
+        raw_results=raw_results,
+        protein=protein,
+        vqe_iterations=counts,
+        vqe_energies=values
     )
 
     result_interpreter.dump_results_to_files()

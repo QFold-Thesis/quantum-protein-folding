@@ -76,14 +76,14 @@ def build_and_compress_hamiltonian(
 
 def setup_vqe_optimization(
     num_qubits: int,
-) -> tuple[SamplingVQE, list[Any], list[Any]]:
+) -> tuple[SamplingVQE, list[int], list[float]]:
     """Setup VQE optimization components."""
     optimizer = COBYLA(maxiter=50)
 
     ansatz: QuantumCircuit = real_amplitudes(num_qubits=num_qubits, reps=1)
 
-    counts: list[Any] = []
-    values: list[Any] = []
+    counts: list[int] = []
+    values: list[float] = []
 
     def _store_intermediate_result(
         eval_count: int,
@@ -125,7 +125,7 @@ def run_vqe_optimization(
 
 
 def setup_result_analysis(
-    raw_results: SamplingMinimumEigensolverResult, protein: Protein
+    raw_results: SamplingMinimumEigensolverResult, protein: Protein, vqe_iterations: list[int], vqe_energies: list[float]
 ) -> tuple[ResultInterpreter, ResultVisualizer]:
     timestamp: str = datetime.now(tz=UTC).strftime("%Y_%m_%d-%H_%M_%S")
     dirpath: Path = (
@@ -134,7 +134,11 @@ def setup_result_analysis(
     dirpath.mkdir(parents=True, exist_ok=True)
 
     result_interpreter: ResultInterpreter = ResultInterpreter(
-        dirpath=dirpath, raw_vqe_results=raw_results, protein=protein
+        dirpath=dirpath,
+        raw_vqe_results=raw_results,
+        protein=protein,
+        vqe_iterations=vqe_iterations,
+        vqe_energies=vqe_energies,
     )
     result_visualizer: ResultVisualizer = ResultVisualizer(dirpath=dirpath)
 
