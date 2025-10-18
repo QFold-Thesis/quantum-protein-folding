@@ -1,3 +1,5 @@
+"""Definitions of constants used throughout the protein folding simulations."""
+
 import logging
 from pathlib import Path
 
