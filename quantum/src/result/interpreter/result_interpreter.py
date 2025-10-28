@@ -117,6 +117,53 @@ class ResultInterpreter:
         self._coordinates_3d: list[BeadPosition] = self._generate_3d_coordinates()
         self._log_coordinates_3d()
 
+        self._main_main_contacts_detected: dict[int, int] = (
+            self._find_main_main_contacts()
+        )
+
+    def _find_main_main_contacts(self) -> dict[int, int]:
+        """
+        Finds contacts between main chain beads based on the interaction bits.
+        This reads the first part of the raw VQE bitstring, which contains
+        the on/off flags for potential interactions.
+
+        Returns:
+            dict[int, int]: A dictionary mapping bead index `i` to bead index `j` for each detected interaction (we don't store contacts symmetrically, assume contacts are bidirectional).
+
+        """
+        logger.debug("Finding main-main contacts from interaction bits")
+
+        raw_bitstring: str = self._vqe_output.bitstring
+        num_beads: int = len(self._protein.main_chain)
+
+        num_shape_qubits: int = self._get_target_sequence_length_main_chain()
+        interaction_bits: str = raw_bitstring[:-num_shape_qubits]
+
+        contacts: dict[int, int] = {}
+        qubit_index: int = 0
+
+        for i in range(num_beads - 5):
+            for j in range(i + 5, num_beads, 2):
+                if qubit_index >= len(interaction_bits):
+                    logger.warning(
+                        f"Ran out of interaction bits while checking pair ({i}, {j}). "
+                        f"Expected more bits."
+                    )
+                    break
+                if interaction_bits[qubit_index] == "1":
+                    contacts[i] = j
+
+                qubit_index += 1
+            if qubit_index >= len(interaction_bits):
+                break
+
+        if qubit_index < len(interaction_bits):
+            logger.warning(
+                f"Finished checking all pairs, but {len(interaction_bits) - qubit_index} "
+                f"interaction bits were left over."
+            )
+        return contacts
+
     def _log_turn_sequence(self) -> None:
         """Logs the decoded turn sequence."""
         if not self._turn_sequence:
@@ -442,3 +489,8 @@ class ResultInterpreter:
     def turn_sequence(self) -> list[TurnDirection]:
         """list[TurnDirection]: Sequence of turns in the protein folding."""
         return self._turn_sequence
+
+    @property
+    def main_main_contacts_detected(self) -> dict[int, int]:
+        """dict[int, int]: Main-main contacts detected in the result sequence."""
+        return self._main_main_contacts_detected

@@ -39,3 +39,6 @@ class TurnDirection(IntEnum):
     DIR_1 = 1
     DIR_2 = 2
     DIR_3 = 3
+
+    def __str__(self) -> str:
+        return f"Direction {self.value}"
