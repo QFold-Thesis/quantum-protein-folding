@@ -9,11 +9,11 @@ from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from qiskit.circuit.library import real_amplitudes
-from qiskit.primitives import StatevectorSampler as Sampler
 from qiskit.quantum_info import SparsePauliOp
 from qiskit_algorithms import SamplingMinimumEigensolverResult, SamplingVQE
 from qiskit_algorithms.optimizers import COBYLA
 
+from backend import get_sampler
 from builder import HamiltonianBuilder
 from constants import INTERACTION_TYPE, OUTPUT_DATA_DIR
 from contact import ContactMap
@@ -135,8 +135,13 @@ def setup_vqe_optimization(
         counts.append(eval_count)
         values.append(mean)
 
+    sampler, backend = get_sampler()
+    if backend is not None:
+        logger.debug(f"Using backend: {backend.name}")
+        logger.debug("Transpilation will be handled by the sampler during execution")
+
     vqe = SamplingVQE(
-        sampler=Sampler(),
+        sampler=sampler,
         ansatz=ansatz,
         optimizer=optimizer,
         aggregation=0.1,

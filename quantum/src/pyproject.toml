@@ -8,4 +8,5 @@ dependencies = [
     "qiskit>=2.2.1",
     "qiskit-algorithms>=0.4.0",
     "vedo>=2025.5.4",
+    "qiskit-ibm-runtime",
 ]
