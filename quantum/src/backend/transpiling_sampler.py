@@ -85,7 +85,7 @@ class TranspilingSampler(BaseSamplerV2):
             )
 
             if hasattr(pub, "circuit") or isinstance(pub, tuple):
-                transpiled_pubs.append((transpiled_circuit,) + pub[1:])
+                transpiled_pubs.append((transpiled_circuit, *pub[1:]))
             else:
                 transpiled_pubs.append(transpiled_circuit)
 
