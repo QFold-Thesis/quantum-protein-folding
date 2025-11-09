@@ -119,5 +119,3 @@ IBM_QUANTUM_TOKEN: str | None = None
 IBM_QUANTUM_BACKEND_NAME: str = "ibm_marrakesh"
 
 IBM_QUANTUM_SHOTS: int = 1024
-
-IBM_OPTIMIZATION_LEVEL: int = 3

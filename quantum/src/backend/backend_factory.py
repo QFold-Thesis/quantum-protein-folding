@@ -73,10 +73,7 @@ def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, Backend]:
     try:
         from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2
     except ImportError as e:
-        msg = (
-            "IBM Quantum backend requires 'qiskit-ibm-runtime' package. "
-            "Install it with: pip install qiskit-ibm-runtime"
-        )
+        msg = "IBM Quantum backend requires 'qiskit-ibm-runtime' package."
         raise InvalidBackendError(msg) from e
 
     token = os.environ.get("IBM_QUANTUM_TOKEN", IBM_QUANTUM_TOKEN)
