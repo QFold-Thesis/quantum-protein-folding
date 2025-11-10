@@ -112,3 +112,5 @@ FCC_BASIS: NDArray[np.float64] = FCC_EDGE_LENGTH * np.array(
 SIDE_CHAIN_FIFTH_POSITION_INDEX: int = (
     4  # Index of the 5th bead in zero-indexed beads list
 )
+
+MIN_CHAIN_LENGTH: int = 5  # Minimum length of the protein chain to be analyzed
