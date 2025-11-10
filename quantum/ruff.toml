@@ -1,9 +1,6 @@
-lint.select = ["ALL"]
-
-[lint.per-file-ignores]
-"tests/*.py" = ["S101"]
-
-lint.ignore = [
+[lint]
+select = ["ALL"]
+ignore = [
     #### modules
     "ANN", # flake8-annotations
     "COM", # flake8-commas
@@ -39,3 +36,6 @@ lint.ignore = [
     "BLE001",
     "G004"
 ]
+
+[lint.per-file-ignores]
+"tests/*.py" = ["S101"]
