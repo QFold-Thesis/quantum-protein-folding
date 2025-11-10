@@ -165,7 +165,9 @@ class ResultVisualizer:
             )
 
         # Add protein beads
-        for i, (sym, (x, y, z), color) in enumerate(zip(symbols, coords, colors)):
+        for i, (sym, (x, y, z), color) in enumerate(
+            zip(symbols, coords, colors, strict=True)
+        ):
             text_color: str = self._get_text_color(color)
             fig.add_trace(
                 go.Scatter3d(
@@ -288,7 +290,7 @@ class ResultVisualizer:
 
         scatter_handles: list[Axes3D.scatter] = []
         for i, (x, y, z, sym, color) in enumerate(
-            zip(coords[:, 0], coords[:, 1], coords[:, 2], symbols, colors)
+            zip(coords[:, 0], coords[:, 1], coords[:, 2], symbols, colors, strict=True)
         ):
             sc: Axes3D.scatter = ax.scatter(
                 x, y, z, c=[color], s=90, edgecolors="black", label=f"{sym} (Index {i})"
