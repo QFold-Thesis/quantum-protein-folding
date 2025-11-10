@@ -38,15 +38,9 @@ class TranspilingSampler(BaseSamplerV2):
             backend (Backend): The backend to transpile circuits for.
 
         """
-        self._sampler = sampler
-        self._backend = backend
-        self._options = sampler.options
+        self._sampler: BaseSamplerV2 = sampler
+        self._backend: Backend = backend
         logger.debug(f"TranspilingSampler initialized for backend: {backend.name}")
-
-    @property
-    def options(self):
-        """Return the sampler options."""
-        return self._options
 
     def run(
         self, pubs: Iterable[SamplerPubLike], *, shots: int | None = None
