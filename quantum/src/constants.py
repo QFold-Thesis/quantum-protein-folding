@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -114,7 +115,7 @@ SIDE_CHAIN_FIFTH_POSITION_INDEX: int = (
 
 BACKEND_TYPE: BackendType = BackendType.LOCAL_STATEVECTOR
 
-IBM_QUANTUM_TOKEN: str | None = None
+IBM_QUANTUM_TOKEN: str | None = os.environ.get("IBM_QUANTUM_TOKEN", None)
 
 IBM_QUANTUM_BACKEND_NAME: str = "ibm_marrakesh"
 

@@ -68,7 +68,7 @@ class InvalidBackendError(Exception):
 
     def __init__(
         self,
-        message: str = "Invalid backend configuration or unsupported backend type.",
+        message: str = "Invalid backend/API key configuration or unsupported backend type.",
     ) -> None:
         logger.exception(message)
         super().__init__(message)

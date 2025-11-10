@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 from typing import TYPE_CHECKING
 
 from backend.transpiling_sampler import TranspilingSampler
@@ -39,7 +38,7 @@ def get_sampler() -> tuple[BaseSamplerV2, Backend | None]:
     if BACKEND_TYPE == BackendType.IBM_QUANTUM:
         return _get_ibm_quantum_sampler()
 
-    msg = f"Unsupported backend type: {BACKEND_TYPE}"
+    msg: str = f"Unsupported backend type: {BACKEND_TYPE}"
     raise InvalidBackendError(msg)
 
 
@@ -70,15 +69,11 @@ def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, Backend]:
         InvalidBackendError: If IBM runtime package is not installed or credentials are missing.
 
     """
-    try:
-        from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2
-    except ImportError as e:
-        msg = "IBM Quantum backend requires 'qiskit-ibm-runtime' package."
-        raise InvalidBackendError(msg) from e
+    from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2
 
-    token = os.environ.get("IBM_QUANTUM_TOKEN", IBM_QUANTUM_TOKEN)
+    token: str | None = IBM_QUANTUM_TOKEN
     if not token:
-        msg = (
+        msg: str = (
             "IBM Quantum token not configured. Set IBM_QUANTUM_TOKEN in constants.py "
             "or as environment variable."
         )

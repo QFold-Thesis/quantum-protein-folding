@@ -62,8 +62,8 @@ class TranspilingSampler(BaseSamplerV2):
             PrimitiveResult[PubResult]: Results from the underlying sampler with transpiled circuits.
 
         """
-        pub_list = list(pubs)
-        transpiled_pubs = []
+        pub_list: list[SamplerPubLike] = list(pubs)
+        transpiled_pubs: list[SamplerPubLike] = []
 
         for pub in pub_list:
             if hasattr(pub, "circuit"):
