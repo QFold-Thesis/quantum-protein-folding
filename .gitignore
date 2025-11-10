@@ -6,6 +6,7 @@ test.py
 temp/
 
 quantum/output/*
+quantum/.env
 !quantum/output/.gitkeep
 
 

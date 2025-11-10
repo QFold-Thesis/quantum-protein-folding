@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import numpy as np
+from dotenv import find_dotenv, load_dotenv
 
 from enums import BackendType, ConformationEncoding, InteractionType, TurnDirection
 
@@ -15,6 +16,8 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 ROOT_PROJECT_PATH: Path = Path(__file__).parent.parent
+
+load_dotenv(find_dotenv())
 
 MJ_INTERACTION_MATRIX_FILEPATH: Path = (
     ROOT_PROJECT_PATH / "src" / "resources" / "mj_matrix.txt"

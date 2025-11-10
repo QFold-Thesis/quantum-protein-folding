@@ -52,6 +52,7 @@ def _get_local_statevector_sampler() -> BaseSamplerV2:
     """
     from qiskit.primitives import StatevectorSampler
 
+    print(IBM_QUANTUM_TOKEN)
     logger.info("Using local StatevectorSampler (ideal simulation)")
     return StatevectorSampler()
 
