@@ -5,7 +5,7 @@ including sequence validation and chain initialization.
 
 from exceptions import ChainLengthError
 from logger import get_logger
-from protein.chain import MainChain, SideChain
+from protein.chain import _MainChain, _SideChain
 
 logger = get_logger()
 
@@ -44,5 +44,5 @@ class Protein:
             logger.error(msg)
             raise ChainLengthError(msg)
 
-        self.main_chain: MainChain = MainChain(main_protein_sequence)
-        self.side_chain: SideChain = SideChain(side_protein_sequence)
+        self.main_chain: _MainChain = _MainChain(main_protein_sequence)
+        self.side_chain: _SideChain = _SideChain(side_protein_sequence)

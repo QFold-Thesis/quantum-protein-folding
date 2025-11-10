@@ -33,7 +33,7 @@ if TYPE_CHECKING:
     from interaction.interaction import Interaction
     from protein import Protein
     from protein.bead import Bead
-    from protein.chain import MainChain
+    from protein.chain import _MainChain
 
 logger = get_logger()
 
@@ -116,7 +116,7 @@ class HamiltonianBuilder:
         """
         logger.info("Creating h_backbone term (BB-BB interactions)")
 
-        main_chain: MainChain = self.protein.main_chain
+        main_chain: _MainChain = self.protein.main_chain
         chain_len: int = len(main_chain)
 
         h_backbone_num_qubits: int = (
@@ -172,7 +172,7 @@ class HamiltonianBuilder:
         """
         logger.debug("Creating h_backtrack term")
 
-        main_chain: MainChain = self.protein.main_chain
+        main_chain: _MainChain = self.protein.main_chain
         h_backtrack_num_qubits: int = (len(main_chain) - 1) * QUBITS_PER_TURN
         h_backtrack: SparsePauliOp = build_identity_op(
             h_backtrack_num_qubits, EMPTY_OP_COEFF

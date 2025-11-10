@@ -1,13 +1,13 @@
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from logger import get_logger
-from protein.bead.placeholder_side_bead import PlaceholderSideBead
-from protein.bead.side_bead import SideBead
+from protein.bead.placeholder_side_bead import _PlaceholderSideBead
+from protein.bead.side_bead import _SideBead
 from protein.chain import Chain
 
 logger = get_logger()
 
 
-class SideChain(Chain):
+class _SideChain(Chain):
     """Represents the side chain of a protein, consisting of amino acids attached to residues of the main chain."""
 
     def __init__(self, protein_sequence: str) -> None:
@@ -26,13 +26,13 @@ class SideChain(Chain):
         )
 
         self.beads = [
-            SideBead(
+            _SideBead(
                 symbol=bead,
                 index=index,
                 parent_chain_len=len(protein_sequence),
             )
             if bead != EMPTY_SIDECHAIN_PLACEHOLDER
-            else PlaceholderSideBead(
+            else _PlaceholderSideBead(
                 symbol=bead,
                 index=index,
                 parent_chain_len=len(protein_sequence),

@@ -6,7 +6,7 @@ from protein.bead import Bead
 logger = get_logger()
 
 
-class SideBead(Bead):
+class _SideBead(Bead):
     """Represents a side bead attached to a protein's main chain."""
 
     def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:

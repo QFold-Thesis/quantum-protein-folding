@@ -1,11 +1,11 @@
 from logger import get_logger
-from protein.bead.main_bead import MainBead
+from protein.bead.main_bead import _MainBead
 from protein.chain import Chain
 
 logger = get_logger()
 
 
-class MainChain(Chain):
+class _MainChain(Chain):
     """Represents the main chain of a protein, a linear sequence of amino acids forming its backbone."""
 
     def __init__(self, protein_sequence: str) -> None:
@@ -22,7 +22,7 @@ class MainChain(Chain):
         )
 
         self.beads = [
-            MainBead(
+            _MainBead(
                 symbol=bead,
                 index=index,
                 parent_chain_len=len(protein_sequence),

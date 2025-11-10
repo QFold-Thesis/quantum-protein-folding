@@ -6,7 +6,7 @@ from protein.bead import Bead
 logger = get_logger()
 
 
-class PlaceholderSideBead(Bead):
+class _PlaceholderSideBead(Bead):
     """Represents a empty side bead - not attached to a protein's main chain, used as a placeholder for storing empty symbols and padding."""
 
     def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:
