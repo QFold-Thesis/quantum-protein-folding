@@ -38,6 +38,7 @@ from constants import (
     HP_INTERACTION_MATRIX_FILEPATH,
     HP_NON_HH_CONTACT_ENERGY,
 )
+from exceptions import UnsupportedAminoAcidSymbolError
 from interaction import Interaction
 from logger import get_logger
 
@@ -52,6 +53,12 @@ class HPInteraction(Interaction):
         super().__init__(interaction_matrix_path)
         self._hydrophobic_symbols: list[str] = self._load_hydrophobic_symbols(
             self._interaction_matrix_path
+        )
+
+        self._valid_symbols = set(self._hydrophobic_symbols)
+
+        logger.debug(
+            f"HPInteraction initialized with {len(self._valid_symbols)} valid amino acid symbols."
         )
 
     def _load_hydrophobic_symbols(
@@ -121,6 +128,10 @@ class HPInteraction(Interaction):
             RuntimeError: If an error occurs while computing the pair energy.
 
         """
+        if symbol_i not in self._valid_symbols or symbol_j not in self._valid_symbols:
+            msg: str = f"Amino acid symbols of {symbol_i}, {symbol_j} not supported in loaded HP interaction model."
+            logger.error(msg)
+            raise UnsupportedAminoAcidSymbolError(msg)
         try:
             return (
                 HP_HH_CONTACT_ENERGY
