@@ -19,7 +19,7 @@
 ### Setup
 
 ```bash
-    cd quantum-protein-folding/src/quantum
+    cd quantum/
     uv sync
 ```
 
