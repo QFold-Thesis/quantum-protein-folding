@@ -53,16 +53,18 @@ def setup_folding_system(
         InvalidInteractionTypeError: If the interaction type is invalid (class not inheriting from Interaction).
 
     """
-    protein = Protein(
-        main_protein_sequence=main_chain, side_protein_sequence=side_chain
-    )
-
     if INTERACTION_TYPE == InteractionType.MJ:
         interaction: Interaction = MJInteraction()
     elif INTERACTION_TYPE == InteractionType.HP:
         interaction: Interaction = HPInteraction()
     else:
         raise InvalidInteractionTypeError
+
+    protein = Protein(
+        main_protein_sequence=main_chain,
+        side_protein_sequence=side_chain,
+        valid_symbols=interaction.valid_symbols,
+    )
 
     contact_map = ContactMap(protein=protein)
     distance_map = DistanceMap(protein=protein)

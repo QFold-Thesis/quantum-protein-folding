@@ -11,8 +11,8 @@ class Interaction(ABC):
     """
     Abstract base class for interaction models.
 
-    Subclasses must implement :meth:`get_energy` to return a numeric energy value
-    and define their own initialization logic.
+    Subclasses must implement `get_energy` to return a numeric energy value and define their own initialization logic.
+    Subclasses should also manage to properly set the `valid_symbols` set to determine which amino acid symbols they support.
     """
 
     @abstractmethod
@@ -25,6 +25,7 @@ class Interaction(ABC):
 
         """
         self._interaction_matrix_path: Path = interaction_matrix_path
+        self.valid_symbols: set[str] = set()
 
     @abstractmethod
     def get_energy(self, *args: Any, **kwargs: Any) -> float:
