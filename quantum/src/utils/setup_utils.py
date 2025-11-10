@@ -189,7 +189,6 @@ def setup_result_analysis(
         protein (Protein): The protein instance.
         vqe_iterations (list[int]): The VQE evaluation counts (iterations).
         vqe_energies (list[float]): The VQE energy values.
-        main_main_contacts (dict[int, dict[int, SparsePauliOp]]): Contacts detected between main-main beads.
 
     Returns:
         tuple[ResultInterpreter, ResultVisualizer]: The result interpreter and visualizer instances.
