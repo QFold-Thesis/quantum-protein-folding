@@ -129,3 +129,5 @@ IBM_QUANTUM_TOKEN: str | None = os.environ.get("IBM_QUANTUM_TOKEN")
 IBM_QUANTUM_BACKEND_NAME: str = "ibm_marrakesh"
 
 IBM_QUANTUM_SHOTS: int = 1024
+
+MIN_CHAIN_LENGTH: int = 5  # Minimum length of the protein chain to be analyzed

@@ -3,6 +3,7 @@ Defines the Protein class, representing proteins with main and side chains,
 including sequence validation and chain initialization.
 """
 
+from constants import MIN_CHAIN_LENGTH
 from exceptions import ChainLengthError
 from logger import get_logger
 from protein.chain import _MainChain, _SideChain
@@ -19,8 +20,8 @@ class Protein:
     Side chains cannot be attached to the first or last main bead.
 
     Attributes:
-        main_chain (MainChain): The main chain of the protein.
-        side_chain (SideChain): The optional side chain of the protein.
+        main_chain (_MainChain): The main chain of the protein.
+        side_chain (_SideChain): The optional side chain of the protein.
 
     """
 
@@ -41,7 +42,10 @@ class Protein:
         """
         if len(main_protein_sequence) != len(side_protein_sequence):
             msg: str = "Main and side protein sequences must be of the same length."
-            logger.error(msg)
+            raise ChainLengthError(msg)
+
+        if len(main_protein_sequence) < MIN_CHAIN_LENGTH or len(side_protein_sequence) < MIN_CHAIN_LENGTH:
+            msg: str = f"Main and side protein sequences must have at least {MIN_CHAIN_LENGTH} residues."
             raise ChainLengthError(msg)
 
         self.main_chain: _MainChain = _MainChain(main_protein_sequence)
