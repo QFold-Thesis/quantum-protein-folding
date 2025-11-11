@@ -1,5 +1,50 @@
-# 🧬 Quantum Protein Folding
+## Installation and Usage with `uv`
 
-This repository explores **protein folding** through both **classical** and **quantum computing** approaches.  
-Our implementation is **inspired by and extends** the methods described in  
-[*Protein Folding Problem: A Quantum Approach*](https://arxiv.org/pdf/1908.02163), and this repository: [quantum-protein-folding-qiskit](https://github.com/qiskit-community/quantum-protein-folding)
+[`uv`](https://github.com/astral-sh/uv) is a fast Python package and environment manager.
+
+### Requirements
+
+* `uv` installed (choose one):
+
+  ```bash
+  # Recommended installer
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  ```
+  Or install via **pip**:
+
+  ```bash
+  pip install uv
+  ```
+
+### Setup
+
+```bash
+    cd quantum/
+    uv sync
+```
+
+This creates a virtual environment and installs dependencies from
+`pyproject.toml`
+
+### Running
+
+```
+uv run main.py
+```
+
+### Adding Dependencies
+
+```
+uv add <package-name>
+```
+
+
+### Running tests
+
+```
+cd quantum
+```
+
+```
+uv run pytest -v -s
+```
