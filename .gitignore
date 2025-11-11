@@ -14,6 +14,8 @@ src/.env
 .DS_Store
 .vscode/
 
+# Sphinx build
+quantum/docs/_build/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
