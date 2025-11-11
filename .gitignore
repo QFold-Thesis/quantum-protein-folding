@@ -5,11 +5,10 @@ test.py
 
 temp/
 
-quantum/output/*
-quantum/src/.env
-quantum/.env
+output/*
+src/.env
 .env
-!quantum/output/.gitkeep
+!output/.gitkeep
 
 
 .DS_Store
