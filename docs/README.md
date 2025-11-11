@@ -1,6 +1,7 @@
 # Quantum Protein Folding
 
-A quantum computing approach to solving the protein folding problem using Variational Quantum Eigensolver (VQE) algorithms. This project implements quantum algorithms to predict the 3D structure of proteins based on their amino acid sequence.
+A quantum computing approach to solving the protein folding problem using [Qiskit](https://qiskit.org/). This project implements Variational Quantum Eigensolver (VQE) algorithm to predict the 3D structure of proteins based on their amino acid sequence. Our implementation is **inspired by and extends** the methods described in  
+[*Protein Folding Problem: A Quantum Approach*](https://arxiv.org/pdf/1908.02163), and this repository: [quantum-protein-folding-qiskit](https://github.com/qiskit-community/quantum-protein-folding)
 
 ## 🧬 Overview
 
@@ -15,9 +16,8 @@ The implementation uses:
 ## ✨ Features
 
 - 🔬 **Multiple interaction models**: Hydrophobic-Polar (HP) and Miyazawa-Jernigan (MJ)
-- ⚛️ **Quantum backend support**: IBM Quantum, local simulators, and Qiskit Aer
+- ⚛️ **Quantum backend support**: IBM Quantum and local simulator
 - 📊 **Rich visualizations**: 2D projections, interactive 3D plots, and animated rotations
-- 🧮 **Flexible encoding**: Dense and sparse qubit encodings for turn operators
 - 📈 **Result tracking**: Detailed logging of VQE iterations, energies, and convergence
 
 ## 🎨 Visualizations
@@ -30,12 +30,12 @@ The quantum optimization produces protein conformations that can be visualized i
     <img src="assets/3d_visualization_static.png" alt="Protein Structure Preview" width="600"/>
   </a>
   <br>
-  <em>Click to view the interactive 3D visualization (HTML)</em>
+  <em>**Click** to view the interactive 3D visualization (HTML)</em>
 </p>
 
 ### Rotating Animation
 <p align="center">
-  <img src="assets/rotating_3d_visualization.gif" alt="Rotating protein structure" width="600"/>
+  <img src="https://qfold-thesis.github.io/quantum-protein-folding/assets/rotating_3d_visualization.gif" alt="Rotating protein structure" width="600"/>
   <br>
   <em>Animated 360° rotation of the folded protein structure</em>
 </p>
@@ -57,7 +57,7 @@ The visualizations show:
 
 Choose one of the following methods:
 
-**Recommended (Unix/macOS):**
+**Linux/macOS:**
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
@@ -177,6 +177,7 @@ uv add --dev <package-name>
 
 ```
 quantum-protein-folding/
+├── docs/                 # Sphinx documentation and README
 ├── src/
 │   ├── backend/          # Quantum backend configurations
 │   ├── builder/          # Hamiltonian construction
@@ -192,12 +193,13 @@ quantum-protein-folding/
 ├── tests/                # Unit tests
 ├── output/               # Generated results and visualizations
 ├── pyproject.toml        # Project metadata and dependencies
-└── README.md             # This file
+├── .env.example          # Example of .env file
+├── ruff.toml             # Ruff configuration
 ```
 
 ## 🔬 How It Works
 
-1. **Protein Representation**: Proteins are modeled as chains of beads on a discrete lattice, with each bead representing an amino acid residue.
+1. **Protein Representation**: Proteins are modeled as chains of beads on a tetrahedral lattice, with each bead representing an amino acid residue.
 
 2. **Quantum Encoding**: Turn directions at each position are encoded into qubits using either sparse (more qubits) or dense (fewer qubits) encoding schemes.
 
@@ -224,14 +226,4 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 
 ## 📄 License
 
-This project is part of a thesis work on quantum approaches to protein folding.
-
-## 🙏 Acknowledgments
-
-- Built with [Qiskit](https://qiskit.org/)
-- Uses [uv](https://github.com/astral-sh/uv) for dependency management
-- Interaction models based on HP and MJ potentials from protein folding literature
-
-## 📧 Contact
-
-For questions or collaboration opportunities, please open an issue on GitHub.
+This project is part of a thesis work on quantum approaches to protein folding. Under MIT License.
