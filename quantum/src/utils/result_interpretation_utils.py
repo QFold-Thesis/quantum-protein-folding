@@ -24,7 +24,7 @@ from result.models import BeadPosition
 logger = get_logger()
 
 
-def create_xyz_file(coords: list[BeadPosition], dirpath: Path) -> None:
+def create_xyz_file(coords: list[BeadPosition], dirpath: Path) -> Path:
     """
     Create an .xyz file from the given bead positions.
 
@@ -35,6 +35,9 @@ def create_xyz_file(coords: list[BeadPosition], dirpath: Path) -> None:
     Args:
         coords (list[BeadPosition]): List of bead positions to include in the XYZ file.
         dirpath (Path): Directory path where the XYZ file will be created.
+
+    Returns:
+        Path: The path to the created XYZ file.
 
     Raises:
         Exception: If there is an error creating the XYZ file.
@@ -56,6 +59,7 @@ def create_xyz_file(coords: list[BeadPosition], dirpath: Path) -> None:
         raise
     else:
         logger.info(f"XYZ file created at {filepath}")
+        return filepath
 
 
 def read_xyz_file(filepath: Path) -> list[BeadPosition]:
