@@ -1,6 +1,6 @@
 """Defines key enumerations for modeling protein folding constraints and encodings."""
 
-from enum import IntEnum
+from enum import Enum, IntEnum
 
 
 class ConformationEncoding(IntEnum):
@@ -30,3 +30,22 @@ class InteractionType(IntEnum):
 
     MJ = 0
     HP = 1
+
+
+class TurnDirection(IntEnum):
+    """Enum representing turn directions on a tetrahedral lattice."""
+
+    DIR_0 = 0
+    DIR_1 = 1
+    DIR_2 = 2
+    DIR_3 = 3
+
+    def __str__(self) -> str:
+        return f"Direction {self.value}"
+
+
+class BackendType(Enum):
+    """Enum representing quantum backend types for VQE execution."""
+
+    LOCAL_STATEVECTOR = "local_statevector"
+    IBM_QUANTUM = "ibm_quantum"

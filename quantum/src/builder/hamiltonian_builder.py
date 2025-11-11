@@ -85,7 +85,7 @@ class HamiltonianBuilder:
 
         for hamiltonian in part_hamiltonians:
             if hamiltonian.num_qubits is None:
-                msg = "One of the part Hamiltonians has num_qubits set to None."
+                msg: str = "One of the part Hamiltonians has num_qubits set to None."
                 raise InvalidOperatorError(msg)
 
         target_qubits: int = max(
@@ -264,7 +264,7 @@ class HamiltonianBuilder:
         x: SparsePauliOp = self.distance_map[lower_bead_idx][upper_bead_idx]
 
         if x.num_qubits is None:
-            msg = "x.num_qubits is None, cannot build first neighbor Hamiltonian."
+            msg: str = "x.num_qubits is None, cannot build first neighbor Hamiltonian."
             raise InvalidOperatorError(msg)
 
         expression: SparsePauliOp = lambda_0 * (x - build_identity_op(x.num_qubits)) + (
@@ -302,7 +302,7 @@ class HamiltonianBuilder:
         x: SparsePauliOp = self.distance_map[lower_bead_idx][upper_bead_idx]
 
         if x.num_qubits is None:
-            msg = "x.num_qubits is None, cannot build second neighbor Hamiltonian."
+            msg: str = "x.num_qubits is None, cannot build second neighbor Hamiltonian."
             raise InvalidOperatorError(msg)
 
         expression: SparsePauliOp = lambda_1 * (

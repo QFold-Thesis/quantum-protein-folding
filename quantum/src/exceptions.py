@@ -61,3 +61,14 @@ class InvalidInteractionTypeError(Exception):
     ) -> None:
         logger.exception(message)
         super().__init__(message)
+
+
+class InvalidBackendError(Exception):
+    """Exception raised when backend configuration is invalid or unsupported."""
+
+    def __init__(
+        self,
+        message: str = "Invalid backend/API key configuration or unsupported backend type.",
+    ) -> None:
+        logger.exception(message)
+        super().__init__(message)

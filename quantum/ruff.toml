@@ -27,6 +27,7 @@ ignore = [
     "D415",
     "E402",   # false positives for local imports
     "E501",   # line too long
+    "PLC0415", # import outside top-level (used for lazy imports of optional dependencies)
     "TRY003", # external messages in exceptions are too verbose
     "TD002",
     "TD003",
