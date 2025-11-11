@@ -4,7 +4,6 @@
 
 ### Requirements
 
-* Python **3.10+**
 * `uv` installed (choose one):
 
   ```bash
@@ -20,7 +19,7 @@
 ### Setup
 
 ```bash
-    cd quantum-protein-folding/src/quantum
+    cd quantum/
     uv sync
 ```
 
@@ -37,4 +36,15 @@ uv run main.py
 
 ```
 uv add <package-name>
+```
+
+
+### Running tests
+
+```
+cd quantum
+```
+
+```
+uv run pytest -v -s
 ```
