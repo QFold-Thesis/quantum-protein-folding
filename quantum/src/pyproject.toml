@@ -5,9 +5,9 @@ description = "Quantum approach to a protein folding problem"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "python-dotenv>=1.2.1",
     "qiskit>=2.2.1",
     "qiskit-algorithms>=0.4.0",
+    "qiskit-ibm-runtime>=0.43.1",
     "vedo>=2025.5.4",
-    "qiskit-ibm-runtime",
-    "python-dotenv",
 ]
