@@ -1,14 +1,23 @@
 """Definitions of constants used throughout the protein folding simulations."""
 
+from __future__ import annotations
+
 import logging
+import os
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
-from numpy.typing import NDArray
+from dotenv import load_dotenv
 
-from enums import ConformationEncoding, InteractionType, TurnDirection
+from enums import BackendType, ConformationEncoding, InteractionType, TurnDirection
+
+if TYPE_CHECKING:
+    from numpy.typing import NDArray
 
 ROOT_PROJECT_PATH: Path = Path(__file__).parent.parent
+
+load_dotenv(ROOT_PROJECT_PATH / ".env")
 
 MJ_INTERACTION_MATRIX_FILEPATH: Path = (
     ROOT_PROJECT_PATH / "src" / "resources" / "mj_matrix.txt"
@@ -106,3 +115,11 @@ FCC_BASIS: NDArray[np.float64] = (1.0 / np.sqrt(3)) * np.array(
 SIDE_CHAIN_FIFTH_POSITION_INDEX: int = (
     4  # Index of the 5th bead in zero-indexed beads list
 )
+
+BACKEND_TYPE: BackendType = BackendType.LOCAL_STATEVECTOR
+
+IBM_QUANTUM_TOKEN: str | None = os.environ.get("IBM_QUANTUM_TOKEN")
+
+IBM_QUANTUM_BACKEND_NAME: str = "ibm_marrakesh"
+
+IBM_QUANTUM_SHOTS: int = 1024
