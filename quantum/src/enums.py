@@ -40,6 +40,9 @@ class TurnDirection(IntEnum):
     DIR_2 = 2
     DIR_3 = 3
 
+    def __str__(self) -> str:
+        return f"Direction {self.value}"
+
 
 class BackendType(Enum):
     """Enum representing quantum backend types for VQE execution."""

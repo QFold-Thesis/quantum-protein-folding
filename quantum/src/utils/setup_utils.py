@@ -212,6 +212,12 @@ def setup_result_analysis(
         vqe_iterations=vqe_iterations,
         vqe_energies=vqe_energies,
     )
-    result_visualizer: ResultVisualizer = ResultVisualizer(dirpath=dirpath)
+
+    result_visualizer: ResultVisualizer = ResultVisualizer(
+        dirpath=dirpath,
+        turn_sequence=result_interpreter.turn_sequence,
+        coordinates_3d=result_interpreter.coordinates_3d,
+        main_main_contacts_detected=result_interpreter.main_main_contacts_detected,
+    )
 
     return result_interpreter, result_visualizer

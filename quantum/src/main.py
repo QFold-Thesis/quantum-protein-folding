@@ -37,7 +37,7 @@ def main() -> None:
         vqe=vqe, hamiltonian=compressed_h
     )
 
-    result_interpreter, _ = setup_result_analysis(
+    result_interpreter, result_visualizer = setup_result_analysis(
         raw_results=raw_results,
         protein=protein,
         vqe_iterations=counts,
@@ -45,6 +45,10 @@ def main() -> None:
     )
 
     result_interpreter.dump_results_to_files()
+
+    result_visualizer.visualize_3d()
+    result_visualizer.visualize_2d()
+    result_visualizer.generate_3d_gif()
 
 
 if __name__ == "__main__":

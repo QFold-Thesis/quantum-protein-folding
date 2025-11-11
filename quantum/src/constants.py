@@ -94,9 +94,13 @@ SPARSE_VQE_RESULTS_FILENAME: str = "sparse_vqe_results.json"
 
 VQE_ITERATIONS_FILENAME: str = "vqe_iterations.txt"
 
-GIF_FILENAME: str = "conformation_3d.gif"
+GIF_VISUALIZATION_FILENAME: str = "rotating_3d_visualization.gif"
 
-PLOT2D_FILENAME: str = "conformation_2d.png"
+HTML_VISUALIZATION_FILENAME: str = "interactive_3d_visualization.html"
+
+FLAT_VISUALIZATION_FILENAME: str = "conformation_2d.png"
+
+TETRAHEDRAL_LATTICE_PADDING: int = 1
 
 INDEX_COLNAME: str = "Index"
 
@@ -108,7 +112,9 @@ COORDINATES_COLUMN_WIDTH: int = (
     12  # Width for coordinate columns in output files (sign, integer part, decimals)
 )
 
-FCC_BASIS: NDArray[np.float64] = (1.0 / np.sqrt(3)) * np.array(
+FCC_EDGE_LENGTH: float = 1.0 / np.sqrt(3)
+
+FCC_BASIS: NDArray[np.float64] = FCC_EDGE_LENGTH * np.array(
     [[-1, 1, 1], [1, 1, -1], [-1, -1, -1], [1, -1, 1]]
 )
 
