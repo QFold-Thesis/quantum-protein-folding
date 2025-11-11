@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import numpy as np
-from dotenv import find_dotenv, load_dotenv
+from dotenv import load_dotenv
 
 from enums import BackendType, ConformationEncoding, InteractionType, TurnDirection
 
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 ROOT_PROJECT_PATH: Path = Path(__file__).parent.parent
 
-load_dotenv(find_dotenv())
+load_dotenv(ROOT_PROJECT_PATH / ".env")
 
 MJ_INTERACTION_MATRIX_FILEPATH: Path = (
     ROOT_PROJECT_PATH / "src" / "resources" / "mj_matrix.txt"
@@ -118,7 +118,7 @@ SIDE_CHAIN_FIFTH_POSITION_INDEX: int = (
 
 BACKEND_TYPE: BackendType = BackendType.LOCAL_STATEVECTOR
 
-IBM_QUANTUM_TOKEN: str | None = os.environ.get("IBM_QUANTUM_TOKEN", None)
+IBM_QUANTUM_TOKEN: str | None = os.environ.get("IBM_QUANTUM_TOKEN")
 
 IBM_QUANTUM_BACKEND_NAME: str = "ibm_marrakesh"
 
