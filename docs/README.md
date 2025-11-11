@@ -26,11 +26,11 @@ The quantum optimization produces protein conformations that can be visualized i
 
 ### Interactive 3D Visualization
 <p align="center">
-  <a href="https://qfold-thesis.github.io/quantum-protein-folding/assets/interactive_3d_visualization.html">
+  <a href="https://qfold-thesis.github.io/quantum-protein-folding/assets/interactive_3d_visualization.html" target="_blank">
     <img src="assets/3d_visualization_static.png" alt="Protein Structure Preview" width="600"/>
   </a>
   <br>
-  <em>**Click** to view the interactive 3D visualization (HTML)</em>
+  <em><b>Click</b> to view the interactive 3D visualization (HTML)</em>
 </p>
 
 ### Rotating Animation
