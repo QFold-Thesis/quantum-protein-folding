@@ -16,11 +16,6 @@
 [license-url]: https://github.com/QFold-Thesis/quantum-protein-folding/blob/main/LICENSE
 
 # Quantum Protein Folding
-<div align="center">
-  <a href="https://github.com/QFold-Thesis/quantum-protein-folding">
-    <img src="../logo.png" alt="Logo" width="400" height="400">
-  </a>
-</div>
 
 A quantum computing approach to solving the protein folding problem using [Qiskit](https://qiskit.org/). This project implements Variational Quantum Eigensolver (VQE) algorithm to predict the 3D structure of proteins based on their amino acid sequence. 
 
