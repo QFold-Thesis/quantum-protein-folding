@@ -1,3 +1,23 @@
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
+
+[contributors-shield]: https://img.shields.io/github/contributors/QFold-Thesis/quantum-protein-folding?style=flat-square
+[contributors-url]: https://github.com/QFold-Thesis/quantum-protein-folding/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/QFold-Thesis/quantum-protein-folding?style=flat-square
+[forks-url]: https://github.com/QFold-Thesis/quantum-protein-folding/network/members
+[stars-shield]: https://img.shields.io/github/stars/QFold-Thesis/quantum-protein-folding?style=flat-square
+[stars-url]: https://github.com/QFold-Thesis/quantum-protein-folding/stargazers
+[issues-shield]: https://img.shields.io/github/issues/QFold-Thesis/quantum-protein-folding?style=flat-square
+[issues-url]: https://github.com/QFold-Thesis/quantum-protein-folding/issues
+[license-shield]: https://img.shields.io/github/license/QFold-Thesis/quantum-protein-folding?style=flat-square
+[license-url]: https://github.com/QFold-Thesis/quantum-protein-folding/blob/main/LICENSE
+[linkedin-shield]: https://img.shields.io/badge/LinkedIn-QFold--Thesis-blue?style=flat-square&logo=linkedin
+[linkedin-url]: https://www.linkedin.com/company/qfold-thesis
+
 # Quantum Protein Folding
 
 A quantum computing approach to solving the protein folding problem using [Qiskit](https://qiskit.org/). This project implements Variational Quantum Eigensolver (VQE) algorithm to predict the 3D structure of proteins based on their amino acid sequence. 
