@@ -39,7 +39,7 @@ jobs:
           mkdir -p docs/sphinx/_build/html
           sphinx-build -b html docs/sphinx docs/sphinx/_build/html
 
-      - name: Deploy to gh-pages
+      - name: Deploy to gh-pages (safe clone + rsync)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -48,19 +48,28 @@ jobs:
           git config --global user.email "actions@github.com"
           git config --global user.name "github-actions[bot]"
 
-          rm -rf .git/worktrees/gh-pages || true
-          git fetch origin gh-pages
-          git worktree add gh-pages origin/gh-pages
+          REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+          CLONE_DIR=gh-pages-clone
 
-          rsync -av --delete --exclude 'assets/' --exclude '.git/' --exclude '.nojekyll' docs/sphinx/_build/html/ gh-pages/
+          rm -rf "${CLONE_DIR}"
 
-          pushd gh-pages
+          if ! git clone --depth 1 --branch gh-pages "${REPO_URL}" "${CLONE_DIR}"; then
+            mkdir -p "${CLONE_DIR}"
+            git init "${CLONE_DIR}"
+            (cd "${CLONE_DIR}" && git checkout --orphan gh-pages)
+          fi
+
+          rsync -av --delete --exclude 'assets/' --exclude '.git/' --exclude '.nojekyll' --dry-run docs/sphinx/_build/html/ "${CLONE_DIR}/"
+
+          rsync -av --delete --exclude 'assets/' --exclude '.git/' --exclude '.nojekyll' docs/sphinx/_build/html/ "${CLONE_DIR}/"
+
+          pushd "${CLONE_DIR}"
           touch .nojekyll
           git add -A
           if ! git diff --cached --quiet; then
             git commit -m "Update Sphinx docs: ${GITHUB_SHA::7}"
-            git push origin HEAD:gh-pages --force
+            git push "${REPO_URL}" gh-pages --force
           else
-            echo \"No changes to publish\"
+            echo "No changes to publish"
           fi
           popd
