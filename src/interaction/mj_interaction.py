@@ -120,7 +120,3 @@ class MJInteraction(Interaction):
         except KeyError as e:
             msg: str = f"Energy pair of '{key}' not found in MJ interaction matrix."
             raise UnsupportedAminoAcidSymbolError(msg) from e
-        except Exception as e:
-            msg: str = f"Error computing MJ energy for pair: {symbol_i}, {symbol_j}"
-            logger.exception(msg)
-            raise RuntimeError(msg) from e

@@ -132,13 +132,9 @@ class HPInteraction(Interaction):
             msg: str = f"Amino acid symbols of {symbol_i}, {symbol_j} not supported in loaded HP interaction model."
             logger.error(msg)
             raise UnsupportedAminoAcidSymbolError(msg)
-        try:
-            return (
-                HP_HH_CONTACT_ENERGY
-                if (self._is_hydrophobic(symbol_i) and self._is_hydrophobic(symbol_j))
-                else HP_NON_HH_CONTACT_ENERGY
-            )
-        except Exception as e:
-            msg: str = f"Error computing HP energy for pair: {symbol_i}, {symbol_j}"
-            logger.exception(msg)
-            raise RuntimeError(msg) from e
+
+        return (
+            HP_HH_CONTACT_ENERGY
+            if (self._is_hydrophobic(symbol_i) and self._is_hydrophobic(symbol_j))
+            else HP_NON_HH_CONTACT_ENERGY
+        )
