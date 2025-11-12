@@ -1,0 +1,413 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interaction &mdash; Quantum protein folding 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Logger" href="logger.html" />
+    <link rel="prev" title="Distance" href="distance.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Quantum protein folding
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Module Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend.html">Backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="builder.html">Builder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distance.html">Distance</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Interaction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hp-matrix-file-format">HP matrix file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#symmetry-energies">Symmetry / Energies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interaction.hp_interaction.HPInteraction"><code class="docutils literal notranslate"><span class="pre">HPInteraction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#interaction.hp_interaction.HPInteraction.__init__"><code class="docutils literal notranslate"><span class="pre">HPInteraction.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interaction.hp_interaction.HPInteraction._abc_impl"><code class="docutils literal notranslate"><span class="pre">HPInteraction._abc_impl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interaction.hp_interaction.HPInteraction._is_hydrophobic"><code class="docutils literal notranslate"><span class="pre">HPInteraction._is_hydrophobic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interaction.hp_interaction.HPInteraction._load_hydrophobic_symbols"><code class="docutils literal notranslate"><span class="pre">HPInteraction._load_hydrophobic_symbols()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interaction.hp_interaction.HPInteraction.get_energy"><code class="docutils literal notranslate"><span class="pre">HPInteraction.get_energy()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#interaction.interaction.Interaction"><code class="docutils literal notranslate"><span class="pre">Interaction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#interaction.interaction.Interaction.__init__"><code class="docutils literal notranslate"><span class="pre">Interaction.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interaction.interaction.Interaction._abc_impl"><code class="docutils literal notranslate"><span class="pre">Interaction._abc_impl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interaction.interaction.Interaction.get_energy"><code class="docutils literal notranslate"><span class="pre">Interaction.get_energy()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#matrix-format-assumptions">Matrix format assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interaction.mj_interaction.MJInteraction"><code class="docutils literal notranslate"><span class="pre">MJInteraction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#interaction.mj_interaction.MJInteraction.__init__"><code class="docutils literal notranslate"><span class="pre">MJInteraction.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interaction.mj_interaction.MJInteraction._abc_impl"><code class="docutils literal notranslate"><span class="pre">MJInteraction._abc_impl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interaction.mj_interaction.MJInteraction._prepare_mj_interaction_matrix"><code class="docutils literal notranslate"><span class="pre">MJInteraction._prepare_mj_interaction_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interaction.mj_interaction.MJInteraction.get_energy"><code class="docutils literal notranslate"><span class="pre">MJInteraction.get_energy()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html">Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protein.html">Protein</a></li>
+<li class="toctree-l2"><a class="reference internal" href="result.html">Result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Quantum protein folding</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Module Reference</a></li>
+      <li class="breadcrumb-item active">Interaction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/interaction.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="interaction">
+<h1>Interaction<a class="headerlink" href="#interaction" title="Link to this heading"></a></h1>
+<p>Interaction implementations.</p>
+<p id="module-interaction.hp_interaction">Hydrophobic / Polar (HP) interaction model.</p>
+<p>This module provides <code class="docutils literal notranslate"><span class="pre">HPInteraction</span></code> which:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>loads a simple text file mapping residue one-letter symbols to a binary</dt><dd><p>hydrophobic(1)/polar(0) flag,</p>
+</dd>
+</dl>
+</li>
+<li><p>exposes the list of hydrophobic symbols, and</p></li>
+<li><dl class="simple">
+<dt>provides a pairwise energy function where only hydrophobic-hydrophobic</dt><dd><p>contacts contribute (default energy -1.0) while any pair involving a polar
+residue contributes 0.0.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<section id="hp-matrix-file-format">
+<h2>HP matrix file format<a class="headerlink" href="#hp-matrix-file-format" title="Link to this heading"></a></h2>
+<p>Expected file (e.g. <code class="docutils literal notranslate"><span class="pre">hp_matrix.txt</span></code>) structure:</p>
+<blockquote>
+<div><p>A 1
+R 0
+N 0
+…</p>
+</div></blockquote>
+<p>Columns are separated by arbitrary whitespace. Only the first two tokens on a line are considered:
+the residue symbol (single character) and a flag (<code class="docutils literal notranslate"><span class="pre">0</span></code> or <code class="docutils literal notranslate"><span class="pre">1</span></code>).</p>
+</section>
+<section id="symmetry-energies">
+<h2>Symmetry / Energies<a class="headerlink" href="#symmetry-energies" title="Link to this heading"></a></h2>
+<p>The classical lattice HP model assigns the same energy to any hydrophobic-
+hydrophobic contact independent of residue identities (here set to -1.0).
+All other pairs have energy 0.0.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="interaction.hp_interaction.HPInteraction">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">interaction.hp_interaction.</span></span><span class="sig-name descname"><span class="pre">HPInteraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/quantum-protein-folding/quantum-protein-folding/src/resources/hp_matrix.txt')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.hp_interaction.HPInteraction" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#interaction.interaction.Interaction" title="interaction.interaction.Interaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interaction</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="interaction.hp_interaction.HPInteraction.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/quantum-protein-folding/quantum-protein-folding/src/resources/hp_matrix.txt')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.hp_interaction.HPInteraction.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the interaction model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>interaction_matrix_path</strong> (<em>Path</em>) – Path to the file containing the interaction matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="interaction.hp_interaction.HPInteraction._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#interaction.hp_interaction.HPInteraction._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interaction.hp_interaction.HPInteraction._is_hydrophobic">
+<span class="sig-name descname"><span class="pre">_is_hydrophobic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.hp_interaction.HPInteraction._is_hydrophobic" title="Link to this definition"></a></dt>
+<dd><p>Check if an amino acid symbol is hydrophobic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>symbol</strong> (<em>str</em>) – Single-letter amino acid symbol.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the symbol is hydrophobic, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interaction.hp_interaction.HPInteraction._load_hydrophobic_symbols">
+<span class="sig-name descname"><span class="pre">_load_hydrophobic_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hp_filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/quantum-protein-folding/quantum-protein-folding/src/resources/hp_matrix.txt')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.hp_interaction.HPInteraction._load_hydrophobic_symbols" title="Link to this definition"></a></dt>
+<dd><p>Load hydrophobic amino acid symbols from a HP interaction matrix file.</p>
+<p>Parses a small, strict matrix file where each line has the format ‘&lt;SYMBOL&gt; &lt;0|1&gt;’.
+Ignores blank lines and lines starting with ‘#’. Only symbols with value ‘1’ are returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>hp_filepath</strong> (<em>Path</em><em>, </em><em>optional</em>) – Path to the HP interaction matrix file.
+Defaults to HP_INTERACTION_MATRIX_FILEPATH.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of hydrophobic amino acid symbols.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[str]</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Exception</strong> – If the HP matrix file cannot be read or parsed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interaction.hp_interaction.HPInteraction.get_energy">
+<span class="sig-name descname"><span class="pre">get_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol_j</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.hp_interaction.HPInteraction.get_energy" title="Link to this definition"></a></dt>
+<dd><p>Return the HP model pair energy.</p>
+<p>Returns the hydrophobic-hydrophobic contact energy (HP_HH_CONTACT_ENERGY) if both residues are hydrophobic,
+otherwise returns the non-hydrophobic contact energy (HP_NON_HH_CONTACT_ENERGY).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>symbol_i</strong> (<em>str</em>) – Single-letter amino acid symbol for the first residue.</p></li>
+<li><p><strong>symbol_j</strong> (<em>str</em>) – Single-letter amino acid symbol for the second residue.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Interaction energy according to the HP model.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core.html#exceptions.UnsupportedAminoAcidSymbolError" title="exceptions.UnsupportedAminoAcidSymbolError"><strong>UnsupportedAminoAcidSymbolError</strong></a> – If either residue symbol is not in the HP matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-interaction.interaction">
+<dt class="sig sig-object py" id="interaction.interaction.Interaction">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">interaction.interaction.</span></span><span class="sig-name descname"><span class="pre">Interaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.interaction.Interaction" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract base class for interaction models.</p>
+<p>Subclasses must implement <cite>get_energy</cite> to return a numeric energy value and define their own initialization logic.
+Subclasses should also manage to properly set the <cite>valid_symbols</cite> set to determine which amino acid symbols they support.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="interaction.interaction.Interaction.__init__">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.interaction.Interaction.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the interaction model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>interaction_matrix_path</strong> (<em>Path</em>) – Path to the file containing the interaction matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="interaction.interaction.Interaction._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#interaction.interaction.Interaction._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interaction.interaction.Interaction.get_energy">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.interaction.Interaction.get_energy" title="Link to this definition"></a></dt>
+<dd><p>Compute and return the interaction energy.</p>
+<p>This method must be implemented by all subclasses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Calculated interaction energy.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-interaction.mj_interaction">Miyazawa-Jernigan (MJ) pairwise contact potentials.</p>
+<p>This module provides a small utility class, <code class="docutils literal notranslate"><span class="pre">MJInteraction</span></code>, that:</p>
+<ul class="simple">
+<li><p>loads an MJ interaction matrix from a plain-text file,</p></li>
+<li><p>records the set of valid residue symbols (one-letter codes), and</p></li>
+<li><p>builds a dictionary that maps residue-residue pairs (e.g., “AL”, “LA”)
+to their contact energies.</p></li>
+</ul>
+<section id="matrix-format-assumptions">
+<h2>Matrix format assumptions<a class="headerlink" href="#matrix-format-assumptions" title="Link to this heading"></a></h2>
+<p>The file is expected to contain a header row with one-letter residue symbols.
+Starting from the second row, each row begins with a residue symbol and the
+upper triangle (including the diagonal) of energies is provided. The loader
+mirrors values to create a symmetric mapping, so both “AB” and “BA” keys are
+present with the same energy.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="interaction.mj_interaction.MJInteraction">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">interaction.mj_interaction.</span></span><span class="sig-name descname"><span class="pre">MJInteraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/quantum-protein-folding/quantum-protein-folding/src/resources/mj_matrix.txt')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.mj_interaction.MJInteraction" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#interaction.interaction.Interaction" title="interaction.interaction.Interaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interaction</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="interaction.mj_interaction.MJInteraction.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/quantum-protein-folding/quantum-protein-folding/src/resources/mj_matrix.txt')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.mj_interaction.MJInteraction.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize MJInteraction instance.</p>
+<p>Loads the MJ interaction matrix from a file and prepares a mapping of
+residue-residue pairs to their contact energies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>interaction_matrix_path</strong> (<em>Path</em>) – Path to the MJ interaction matrix file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="interaction.mj_interaction.MJInteraction._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#interaction.mj_interaction.MJInteraction._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interaction.mj_interaction.MJInteraction._prepare_mj_interaction_matrix">
+<span class="sig-name descname"><span class="pre">_prepare_mj_interaction_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mj_filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/quantum-protein-folding/quantum-protein-folding/src/resources/mj_matrix.txt')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.mj_interaction.MJInteraction._prepare_mj_interaction_matrix" title="Link to this definition"></a></dt>
+<dd><p>Prepare the MJ interaction matrix.</p>
+<p>Reads the MJ matrix file, records valid residue symbols, and builds a
+dictionary of symmetric residue-residue contact energies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>mj_filepath</strong> (<em>Path</em>) – Path to the MJ matrix file.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary mapping residue pair codes to energies.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, float]</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Exception</strong> – If an error occurs while loading or parsing the matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="interaction.mj_interaction.MJInteraction.get_energy">
+<span class="sig-name descname"><span class="pre">get_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol_j</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.mj_interaction.MJInteraction.get_energy" title="Link to this definition"></a></dt>
+<dd><p>Return MJ interaction energy for a pair of residue symbols.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>symbol_i</strong> (<em>str</em>) – One-letter code of the first residue.</p></li>
+<li><p><strong>symbol_j</strong> (<em>str</em>) – One-letter code of the second residue.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>MJ interaction energy between the two residues.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core.html#exceptions.UnsupportedAminoAcidSymbolError" title="exceptions.UnsupportedAminoAcidSymbolError"><strong>UnsupportedAminoAcidSymbolError</strong></a> – If either residue symbol is not in the MJ matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="distance.html" class="btn btn-neutral float-left" title="Distance" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="logger.html" class="btn btn-neutral float-right" title="Logger" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Lucjan Gackowski, Gracjan Żukowski, Stefan Furmański, Anna Sztukowska.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

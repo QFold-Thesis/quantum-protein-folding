@@ -1,0 +1,640 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Result &mdash; Quantum protein folding 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Utils" href="utils.html" />
+    <link rel="prev" title="Protein" href="protein.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Quantum protein folding
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Module Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend.html">Backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="builder.html">Builder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distance.html">Distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interaction.html">Interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html">Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protein.html">Protein</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Result</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#result.models.BeadPosition"><code class="docutils literal notranslate"><span class="pre">BeadPosition</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#result.models.BeadPosition.__init__"><code class="docutils literal notranslate"><span class="pre">BeadPosition.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#result.models.BeadPosition.index"><code class="docutils literal notranslate"><span class="pre">BeadPosition.index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#result.models.BeadPosition.symbol"><code class="docutils literal notranslate"><span class="pre">BeadPosition.symbol</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#result.models.BeadPosition.x"><code class="docutils literal notranslate"><span class="pre">BeadPosition.x</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#result.models.BeadPosition.y"><code class="docutils literal notranslate"><span class="pre">BeadPosition.y</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#result.models.BeadPosition.z"><code class="docutils literal notranslate"><span class="pre">BeadPosition.z</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#result.models.SparseVQEOutput"><code class="docutils literal notranslate"><span class="pre">SparseVQEOutput</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#result.models.SparseVQEOutput.__init__"><code class="docutils literal notranslate"><span class="pre">SparseVQEOutput.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#result.models.SparseVQEOutput.bitstring"><code class="docutils literal notranslate"><span class="pre">SparseVQEOutput.bitstring</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#result.models.SparseVQEOutput.energy_value"><code class="docutils literal notranslate"><span class="pre">SparseVQEOutput.energy_value</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#result.models.SparseVQEOutput.probability"><code class="docutils literal notranslate"><span class="pre">SparseVQEOutput.probability</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#result.models.SparseVQEOutput.state"><code class="docutils literal notranslate"><span class="pre">SparseVQEOutput.state</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-result.interpreter.result_interpreter">Subpackage: interpreter</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#result.interpreter.result_interpreter.ResultInterpreter"><code class="docutils literal notranslate"><span class="pre">ResultInterpreter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-result.visualizer.result_visualizer">Subpackage: visualizer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#result.visualizer.result_visualizer.ResultVisualizer"><code class="docutils literal notranslate"><span class="pre">ResultVisualizer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Quantum protein folding</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Module Reference</a></li>
+      <li class="breadcrumb-item active">Result</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/result.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="result">
+<h1>Result<a class="headerlink" href="#result" title="Link to this heading"></a></h1>
+<p>Result models, interpreter and visualizer utilities.</p>
+<p id="module-result.models">Data models for interpreting and visualizing protein folding results.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="result.models.BeadPosition">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">result.models.</span></span><span class="sig-name descname"><span class="pre">BeadPosition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.models.BeadPosition" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Data class for storing the position of a bead in 3D space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>int</em>) – The index of the bead.</p></li>
+<li><p><strong>symbol</strong> (<em>str</em>) – The chemical symbol of the bead.</p></li>
+<li><p><strong>x</strong> (<em>float</em>) – The x-coordinate of the bead.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – The y-coordinate of the bead.</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – The z-coordinate of the bead.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="result.models.BeadPosition.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.models.BeadPosition.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="result.models.BeadPosition.index">
+<span class="sig-name descname"><span class="pre">index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></em><a class="headerlink" href="#result.models.BeadPosition.index" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="result.models.BeadPosition.symbol">
+<span class="sig-name descname"><span class="pre">symbol</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#result.models.BeadPosition.symbol" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="result.models.BeadPosition.x">
+<span class="sig-name descname"><span class="pre">x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></em><a class="headerlink" href="#result.models.BeadPosition.x" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="result.models.BeadPosition.y">
+<span class="sig-name descname"><span class="pre">y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></em><a class="headerlink" href="#result.models.BeadPosition.y" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="result.models.BeadPosition.z">
+<span class="sig-name descname"><span class="pre">z</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></em><a class="headerlink" href="#result.models.BeadPosition.z" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="result.models.SparseVQEOutput">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">result.models.</span></span><span class="sig-name descname"><span class="pre">SparseVQEOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bitstring</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">energy_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.models.SparseVQEOutput" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Data class for storing sparse VQE output results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bitstring</strong> (<em>str</em>) – The bitstring representation of the quantum state.</p></li>
+<li><p><strong>probability</strong> (<em>float</em>) – The probability associated with the bitstring.</p></li>
+<li><p><strong>state</strong> (<em>str</em>) – The quantum state in string format.</p></li>
+<li><p><strong>energy_value</strong> (<em>np.complex128</em>) – The energy value corresponding to the quantum state.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="result.models.SparseVQEOutput.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bitstring</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">energy_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.models.SparseVQEOutput.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="result.models.SparseVQEOutput.bitstring">
+<span class="sig-name descname"><span class="pre">bitstring</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#result.models.SparseVQEOutput.bitstring" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="result.models.SparseVQEOutput.energy_value">
+<span class="sig-name descname"><span class="pre">energy_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">complex128</span></code></em><a class="headerlink" href="#result.models.SparseVQEOutput.energy_value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="result.models.SparseVQEOutput.probability">
+<span class="sig-name descname"><span class="pre">probability</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></em><a class="headerlink" href="#result.models.SparseVQEOutput.probability" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="result.models.SparseVQEOutput.state">
+<span class="sig-name descname"><span class="pre">state</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#result.models.SparseVQEOutput.state" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<section id="module-result.interpreter.result_interpreter">
+<span id="subpackage-interpreter"></span><h2>Subpackage: interpreter<a class="headerlink" href="#module-result.interpreter.result_interpreter" title="Link to this heading"></a></h2>
+<p>Utilities for interpreting protein folding results.</p>
+<p>This module provides the ResultInterpreter class, which processes
+the results of quantum simulations for protein folding, including detailed VQE results,
+decoded turn sequences, and 3D coordinate mappings.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">result.interpreter.result_interpreter.</span></span><span class="sig-name descname"><span class="pre">ResultInterpreter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_vqe_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vqe_energies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vqe_iterations</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Interprets and processes the results of quantum protein folding simulations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coordinates_3d</strong> (<em>list</em><em>[</em><a class="reference internal" href="#result.models.BeadPosition" title="result.models.BeadPosition"><em>BeadPosition</em></a><em>]</em>) – 3D coordinates of the protein beads.</p></li>
+<li><p><strong>turn_sequence</strong> (<em>list</em><em>[</em><a class="reference internal" href="core.html#enums.TurnDirection" title="enums.TurnDirection"><em>TurnDirection</em></a><em>]</em>) – Decoded sequence of turns for the protein chain.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_vqe_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vqe_energies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vqe_iterations</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the ResultInterpreter with protein data and VQE results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>protein</strong> (<a class="reference internal" href="protein.html#protein.protein.Protein" title="protein.protein.Protein"><em>Protein</em></a>) – The Protein object containing chain information.</p></li>
+<li><p><strong>dirpath</strong> (<em>Path</em>) – Directory path for saving output files.</p></li>
+<li><p><strong>raw_vqe_results</strong> (<em>SamplingMinimumEigensolverResult</em>) – Raw VQE results from quantum simulation.</p></li>
+<li><p><strong>vqe_energies</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – List of VQE energy values per iteration.</p></li>
+<li><p><strong>vqe_iterations</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – List of VQE iteration numbers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#exceptions.ConformationEncodingError" title="exceptions.ConformationEncodingError"><strong>ConformationEncodingError</strong></a> – If the conformation encoding is not recognized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter._dump_result_dict_to_json">
+<span class="sig-name descname"><span class="pre">_dump_result_dict_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter._dump_result_dict_to_json" title="Link to this definition"></a></dt>
+<dd><p>Dumps the given results dictionary to a JSON file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the file to save the results.</p></li>
+<li><p><strong>results_dict</strong> (<a class="reference internal" href="#result.models.SparseVQEOutput" title="result.models.SparseVQEOutput"><em>SparseVQEOutput</em></a><em> | </em><em>SamplingMinimumEigensolverResult</em>) – The results data to be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Exception</strong> – If there is an error during sanitization or file writing.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter._dump_vqe_iterations_to_file">
+<span class="sig-name descname"><span class="pre">_dump_vqe_iterations_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter._dump_vqe_iterations_to_file" title="Link to this definition"></a></dt>
+<dd><p>Dumps the VQE iterations and their corresponding energies to a text file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>filename</strong> (<em>str</em>) – The name of the file to save the VQE iterations and energies.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Exception</strong> – If there is an error writing to the file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter._find_main_main_contacts">
+<span class="sig-name descname"><span class="pre">_find_main_main_contacts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter._find_main_main_contacts" title="Link to this definition"></a></dt>
+<dd><p>Finds contacts between main chain beads based on the interaction bits.
+This reads the first part of the raw VQE bitstring, which contains
+the on/off flags for potential interactions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary mapping bead index <cite>i</cite> to bead index <cite>j</cite> for each detected interaction (we don’t store contacts symmetrically, assume contacts are bidirectional).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter._generate_3d_coordinates">
+<span class="sig-name descname"><span class="pre">_generate_3d_coordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter._generate_3d_coordinates" title="Link to this definition"></a></dt>
+<dd><p>Generates the coordinates for the beads in the main chain in 3D tetrahedral lattice.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="#result.models.BeadPosition" title="result.models.BeadPosition"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeadPosition</span></code></a>]</span></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The 3D coordinates are generated based on the tetrahedral lattice structure, which is used to represent the spatial arrangement of the beads in the protein.
+Calculations use the FCC basis vectors to determine the position of each bead based on the turn sequence and the sublattice they belong to (determined by the bead index - alternating signs).</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of 3D coordinates for each bead in the main chain.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[<a class="reference internal" href="#result.models.BeadPosition" title="result.models.BeadPosition">BeadPosition</a>]</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core.html#exceptions.ConformationEncodingError" title="exceptions.ConformationEncodingError"><strong>ConformationEncodingError</strong></a> – If the decoded turns contain unknown encodings.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter._generate_turn_sequence">
+<span class="sig-name descname"><span class="pre">_generate_turn_sequence</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter._generate_turn_sequence" title="Link to this definition"></a></dt>
+<dd><p>Generates the turn sequence from the processed bitstring.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="core.html#enums.TurnDirection" title="enums.TurnDirection"><code class="xref py py-class docutils literal notranslate"><span class="pre">TurnDirection</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The decoded sequence of turns.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="core.html#enums.TurnDirection" title="enums.TurnDirection">TurnDirection</a>]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#exceptions.ConformationEncodingError" title="exceptions.ConformationEncodingError"><strong>ConformationEncodingError</strong></a> – If the decoded turns contain unknown encodings.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter._get_target_sequence_length_main_chain">
+<span class="sig-name descname"><span class="pre">_get_target_sequence_length_main_chain</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter._get_target_sequence_length_main_chain" title="Link to this definition"></a></dt>
+<dd><p>Calculates the target length (in bits) of the turn sequence for the main chain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Each turn is represented by a fixed number of qubits (QUBITS_PER_TURN).
+The number of turns is N - 1, where N is the number of beads in the main chain.
+However, by the symmetry of tetrahedral lattice we can assume that:</p>
+<ul class="simple">
+<li><p>The first two turns are fixed.</p></li>
+<li><p>(Sparse encoding only) If we don’t have a side bead attached to the second bead, we can encode the third turn as fixed value of “1”.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Target turn sequence length for the main chain in bits.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core.html#exceptions.ConformationEncodingError" title="exceptions.ConformationEncodingError"><strong>ConformationEncodingError</strong></a> – If the conformation encoding is not recognized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter._interpret_raw_vqe_results">
+<span class="sig-name descname"><span class="pre">_interpret_raw_vqe_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter._interpret_raw_vqe_results" title="Link to this definition"></a></dt>
+<dd><p>Interprets the raw VQE results into a structured SparseVQEOutput.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#result.models.SparseVQEOutput" title="result.models.SparseVQEOutput"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparseVQEOutput</span></code></a></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The interpreted VQE results.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#result.models.SparseVQEOutput" title="result.models.SparseVQEOutput">SparseVQEOutput</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the best measurement data is incomplete or missing.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter._log_coordinates_3d">
+<span class="sig-name descname"><span class="pre">_log_coordinates_3d</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter._log_coordinates_3d" title="Link to this definition"></a></dt>
+<dd><p>Logs the generated 3D coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter._log_turn_sequence">
+<span class="sig-name descname"><span class="pre">_log_turn_sequence</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter._log_turn_sequence" title="Link to this definition"></a></dt>
+<dd><p>Logs the decoded turn sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter._preprocess_bitstring">
+<span class="sig-name descname"><span class="pre">_preprocess_bitstring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bitstring</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter._preprocess_bitstring" title="Link to this definition"></a></dt>
+<dd><p>Preprocesses the raw bitstring from VQE results to match the expected format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Bitstring preprocessing includes:
+- Trimming to the target length.
+- Appending fixed turn indicators for the first two turns.
+- Handling special cases for the fifth bead’s sidechain in dense encoding</p>
+<p>For details regarding processing, see _get_target_sequence_length_main_chain.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bitstring</strong> (<em>str</em>) – The raw bitstring from VQE results.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The preprocessed bitstring ready for turn sequence decoding.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter.coordinates_3d">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">coordinates_3d</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#result.models.BeadPosition" title="result.models.BeadPosition"><span class="pre">BeadPosition</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter.coordinates_3d" title="Link to this definition"></a></dt>
+<dd><p>3D coordinates of the protein beads.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="#result.models.BeadPosition" title="result.models.BeadPosition">BeadPosition</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter.dump_results_to_files">
+<span class="sig-name descname"><span class="pre">dump_results_to_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter.dump_results_to_files" title="Link to this definition"></a></dt>
+<dd><p>Dumps the interpreted results to output files in the specified directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter.main_main_contacts_detected">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">main_main_contacts_detected</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter.main_main_contacts_detected" title="Link to this definition"></a></dt>
+<dd><p>Main-main contacts detected in the result sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter.turn_sequence">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">turn_sequence</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="core.html#enums.TurnDirection" title="enums.TurnDirection"><span class="pre">TurnDirection</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter.turn_sequence" title="Link to this definition"></a></dt>
+<dd><p>Sequence of turns in the protein folding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="core.html#enums.TurnDirection" title="enums.TurnDirection">TurnDirection</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-result.visualizer.result_visualizer">
+<span id="subpackage-visualizer"></span><h2>Subpackage: visualizer<a class="headerlink" href="#module-result.visualizer.result_visualizer" title="Link to this heading"></a></h2>
+<p>Utilities for visualizing protein folding results.</p>
+<p>This module provides the ResultVisualizer class, which processes
+the interpreted results of protein folding simulations and generates 3D and 2D visualizations of
+the folded protein structure.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="result.visualizer.result_visualizer.ResultVisualizer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">result.visualizer.result_visualizer.</span></span><span class="sig-name descname"><span class="pre">ResultVisualizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">turn_sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates_3d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_main_contacts_detected</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.visualizer.result_visualizer.ResultVisualizer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Visualizes and processes interpreted results of quantum protein folding simulations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="result.visualizer.result_visualizer.ResultVisualizer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">turn_sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates_3d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_main_contacts_detected</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.visualizer.result_visualizer.ResultVisualizer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the ResultVisualizer with contacts data from the main chain, directory path and decoded turn sequence and 3D coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dirpath</strong> (<em>Path</em>) – Directory path for saving output files.</p></li>
+<li><p><strong>turn_sequence</strong> (<em>list</em><em>[</em><a class="reference internal" href="core.html#enums.TurnDirection" title="enums.TurnDirection"><em>TurnDirection</em></a><em>]</em>) – Decoded turn sequence.</p></li>
+<li><p><strong>coordinates_3d</strong> (<em>list</em><em>[</em><a class="reference internal" href="#result.models.BeadPosition" title="result.models.BeadPosition"><em>BeadPosition</em></a><em>]</em>) – 3D coordinates of the protein structure.</p></li>
+<li><p><strong>main_main_contacts_detected</strong> (<em>dict</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) – Detected contacts between main chain beads.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.visualizer.result_visualizer.ResultVisualizer._generate_lattice_points">
+<span class="sig-name descname"><span class="pre">_generate_lattice_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.visualizer.result_visualizer.ResultVisualizer._generate_lattice_points" title="Link to this definition"></a></dt>
+<dd><p>Generate tetrahedral lattice points in range that matches the coordinates of the conformation
+(by taking the min/max values from the coordinates and padding them accordingly)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float64</span></code>]]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>coords</strong> (<em>NDArray</em><em>[</em><em>np.float64</em><em>]</em>) – The coordinates of the conformation.</p></li>
+<li><p><strong>padding</strong> (<em>int</em>) – Value that determines the padding around the coordinates (how big should the space be). Defaults to TETRAHEDRAL_LATTICE_PADDING.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.visualizer.result_visualizer.ResultVisualizer._get_text_color">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_get_text_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rgb_color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brightness_threshhold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.visualizer.result_visualizer.ResultVisualizer._get_text_color" title="Link to this definition"></a></dt>
+<dd><p>Helper function to choose black or white text depending on the brightness of the RGB color (using luminance formula for RGB).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>rgb_color</strong> (<em>str</em>) – The RGB color string in the format “rgb(r, g, b)”.</p></li>
+<li><p><strong>brightness_threshhold</strong> (<em>float</em>) – The brightness threshold for determining text color.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.visualizer.result_visualizer.ResultVisualizer.generate_3d_gif">
+<span class="sig-name descname"><span class="pre">generate_3d_gif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rotating_3d_visualization.gif'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.visualizer.result_visualizer.ResultVisualizer.generate_3d_gif" title="Link to this definition"></a></dt>
+<dd><p>Generate interactive simplified 3D visualization of the resulting conformation as a rotating plot in the .html file format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>filename</strong> (<em>str</em>) – The name of the file to save the rotating .gif plot. Defaults to GIF_VISUALIZATION_FILENAME constant.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.visualizer.result_visualizer.ResultVisualizer.visualize_2d">
+<span class="sig-name descname"><span class="pre">visualize_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'conformation_2d.png'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.visualizer.result_visualizer.ResultVisualizer.visualize_2d" title="Link to this definition"></a></dt>
+<dd><p>Generate flat, 2D visualization of the resulting conformation in the .png file format.
+This plot is a 2D projection (top-down view) of the 3D coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>filename</strong> (<em>str</em>) – The name of the file to save the static .png visualization. Defaults to FLAT_VISUALIZATION_FILENAME.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="result.visualizer.result_visualizer.ResultVisualizer.visualize_3d">
+<span class="sig-name descname"><span class="pre">visualize_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'interactive_3d_visualization.html'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.visualizer.result_visualizer.ResultVisualizer.visualize_3d" title="Link to this definition"></a></dt>
+<dd><p>Generate interactive 3D visualization of the resulting conformation in the .html file format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>filename</strong> (<em>str</em>) – The name of the file to save the interactive .html visualization. Defaults to HTML_VISUALIZATION_FILENAME.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="protein.html" class="btn btn-neutral float-left" title="Protein" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="utils.html" class="btn btn-neutral float-right" title="Utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Lucjan Gackowski, Gracjan Żukowski, Stefan Furmański, Anna Sztukowska.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

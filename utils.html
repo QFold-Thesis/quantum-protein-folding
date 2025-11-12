@@ -1,0 +1,599 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Utils &mdash; Quantum protein folding 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Result" href="result.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Quantum protein folding
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Module Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend.html">Backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="builder.html">Builder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distance.html">Distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interaction.html">Interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html">Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protein.html">Protein</a></li>
+<li class="toctree-l2"><a class="reference internal" href="result.html">Result</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#utils.qubit_utils._calc_updated_coeffs"><code class="docutils literal notranslate"><span class="pre">_calc_updated_coeffs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.qubit_utils._preset_binary_vals"><code class="docutils literal notranslate"><span class="pre">_preset_binary_vals()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.qubit_utils._preset_single_binary_val"><code class="docutils literal notranslate"><span class="pre">_preset_single_binary_val()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.qubit_utils.build_identity_op"><code class="docutils literal notranslate"><span class="pre">build_identity_op()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.qubit_utils.build_pauli_z_operator"><code class="docutils literal notranslate"><span class="pre">build_pauli_z_operator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.qubit_utils.build_turn_qubit"><code class="docutils literal notranslate"><span class="pre">build_turn_qubit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.qubit_utils.convert_to_qubits"><code class="docutils literal notranslate"><span class="pre">convert_to_qubits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.qubit_utils.find_unused_qubits"><code class="docutils literal notranslate"><span class="pre">find_unused_qubits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.qubit_utils.fix_qubits"><code class="docutils literal notranslate"><span class="pre">fix_qubits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.qubit_utils.pad_to_n_qubits"><code class="docutils literal notranslate"><span class="pre">pad_to_n_qubits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.qubit_utils.remove_unused_qubits"><code class="docutils literal notranslate"><span class="pre">remove_unused_qubits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.result_interpretation_utils.create_xyz_file"><code class="docutils literal notranslate"><span class="pre">create_xyz_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.result_interpretation_utils.read_xyz_file"><code class="docutils literal notranslate"><span class="pre">read_xyz_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.result_interpretation_utils.sanitize_for_json"><code class="docutils literal notranslate"><span class="pre">sanitize_for_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.setup_utils.build_and_compress_hamiltonian"><code class="docutils literal notranslate"><span class="pre">build_and_compress_hamiltonian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.setup_utils.run_vqe_optimization"><code class="docutils literal notranslate"><span class="pre">run_vqe_optimization()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.setup_utils.setup_folding_system"><code class="docutils literal notranslate"><span class="pre">setup_folding_system()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.setup_utils.setup_result_analysis"><code class="docutils literal notranslate"><span class="pre">setup_result_analysis()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.setup_utils.setup_vqe_optimization"><code class="docutils literal notranslate"><span class="pre">setup_vqe_optimization()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Quantum protein folding</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Module Reference</a></li>
+      <li class="breadcrumb-item active">Utils</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="utils">
+<h1>Utils<a class="headerlink" href="#utils" title="Link to this heading"></a></h1>
+<p>Utility functions used by the project.</p>
+<p id="module-utils.qubit_utils">Module providing tools to create and manipulate Pauli operators,
+manage main chain bead states, and prepare operators for qubit-based
+protein folding simulations.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.qubit_utils._calc_updated_coeffs">
+<span class="sig-prename descclassname"><span class="pre">utils.qubit_utils.</span></span><span class="sig-name descname"><span class="pre">_calc_updated_coeffs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeff</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_side_chain_second_bead</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.qubit_utils._calc_updated_coeffs" title="Link to this definition"></a></dt>
+<dd><p>Update coefficients based on fixed qubit positions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>table_z</strong> (<em>NDArray</em><em>[</em><em>np.bool</em><em>]</em>) – Z values for each qubit.</p></li>
+<li><p><strong>coeff</strong> (<em>float</em>) – Original coefficient.</p></li>
+<li><p><strong>has_side_chain_second_bead</strong> (<em>bool</em>) – Whether second bead of side chain exists.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Updated coefficient.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.qubit_utils._preset_binary_vals">
+<span class="sig-prename descclassname"><span class="pre">utils.qubit_utils.</span></span><span class="sig-name descname"><span class="pre">_preset_binary_vals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_z</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_side_chain_second_bead</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.qubit_utils._preset_binary_vals" title="Link to this definition"></a></dt>
+<dd><p>Set False for main bead indices in the Z table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>table_z</strong> (<em>NDArray</em><em>[</em><em>np.bool</em><em>]</em>) – Z values for each qubit.</p></li>
+<li><p><strong>has_side_chain_second_bead</strong> (<em>bool</em>) – Whether second bead of side chain exists.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.qubit_utils._preset_single_binary_val">
+<span class="sig-prename descclassname"><span class="pre">utils.qubit_utils.</span></span><span class="sig-name descname"><span class="pre">_preset_single_binary_val</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.qubit_utils._preset_single_binary_val" title="Link to this definition"></a></dt>
+<dd><p>Set a single qubit value to False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>table_z</strong> (<em>NDArray</em><em>[</em><em>np.bool</em><em>]</em>) – Z values for each qubit.</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – Qubit index to set.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.qubit_utils.build_identity_op">
+<span class="sig-prename descclassname"><span class="pre">utils.qubit_utils.</span></span><span class="sig-name descname"><span class="pre">build_identity_op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_qubits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.qubit_utils.build_identity_op" title="Link to this definition"></a></dt>
+<dd><p>Builds a full identity Pauli operator for a given number of qubits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>num_qubits</strong> (<em>int</em>) – Number of qubits in the operator.</p></li>
+<li><p><strong>coeff</strong> (<em>float</em><em>, </em><em>optional</em>) – Coefficient for the operator. Defaults to IDENTITY_OP_COEFF.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Identity Pauli operator.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SparsePauliOp</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.qubit_utils.build_pauli_z_operator">
+<span class="sig-prename descclassname"><span class="pre">utils.qubit_utils.</span></span><span class="sig-name descname"><span class="pre">build_pauli_z_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_qubits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pauli_z_indices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.qubit_utils.build_pauli_z_operator" title="Link to this definition"></a></dt>
+<dd><p>Build a Pauli operator with Z operators at specified positions and I elsewhere.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>num_qubits</strong> (<em>int</em>) – Total number of qubits.</p></li>
+<li><p><strong>pauli_z_indices</strong> (<em>set</em><em>[</em><em>int</em><em>]</em>) – Indices where Z operators should be applied.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Constructed Pauli operator.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SparsePauliOp</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.qubit_utils.build_turn_qubit">
+<span class="sig-prename descclassname"><span class="pre">utils.qubit_utils.</span></span><span class="sig-name descname"><span class="pre">build_turn_qubit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_qubits</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.qubit_utils.build_turn_qubit" title="Link to this definition"></a></dt>
+<dd><p>Builds a turn qubit Pauli operator with Z at the specified index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>z_index</strong> (<em>int</em>) – Index of the qubit to place a Z operator.</p></li>
+<li><p><strong>num_qubits</strong> (<em>int</em>) – Total number of qubits.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pauli operator representing the turn qubit.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SparsePauliOp</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.qubit_utils.convert_to_qubits">
+<span class="sig-prename descclassname"><span class="pre">utils.qubit_utils.</span></span><span class="sig-name descname"><span class="pre">convert_to_qubits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pauli_op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.qubit_utils.convert_to_qubits" title="Link to this definition"></a></dt>
+<dd><p>Convert a Pauli operator to a qubit operator using the identity and normalization factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>pauli_op</strong> (<em>SparsePauliOp</em>) – Pauli operator to convert.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Converted operator.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SparsePauliOp</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core.html#exceptions.InvalidOperatorError" title="exceptions.InvalidOperatorError"><strong>InvalidOperatorError</strong></a> – If the Pauli operator does not have a defined number of qubits.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.qubit_utils.find_unused_qubits">
+<span class="sig-prename descclassname"><span class="pre">utils.qubit_utils.</span></span><span class="sig-name descname"><span class="pre">find_unused_qubits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.qubit_utils.find_unused_qubits" title="Link to this definition"></a></dt>
+<dd><p>Return indices of qubits that are identity (I) in every term of the operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>op</strong> (<em>SparsePauliOp</em>) – Operator to check.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of unused qubit indices.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[int]</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core.html#exceptions.InvalidOperatorError" title="exceptions.InvalidOperatorError"><strong>InvalidOperatorError</strong></a> – If op.num_qubits is None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.qubit_utils.fix_qubits">
+<span class="sig-prename descclassname"><span class="pre">utils.qubit_utils.</span></span><span class="sig-name descname"><span class="pre">fix_qubits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_side_chain_second_bead</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.qubit_utils.fix_qubits" title="Link to this definition"></a></dt>
+<dd><p>Fixes specific qubits in a SparsePauliOp to predefined values for main chain turns.</p>
+<p>Qubits at positions 0, 1, 2, 3, and 5 correspond to fixed turn positions in the main chain
+and are not subject to optimization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>operator</strong> (<em>SparsePauliOp</em>) – Operator to fix.</p></li>
+<li><p><strong>has_side_chain_second_bead</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether second bead of side chain exists. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Operator with fixed qubits.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SparsePauliOp</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.qubit_utils.pad_to_n_qubits">
+<span class="sig-prename descclassname"><span class="pre">utils.qubit_utils.</span></span><span class="sig-name descname"><span class="pre">pad_to_n_qubits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.qubit_utils.pad_to_n_qubits" title="Link to this definition"></a></dt>
+<dd><p>Extends a Pauli operator with identity qubits to reach the target size.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>op</strong> (<em>SparsePauliOp</em>) – Operator to pad.</p></li>
+<li><p><strong>target</strong> (<em>int</em>) – Target number of qubits.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Padded operator.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SparsePauliOp</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core.html#exceptions.InvalidOperatorError" title="exceptions.InvalidOperatorError"><strong>InvalidOperatorError</strong></a> – If op.num_qubits is None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.qubit_utils.remove_unused_qubits">
+<span class="sig-prename descclassname"><span class="pre">utils.qubit_utils.</span></span><span class="sig-name descname"><span class="pre">remove_unused_qubits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.qubit_utils.remove_unused_qubits" title="Link to this definition"></a></dt>
+<dd><p>Remove qubits that are identity in all terms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>op</strong> (<em>SparsePauliOp</em>) – Operator to remove unused qubits from.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Operator without unused qubits.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SparsePauliOp</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core.html#exceptions.InvalidOperatorError" title="exceptions.InvalidOperatorError"><strong>InvalidOperatorError</strong></a> – If op.num_qubits is None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p id="module-utils.result_interpretation_utils">Module providing tools to interpret and handle protein folding results, including
+XYZ file creation and JSON sanitization.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.result_interpretation_utils.create_xyz_file">
+<span class="sig-prename descclassname"><span class="pre">utils.result_interpretation_utils.</span></span><span class="sig-name descname"><span class="pre">create_xyz_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirpath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.result_interpretation_utils.create_xyz_file" title="Link to this definition"></a></dt>
+<dd><p>Create an .xyz file from the given bead positions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>XYZ file format reference: <a class="reference external" href="https://en.wikipedia.org/wiki/XYZ_file_format">https://en.wikipedia.org/wiki/XYZ_file_format</a>
+Since no formal standard exists, this implementation follows the most common convention.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coords</strong> (<em>list</em><em>[</em><a class="reference internal" href="result.html#result.models.BeadPosition" title="result.models.BeadPosition"><em>BeadPosition</em></a><em>]</em>) – List of bead positions to include in the XYZ file.</p></li>
+<li><p><strong>dirpath</strong> (<em>Path</em>) – Directory path where the XYZ file will be created.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The path to the created XYZ file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – If there is an error creating the XYZ file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.result_interpretation_utils.read_xyz_file">
+<span class="sig-prename descclassname"><span class="pre">utils.result_interpretation_utils.</span></span><span class="sig-name descname"><span class="pre">read_xyz_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.result_interpretation_utils.read_xyz_file" title="Link to this definition"></a></dt>
+<dd><p>Read bead positions from an .xyz file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="result.html#result.models.BeadPosition" title="result.models.BeadPosition"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeadPosition</span></code></a>]</span></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>XYZ file format reference: <a class="reference external" href="https://en.wikipedia.org/wiki/XYZ_file_format">https://en.wikipedia.org/wiki/XYZ_file_format</a>
+Since no formal standard exists, this implementation follows the most common convention.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>Path</em>) – Path to the XYZ file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of bead positions read from the file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="result.html#result.models.BeadPosition" title="result.models.BeadPosition">BeadPosition</a>]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – If there is an error reading the XYZ file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.result_interpretation_utils.sanitize_for_json">
+<span class="sig-prename descclassname"><span class="pre">utils.result_interpretation_utils.</span></span><span class="sig-name descname"><span class="pre">sanitize_for_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.result_interpretation_utils.sanitize_for_json" title="Link to this definition"></a></dt>
+<dd><p>Recursively sanitize an object to make it JSON serializable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>obj</strong> (<em>Any</em>) – The object to sanitize.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A JSON-serializable representation of the input object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p id="module-utils.setup_utils">Module providing setup utilities for protein folding quantum simulation, including
+Hamiltonian construction, VQE setup, and result processing.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.setup_utils.build_and_compress_hamiltonian">
+<span class="sig-prename descclassname"><span class="pre">utils.setup_utils.</span></span><span class="sig-name descname"><span class="pre">build_and_compress_hamiltonian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.setup_utils.build_and_compress_hamiltonian" title="Link to this definition"></a></dt>
+<dd><p>Build and compress the final Hamiltonian for the protein folding system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code>]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>protein</strong> (<a class="reference internal" href="protein.html#protein.protein.Protein" title="protein.protein.Protein"><em>Protein</em></a>) – The protein instance.</p></li>
+<li><p><strong>interaction</strong> (<a class="reference internal" href="interaction.html#interaction.interaction.Interaction" title="interaction.interaction.Interaction"><em>Interaction</em></a>) – The interaction model.</p></li>
+<li><p><strong>contact_map</strong> (<a class="reference internal" href="contact.html#contact.contact_map.ContactMap" title="contact.contact_map.ContactMap"><em>ContactMap</em></a>) – The contact map.</p></li>
+<li><p><strong>distance_map</strong> (<a class="reference internal" href="distance.html#distance.distance_map.DistanceMap" title="distance.distance_map.DistanceMap"><em>DistanceMap</em></a>) – The distance map.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The original and compressed Hamiltonians</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[SparsePauliOp, SparsePauliOp]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.setup_utils.run_vqe_optimization">
+<span class="sig-prename descclassname"><span class="pre">utils.setup_utils.</span></span><span class="sig-name descname"><span class="pre">run_vqe_optimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vqe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hamiltonian</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.setup_utils.run_vqe_optimization" title="Link to this definition"></a></dt>
+<dd><p>Run the VQE optimization process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SamplingMinimumEigensolverResult</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>vqe</strong> (<em>SamplingVQE</em>) – The VQE instance.</p></li>
+<li><p><strong>hamiltonian</strong> (<em>SparsePauliOp</em>) – The Hamiltonian to optimize.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The raw results from the VQE optimization.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SamplingMinimumEigensolverResult</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.setup_utils.setup_folding_system">
+<span class="sig-prename descclassname"><span class="pre">utils.setup_utils.</span></span><span class="sig-name descname"><span class="pre">setup_folding_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_chain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side_chain</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.setup_utils.setup_folding_system" title="Link to this definition"></a></dt>
+<dd><p>Setup the protein folding system components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="protein.html#protein.protein.Protein" title="protein.protein.Protein"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protein</span></code></a>, <a class="reference internal" href="interaction.html#interaction.interaction.Interaction" title="interaction.interaction.Interaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interaction</span></code></a>, <a class="reference internal" href="contact.html#contact.contact_map.ContactMap" title="contact.contact_map.ContactMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContactMap</span></code></a>, <a class="reference internal" href="distance.html#distance.distance_map.DistanceMap" title="distance.distance_map.DistanceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">DistanceMap</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>main_chain</strong> (<em>str</em>) – Main chain protein sequence.</p></li>
+<li><p><strong>side_chain</strong> (<em>str</em>) – Side chain protein sequence.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The protein, interaction model,
+contact map, and distance map.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[<a class="reference internal" href="protein.html#protein.protein.Protein" title="protein.protein.Protein">Protein</a>, <a class="reference internal" href="interaction.html#interaction.interaction.Interaction" title="interaction.interaction.Interaction">Interaction</a>, <a class="reference internal" href="contact.html#contact.contact_map.ContactMap" title="contact.contact_map.ContactMap">ContactMap</a>, <a class="reference internal" href="distance.html#distance.distance_map.DistanceMap" title="distance.distance_map.DistanceMap">DistanceMap</a>]</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core.html#exceptions.InvalidInteractionTypeError" title="exceptions.InvalidInteractionTypeError"><strong>InvalidInteractionTypeError</strong></a> – If the interaction type is invalid (class not inheriting from Interaction).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.setup_utils.setup_result_analysis">
+<span class="sig-prename descclassname"><span class="pre">utils.setup_utils.</span></span><span class="sig-name descname"><span class="pre">setup_result_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protein</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vqe_iterations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vqe_energies</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.setup_utils.setup_result_analysis" title="Link to this definition"></a></dt>
+<dd><p>Setup the result analysis components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="result.html#result.interpreter.result_interpreter.ResultInterpreter" title="result.interpreter.result_interpreter.ResultInterpreter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResultInterpreter</span></code></a>, <a class="reference internal" href="result.html#result.visualizer.result_visualizer.ResultVisualizer" title="result.visualizer.result_visualizer.ResultVisualizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResultVisualizer</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>raw_results</strong> (<em>SamplingMinimumEigensolverResult</em>) – The raw results from the VQE optimization.</p></li>
+<li><p><strong>protein</strong> (<a class="reference internal" href="protein.html#protein.protein.Protein" title="protein.protein.Protein"><em>Protein</em></a>) – The protein instance.</p></li>
+<li><p><strong>vqe_iterations</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – The VQE evaluation counts (iterations).</p></li>
+<li><p><strong>vqe_energies</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – The VQE energy values.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The result interpreter and visualizer instances.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[<a class="reference internal" href="result.html#result.interpreter.result_interpreter.ResultInterpreter" title="result.interpreter.result_interpreter.ResultInterpreter">ResultInterpreter</a>, <a class="reference internal" href="result.html#result.visualizer.result_visualizer.ResultVisualizer" title="result.visualizer.result_visualizer.ResultVisualizer">ResultVisualizer</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.setup_utils.setup_vqe_optimization">
+<span class="sig-prename descclassname"><span class="pre">utils.setup_utils.</span></span><span class="sig-name descname"><span class="pre">setup_vqe_optimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_qubits</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.setup_utils.setup_vqe_optimization" title="Link to this definition"></a></dt>
+<dd><p>Setup the VQE optimization process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">SamplingVQE</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>num_qubits</strong> (<em>int</em>) – Number of qubits for the ansatz.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The VQE instance, evaluation counts (iterations), and their respective energy values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[SamplingVQE, list[int], list[float]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="result.html" class="btn btn-neutral float-left" title="Result" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Lucjan Gackowski, Gracjan Żukowski, Stefan Furmański, Anna Sztukowska.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

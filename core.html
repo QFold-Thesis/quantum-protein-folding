@@ -1,0 +1,364 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Core modules &mdash; Quantum protein folding 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Backend" href="backend.html" />
+    <link rel="prev" title="Module Reference" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Quantum protein folding
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Module Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Core modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-enums">Enums</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#enums.BackendType"><code class="docutils literal notranslate"><span class="pre">BackendType</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#enums.ConformationEncoding"><code class="docutils literal notranslate"><span class="pre">ConformationEncoding</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#enums.InteractionType"><code class="docutils literal notranslate"><span class="pre">InteractionType</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#enums.Penalties"><code class="docutils literal notranslate"><span class="pre">Penalties</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#enums.SubLattice"><code class="docutils literal notranslate"><span class="pre">SubLattice</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#enums.TurnDirection"><code class="docutils literal notranslate"><span class="pre">TurnDirection</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-exceptions">Exceptions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#exceptions.ChainLengthError"><code class="docutils literal notranslate"><span class="pre">ChainLengthError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#exceptions.ConformationEncodingError"><code class="docutils literal notranslate"><span class="pre">ConformationEncodingError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#exceptions.InvalidBackendError"><code class="docutils literal notranslate"><span class="pre">InvalidBackendError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#exceptions.InvalidInteractionTypeError"><code class="docutils literal notranslate"><span class="pre">InvalidInteractionTypeError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#exceptions.InvalidOperatorError"><code class="docutils literal notranslate"><span class="pre">InvalidOperatorError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#exceptions.UnsupportedAminoAcidSymbolError"><code class="docutils literal notranslate"><span class="pre">UnsupportedAminoAcidSymbolError</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-main">Main</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="backend.html">Backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="builder.html">Builder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distance.html">Distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interaction.html">Interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html">Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protein.html">Protein</a></li>
+<li class="toctree-l2"><a class="reference internal" href="result.html">Result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Quantum protein folding</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Module Reference</a></li>
+      <li class="breadcrumb-item active">Core modules</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/core.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="core-modules">
+<h1>Core modules<a class="headerlink" href="#core-modules" title="Link to this heading"></a></h1>
+<p>Core and small utility modules that define constants, enumerations,
+exceptions, and main execution logic.</p>
+<section id="module-constants">
+<span id="constants"></span><h2>Constants<a class="headerlink" href="#module-constants" title="Link to this heading"></a></h2>
+<p>Definitions of constants used throughout the protein folding simulations.</p>
+</section>
+<section id="module-enums">
+<span id="enums"></span><h2>Enums<a class="headerlink" href="#module-enums" title="Link to this heading"></a></h2>
+<p>Defines key enumerations for modeling protein folding constraints and encodings.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="enums.BackendType">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">enums.</span></span><span class="sig-name descname"><span class="pre">BackendType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#enums.BackendType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enum representing quantum backend types for VQE execution.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="enums.BackendType.IBM_QUANTUM">
+<span class="sig-name descname"><span class="pre">IBM_QUANTUM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ibm_quantum'</span></em><a class="headerlink" href="#enums.BackendType.IBM_QUANTUM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="enums.BackendType.LOCAL_STATEVECTOR">
+<span class="sig-name descname"><span class="pre">LOCAL_STATEVECTOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'local_statevector'</span></em><a class="headerlink" href="#enums.BackendType.LOCAL_STATEVECTOR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="enums.ConformationEncoding">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">enums.</span></span><span class="sig-name descname"><span class="pre">ConformationEncoding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#enums.ConformationEncoding" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Enum representing a map of encoding types and qubit counts.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="enums.ConformationEncoding.DENSE">
+<span class="sig-name descname"><span class="pre">DENSE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#enums.ConformationEncoding.DENSE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="enums.ConformationEncoding.SPARSE">
+<span class="sig-name descname"><span class="pre">SPARSE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#enums.ConformationEncoding.SPARSE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="enums.InteractionType">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">enums.</span></span><span class="sig-name descname"><span class="pre">InteractionType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#enums.InteractionType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Enum representing interaction types.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="enums.InteractionType.HP">
+<span class="sig-name descname"><span class="pre">HP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#enums.InteractionType.HP" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="enums.InteractionType.MJ">
+<span class="sig-name descname"><span class="pre">MJ</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#enums.InteractionType.MJ" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="enums.Penalties">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">enums.</span></span><span class="sig-name descname"><span class="pre">Penalties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#enums.Penalties" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Enum representing penalty types for protein folding constraints.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="enums.Penalties.BACK_PENALTY">
+<span class="sig-name descname"><span class="pre">BACK_PENALTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#enums.Penalties.BACK_PENALTY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="enums.Penalties.CHIRALITY_PENALTY">
+<span class="sig-name descname"><span class="pre">CHIRALITY_PENALTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#enums.Penalties.CHIRALITY_PENALTY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="enums.Penalties.OVERLAP_PENALTY">
+<span class="sig-name descname"><span class="pre">OVERLAP_PENALTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#enums.Penalties.OVERLAP_PENALTY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="enums.SubLattice">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">enums.</span></span><span class="sig-name descname"><span class="pre">SubLattice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#enums.SubLattice" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Enum representing the sublattices in the protein chain.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="enums.SubLattice.A">
+<span class="sig-name descname"><span class="pre">A</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#enums.SubLattice.A" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="enums.SubLattice.B">
+<span class="sig-name descname"><span class="pre">B</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#enums.SubLattice.B" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="enums.TurnDirection">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">enums.</span></span><span class="sig-name descname"><span class="pre">TurnDirection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#enums.TurnDirection" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Enum representing turn directions on a tetrahedral lattice.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="enums.TurnDirection.DIR_0">
+<span class="sig-name descname"><span class="pre">DIR_0</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#enums.TurnDirection.DIR_0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="enums.TurnDirection.DIR_1">
+<span class="sig-name descname"><span class="pre">DIR_1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#enums.TurnDirection.DIR_1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="enums.TurnDirection.DIR_2">
+<span class="sig-name descname"><span class="pre">DIR_2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#enums.TurnDirection.DIR_2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="enums.TurnDirection.DIR_3">
+<span class="sig-name descname"><span class="pre">DIR_3</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#enums.TurnDirection.DIR_3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-exceptions">
+<span id="exceptions"></span><h2>Exceptions<a class="headerlink" href="#module-exceptions" title="Link to this heading"></a></h2>
+<p>Defines custom exceptions for protein folding simulations,
+including errors for conformation encoding, chain length, and amino acid validity.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="exceptions.ChainLengthError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">exceptions.</span></span><span class="sig-name descname"><span class="pre">ChainLengthError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Invalid</span> <span class="pre">chain</span> <span class="pre">length.</span> <span class="pre">Make</span> <span class="pre">sure</span> <span class="pre">that</span> <span class="pre">the</span> <span class="pre">chain</span> <span class="pre">length</span> <span class="pre">is</span> <span class="pre">correct.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#exceptions.ChainLengthError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised for errors in the chain length.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="exceptions.ChainLengthError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Invalid</span> <span class="pre">chain</span> <span class="pre">length.</span> <span class="pre">Make</span> <span class="pre">sure</span> <span class="pre">that</span> <span class="pre">the</span> <span class="pre">chain</span> <span class="pre">length</span> <span class="pre">is</span> <span class="pre">correct.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#exceptions.ChainLengthError.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="exceptions.ConformationEncodingError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">exceptions.</span></span><span class="sig-name descname"><span class="pre">ConformationEncodingError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Invalid</span> <span class="pre">conformation</span> <span class="pre">encoding.</span> <span class="pre">Make</span> <span class="pre">sure</span> <span class="pre">that</span> <span class="pre">the</span> <span class="pre">encoding</span> <span class="pre">is</span> <span class="pre">of</span> <span class="pre">type</span> <span class="pre">ConformationEncoding.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#exceptions.ConformationEncodingError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised for errors in the conformation encoding.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="exceptions.ConformationEncodingError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Invalid</span> <span class="pre">conformation</span> <span class="pre">encoding.</span> <span class="pre">Make</span> <span class="pre">sure</span> <span class="pre">that</span> <span class="pre">the</span> <span class="pre">encoding</span> <span class="pre">is</span> <span class="pre">of</span> <span class="pre">type</span> <span class="pre">ConformationEncoding.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#exceptions.ConformationEncodingError.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="exceptions.InvalidBackendError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidBackendError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Invalid</span> <span class="pre">backend/API</span> <span class="pre">key</span> <span class="pre">configuration</span> <span class="pre">or</span> <span class="pre">unsupported</span> <span class="pre">backend</span> <span class="pre">type.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#exceptions.InvalidBackendError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised when backend configuration is invalid or unsupported.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="exceptions.InvalidBackendError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Invalid</span> <span class="pre">backend/API</span> <span class="pre">key</span> <span class="pre">configuration</span> <span class="pre">or</span> <span class="pre">unsupported</span> <span class="pre">backend</span> <span class="pre">type.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#exceptions.InvalidBackendError.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="exceptions.InvalidInteractionTypeError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidInteractionTypeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Invalid</span> <span class="pre">interaction</span> <span class="pre">type.</span> <span class="pre">Make</span> <span class="pre">sure</span> <span class="pre">that</span> <span class="pre">the</span> <span class="pre">interaction</span> <span class="pre">type</span> <span class="pre">is</span> <span class="pre">of</span> <span class="pre">type</span> <span class="pre">InteractionType.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#exceptions.InvalidInteractionTypeError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised when an invalid interaction type is encountered.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="exceptions.InvalidInteractionTypeError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Invalid</span> <span class="pre">interaction</span> <span class="pre">type.</span> <span class="pre">Make</span> <span class="pre">sure</span> <span class="pre">that</span> <span class="pre">the</span> <span class="pre">interaction</span> <span class="pre">type</span> <span class="pre">is</span> <span class="pre">of</span> <span class="pre">type</span> <span class="pre">InteractionType.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#exceptions.InvalidInteractionTypeError.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="exceptions.InvalidOperatorError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidOperatorError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Invalid</span> <span class="pre">quantum</span> <span class="pre">operator</span> <span class="pre">encountered.</span> <span class="pre">Make</span> <span class="pre">sure</span> <span class="pre">that</span> <span class="pre">the</span> <span class="pre">operator</span> <span class="pre">is</span> <span class="pre">valid.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#exceptions.InvalidOperatorError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised when an invalid quantum operator is encountered.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="exceptions.InvalidOperatorError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Invalid</span> <span class="pre">quantum</span> <span class="pre">operator</span> <span class="pre">encountered.</span> <span class="pre">Make</span> <span class="pre">sure</span> <span class="pre">that</span> <span class="pre">the</span> <span class="pre">operator</span> <span class="pre">is</span> <span class="pre">valid.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#exceptions.InvalidOperatorError.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="exceptions.UnsupportedAminoAcidSymbolError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">exceptions.</span></span><span class="sig-name descname"><span class="pre">UnsupportedAminoAcidSymbolError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Invalid</span> <span class="pre">amino</span> <span class="pre">acid</span> <span class="pre">symbol.</span> <span class="pre">Make</span> <span class="pre">sure</span> <span class="pre">that</span> <span class="pre">the</span> <span class="pre">amino</span> <span class="pre">acid</span> <span class="pre">symbol</span> <span class="pre">is</span> <span class="pre">compatible</span> <span class="pre">with</span> <span class="pre">the</span> <span class="pre">solution.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#exceptions.UnsupportedAminoAcidSymbolError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised when amino acid symbol is not included in interaction.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="exceptions.UnsupportedAminoAcidSymbolError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Invalid</span> <span class="pre">amino</span> <span class="pre">acid</span> <span class="pre">symbol.</span> <span class="pre">Make</span> <span class="pre">sure</span> <span class="pre">that</span> <span class="pre">the</span> <span class="pre">amino</span> <span class="pre">acid</span> <span class="pre">symbol</span> <span class="pre">is</span> <span class="pre">compatible</span> <span class="pre">with</span> <span class="pre">the</span> <span class="pre">solution.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#exceptions.UnsupportedAminoAcidSymbolError.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-main">
+<span id="main"></span><h2>Main<a class="headerlink" href="#module-main" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="main.main">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.main" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Module Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="backend.html" class="btn btn-neutral float-right" title="Backend" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Lucjan Gackowski, Gracjan Żukowski, Stefan Furmański, Anna Sztukowska.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

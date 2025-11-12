@@ -1,0 +1,303 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Builder &mdash; Quantum protein folding 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contact" href="contact.html" />
+    <link rel="prev" title="Backend" href="backend.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Quantum protein folding
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Module Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend.html">Backend</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Builder</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#builder.hamiltonian_builder.HamiltonianBuilder"><code class="docutils literal notranslate"><span class="pre">HamiltonianBuilder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#builder.hamiltonian_builder.HamiltonianBuilder.__init__"><code class="docutils literal notranslate"><span class="pre">HamiltonianBuilder.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#builder.hamiltonian_builder.HamiltonianBuilder._add_backtracking_penalty"><code class="docutils literal notranslate"><span class="pre">HamiltonianBuilder._add_backtracking_penalty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#builder.hamiltonian_builder.HamiltonianBuilder._build_backbone_contact_term"><code class="docutils literal notranslate"><span class="pre">HamiltonianBuilder._build_backbone_contact_term()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#builder.hamiltonian_builder.HamiltonianBuilder.get_first_neighbor_hamiltonian"><code class="docutils literal notranslate"><span class="pre">HamiltonianBuilder.get_first_neighbor_hamiltonian()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#builder.hamiltonian_builder.HamiltonianBuilder.get_second_neighbor_hamiltonian"><code class="docutils literal notranslate"><span class="pre">HamiltonianBuilder.get_second_neighbor_hamiltonian()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#builder.hamiltonian_builder.HamiltonianBuilder.get_turn_operators"><code class="docutils literal notranslate"><span class="pre">HamiltonianBuilder.get_turn_operators()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#builder.hamiltonian_builder.HamiltonianBuilder.sum_hamiltonians"><code class="docutils literal notranslate"><span class="pre">HamiltonianBuilder.sum_hamiltonians()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distance.html">Distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interaction.html">Interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html">Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protein.html">Protein</a></li>
+<li class="toctree-l2"><a class="reference internal" href="result.html">Result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Quantum protein folding</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Module Reference</a></li>
+      <li class="breadcrumb-item active">Builder</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/builder.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="builder">
+<h1>Builder<a class="headerlink" href="#builder" title="Link to this heading"></a></h1>
+<p>Hamiltonian builder utilities.</p>
+<p id="module-builder.hamiltonian_builder">Utilities for building the Hamiltonian of a protein for quantum simulations.</p>
+<p>This module provides the HamiltonianBuilder class, which constructs Hamiltonian
+operators for a given protein, including backbone interactions, backtracking
+penalties, and neighbor-based contact terms, using distance and interaction maps.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">builder.hamiltonian_builder.</span></span><span class="sig-name descname"><span class="pre">HamiltonianBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constructs Hamiltonian operators for a given protein, including backbone interactions and backtracking penalties.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the HamiltonianBuilder with required protein data
+and interaction maps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>protein</strong> (<a class="reference internal" href="protein.html#protein.protein.Protein" title="protein.protein.Protein"><em>Protein</em></a>) – The Protein object that includes all information about protein.</p></li>
+<li><p><strong>interaction</strong> (<a class="reference internal" href="interaction.html#interaction.interaction.Interaction" title="interaction.interaction.Interaction"><em>Interaction</em></a>) – Interaction model between beads of the protein.</p></li>
+<li><p><strong>distance_map</strong> (<a class="reference internal" href="distance.html#distance.distance_map.DistanceMap" title="distance.distance_map.DistanceMap"><em>DistanceMap</em></a>) – Matrix of pairwise distances between residues.</p></li>
+<li><p><strong>contact_map</strong> (<a class="reference internal" href="contact.html#contact.contact_map.ContactMap" title="contact.contact_map.ContactMap"><em>ContactMap</em></a>) – Matrix indicating residue-residue contacts.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder._add_backtracking_penalty">
+<span class="sig-name descname"><span class="pre">_add_backtracking_penalty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder._add_backtracking_penalty" title="Link to this definition"></a></dt>
+<dd><p>Adds a penalty term to the Hamiltonian to discourage backtracking
+in the main chain configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Hamiltonian term representing backtracking penalties.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SparsePauliOp</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder._build_backbone_contact_term">
+<span class="sig-name descname"><span class="pre">_build_backbone_contact_term</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder._build_backbone_contact_term" title="Link to this definition"></a></dt>
+<dd><p>Builds the Hamiltonian term corresponding to backbone_backbone (BB-BB) interactions.
+Includes both 1st neighbor and 2nd neighbor contributions (with shifts i±1, j±1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Hamiltonian term representing BB-BB interactions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SparsePauliOp</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder.get_first_neighbor_hamiltonian">
+<span class="sig-name descname"><span class="pre">get_first_neighbor_hamiltonian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bead_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bead_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder.get_first_neighbor_hamiltonian" title="Link to this definition"></a></dt>
+<dd><p>Computes the Hamiltonian contribution for first-neighbor bead pairs,
+combining distance-based and interaction contact energies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>lower_bead_idx</strong> (<em>int</em>) – Index of the lower bead in the main chain.</p></li>
+<li><p><strong>upper_bead_idx</strong> (<em>int</em>) – Index of the upper bead in the main chain.</p></li>
+<li><p><strong>lambda_1</strong> (<em>float</em>) – Penalty coefficient for first neighbor interaction.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Quantum operator representing the first neighbor Hamiltonian term.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SparsePauliOp</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core.html#exceptions.InvalidOperatorError" title="exceptions.InvalidOperatorError"><strong>InvalidOperatorError</strong></a> – If the number of qubits in the operator is None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder.get_second_neighbor_hamiltonian">
+<span class="sig-name descname"><span class="pre">get_second_neighbor_hamiltonian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bead_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bead_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder.get_second_neighbor_hamiltonian" title="Link to this definition"></a></dt>
+<dd><p>Computes the Hamiltonian contribution for second-neighbor bead pairs,
+including distance-based and interaction terms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>lower_bead_idx</strong> (<em>int</em>) – Index of the lower bead in the main chain.</p></li>
+<li><p><strong>upper_bead_idx</strong> (<em>int</em>) – Index of the upper bead in the main chain.</p></li>
+<li><p><strong>lambda_1</strong> (<em>float</em>) – Penalty coefficient for second neighbor interaction.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Quantum operator representing the second neighbor Hamiltonian term.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SparsePauliOp</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core.html#exceptions.InvalidOperatorError" title="exceptions.InvalidOperatorError"><strong>InvalidOperatorError</strong></a> – If the number of qubits in the operator is None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder.get_turn_operators">
+<span class="sig-name descname"><span class="pre">get_turn_operators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bead</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bead</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder.get_turn_operators" title="Link to this definition"></a></dt>
+<dd><p>Builds the combined turn operators for two consecutive beads in the main chain.</p>
+<p>Generates a quantum operator representing allowed directional turns
+between two beads based on their turn functions. If either bead lacks
+defined turn functions, an identity operator is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>lower_bead</strong> (<a class="reference internal" href="protein.html#protein.bead.bead.Bead" title="protein.bead.bead.Bead"><em>Bead</em></a>) – The bead from the main chain at the lower index.</p></li>
+<li><p><strong>upper_bead</strong> (<a class="reference internal" href="protein.html#protein.bead.bead.Bead" title="protein.bead.bead.Bead"><em>Bead</em></a>) – The bead from the main chain at the upper index.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Combined turn operator describing the interaction between the two beads.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SparsePauliOp</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder.sum_hamiltonians">
+<span class="sig-name descname"><span class="pre">sum_hamiltonians</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder.sum_hamiltonians" title="Link to this definition"></a></dt>
+<dd><p>Build and sum all Hamiltonian components, padding to a common qubit size.</p>
+<p>Constructs the backbone and backtracking terms, checks qubit consistency,
+pads them to the same qubit count, and sums them into a single Hamiltonian.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The total Hamiltonian operator, simplified and ready for use.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SparsePauliOp</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#exceptions.InvalidOperatorError" title="exceptions.InvalidOperatorError"><strong>InvalidOperatorError</strong></a> – If any part Hamiltonian has <cite>num_qubits</cite> set to None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="backend.html" class="btn btn-neutral float-left" title="Backend" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="contact.html" class="btn btn-neutral float-right" title="Contact" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Lucjan Gackowski, Gracjan Żukowski, Stefan Furmański, Anna Sztukowska.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

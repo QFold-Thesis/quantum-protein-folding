@@ -1,0 +1,247 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backend &mdash; Quantum protein folding 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Builder" href="builder.html" />
+    <link rel="prev" title="Core modules" href="core.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Quantum protein folding
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Module Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core modules</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Backend</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#backend.backend_factory._get_ibm_quantum_sampler"><code class="docutils literal notranslate"><span class="pre">_get_ibm_quantum_sampler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#backend.backend_factory._get_local_statevector_sampler"><code class="docutils literal notranslate"><span class="pre">_get_local_statevector_sampler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#backend.backend_factory.get_sampler"><code class="docutils literal notranslate"><span class="pre">get_sampler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#backend.transpiling_sampler.TranspilingSampler"><code class="docutils literal notranslate"><span class="pre">TranspilingSampler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#backend.transpiling_sampler.TranspilingSampler.__init__"><code class="docutils literal notranslate"><span class="pre">TranspilingSampler.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backend.transpiling_sampler.TranspilingSampler._abc_impl"><code class="docutils literal notranslate"><span class="pre">TranspilingSampler._abc_impl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backend.transpiling_sampler.TranspilingSampler.run"><code class="docutils literal notranslate"><span class="pre">TranspilingSampler.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="builder.html">Builder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distance.html">Distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interaction.html">Interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html">Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protein.html">Protein</a></li>
+<li class="toctree-l2"><a class="reference internal" href="result.html">Result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Quantum protein folding</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Module Reference</a></li>
+      <li class="breadcrumb-item active">Backend</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/backend.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="backend">
+<h1>Backend<a class="headerlink" href="#backend" title="Link to this heading"></a></h1>
+<p>Backend selection and transpiling utilities.</p>
+<p id="module-backend.backend_factory">Factory module for creating quantum backend samplers.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.backend_factory._get_ibm_quantum_sampler">
+<span class="sig-prename descclassname"><span class="pre">backend.backend_factory.</span></span><span class="sig-name descname"><span class="pre">_get_ibm_quantum_sampler</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.backend_factory._get_ibm_quantum_sampler" title="Link to this definition"></a></dt>
+<dd><p>Get a sampler for IBM Quantum hardware with automatic transpilation.</p>
+<p>Requires qiskit-ibm-runtime package and valid IBM Quantum credentials.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">BaseSamplerV2</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Backend</span></code>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Transpiling sampler wrapping IBM SamplerV2 and the backend object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[BaseSamplerV2, Backend]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#exceptions.InvalidBackendError" title="exceptions.InvalidBackendError"><strong>InvalidBackendError</strong></a> – If IBM runtime package is not installed or credentials are missing.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.backend_factory._get_local_statevector_sampler">
+<span class="sig-prename descclassname"><span class="pre">backend.backend_factory.</span></span><span class="sig-name descname"><span class="pre">_get_local_statevector_sampler</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.backend_factory._get_local_statevector_sampler" title="Link to this definition"></a></dt>
+<dd><p>Get a local statevector sampler for ideal simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseSamplerV2</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Local statevector sampler instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>BaseSamplerV2</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.backend_factory.get_sampler">
+<span class="sig-prename descclassname"><span class="pre">backend.backend_factory.</span></span><span class="sig-name descname"><span class="pre">get_sampler</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.backend_factory.get_sampler" title="Link to this definition"></a></dt>
+<dd><p>Get the appropriate sampler based on the configured backend type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">BaseSamplerV2</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Backend</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured sampler instance and backend (None for local statevector).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[BaseSamplerV2, Backend | None]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#exceptions.InvalidBackendError" title="exceptions.InvalidBackendError"><strong>InvalidBackendError</strong></a> – If the backend type is not supported or configuration is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p id="module-backend.transpiling_sampler">Wrapper sampler that handles transpilation for IBM backends.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="backend.transpiling_sampler.TranspilingSampler">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">backend.transpiling_sampler.</span></span><span class="sig-name descname"><span class="pre">TranspilingSampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sampler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#backend.transpiling_sampler.TranspilingSampler" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseSamplerV2</span></code></p>
+<p>Sampler wrapper that transpiles circuits before execution.</p>
+<p>This is required for IBM Quantum backends since March 2024, as they
+no longer accept non-ISA circuits. The wrapper intercepts circuit
+submissions, transpiles them to the backend’s instruction set, and
+passes ISA-compliant circuits to the underlying SamplerV2.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="backend.transpiling_sampler.TranspilingSampler.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sampler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#backend.transpiling_sampler.TranspilingSampler.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the transpiling sampler.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sampler</strong> (<em>BaseSamplerV2</em>) – The underlying sampler (e.g., IBM SamplerV2).</p></li>
+<li><p><strong>backend</strong> (<em>Backend</em>) – The backend to transpile circuits for.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="backend.transpiling_sampler.TranspilingSampler._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#backend.transpiling_sampler.TranspilingSampler._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="backend.transpiling_sampler.TranspilingSampler.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pubs</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">shots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#backend.transpiling_sampler.TranspilingSampler.run" title="Link to this definition"></a></dt>
+<dd><p>Run the sampler with automatic transpilation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrimitiveResult</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">PubResult</span></code>]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>pubs</strong> (<em>Iterable</em><em>[</em><em>SamplerPubLike</em><em>]</em>) – An iterable of pub-like objects containing circuits to execute.</p></li>
+<li><p><strong>shots</strong> (<em>int</em><em> | </em><em>None</em>) – Number of shots per circuit (optional).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Results from the underlying sampler with transpiled circuits.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>PrimitiveResult[PubResult]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="core.html" class="btn btn-neutral float-left" title="Core modules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="builder.html" class="btn btn-neutral float-right" title="Builder" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Lucjan Gackowski, Gracjan Żukowski, Stefan Furmański, Anna Sztukowska.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

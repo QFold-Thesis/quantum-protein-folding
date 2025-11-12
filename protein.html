@@ -1,0 +1,729 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Protein &mdash; Quantum protein folding 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Result" href="result.html" />
+    <link rel="prev" title="Logger" href="logger.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Quantum protein folding
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Module Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend.html">Backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="builder.html">Builder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distance.html">Distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interaction.html">Interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html">Logger</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Protein</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#protein.protein.Protein"><code class="docutils literal notranslate"><span class="pre">Protein</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#protein.protein.Protein.__init__"><code class="docutils literal notranslate"><span class="pre">Protein.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-protein.bead.bead">Subpackage: bead</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#protein.bead.bead.Bead"><code class="docutils literal notranslate"><span class="pre">Bead</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#protein.bead.main_bead._MainBead"><code class="docutils literal notranslate"><span class="pre">_MainBead</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#protein.bead.side_bead._SideBead"><code class="docutils literal notranslate"><span class="pre">_SideBead</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#protein.bead.placeholder_side_bead._PlaceholderSideBead"><code class="docutils literal notranslate"><span class="pre">_PlaceholderSideBead</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-protein.chain.chain">Subpackage: chain</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#protein.chain.chain.Chain"><code class="docutils literal notranslate"><span class="pre">Chain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#protein.chain.main_chain._MainChain"><code class="docutils literal notranslate"><span class="pre">_MainChain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#protein.chain.side_chain._SideChain"><code class="docutils literal notranslate"><span class="pre">_SideChain</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="result.html">Result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Quantum protein folding</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Module Reference</a></li>
+      <li class="breadcrumb-item active">Protein</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/protein.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="protein">
+<h1>Protein<a class="headerlink" href="#protein" title="Link to this heading"></a></h1>
+<p>Protein-related classes and subpackages.</p>
+<p id="module-protein.protein">Defines the Protein class, representing proteins with main and side chains,
+including sequence validation and chain initialization.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="protein.protein.Protein">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">protein.protein.</span></span><span class="sig-name descname"><span class="pre">Protein</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_protein_sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side_protein_sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_symbols</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.protein.Protein" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a protein with main and side chains.</p>
+<p>The main chain is defined as a sequence of amino acid residues.
+Side chains are optional and can be empty; if present, they follow the same residue types.
+Side chains cannot be attached to the first or last main bead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>main_chain</strong> (<a class="reference internal" href="#protein.chain.main_chain._MainChain" title="protein.chain.main_chain._MainChain"><em>_MainChain</em></a>) – The main chain of the protein.</p></li>
+<li><p><strong>side_chain</strong> (<a class="reference internal" href="#protein.chain.side_chain._SideChain" title="protein.chain.side_chain._SideChain"><em>_SideChain</em></a>) – The optional side chain of the protein.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.protein.Protein.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_protein_sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side_protein_sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_symbols</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.protein.Protein.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize a Protein instance with given main and side chain sequences.</p>
+<p>Validates that both sequences have the same length and initializes
+the corresponding chain objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>main_protein_sequence</strong> (<em>str</em>) – Sequence of residues for the main chain.</p></li>
+<li><p><strong>side_protein_sequence</strong> (<em>str</em>) – Sequence of residues for the side chain.</p></li>
+<li><p><strong>valid_symbols</strong> (<em>set</em><em>[</em><em>str</em><em>]</em>) – Set of valid amino acid symbols for the protein (This information comes from the interaction model).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#exceptions.ChainLengthError" title="exceptions.ChainLengthError"><strong>ChainLengthError</strong></a> – If main and side chain sequences are not of the same length.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<section id="module-protein.bead.bead">
+<span id="subpackage-bead"></span><h2>Subpackage: bead<a class="headerlink" href="#module-protein.bead.bead" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="protein.bead.bead.Bead">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">protein.bead.bead.</span></span><span class="sig-name descname"><span class="pre">Bead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_chain_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.bead.Bead" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>An abstract class defining a bead of a peptide.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.bead.Bead.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_chain_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.bead.Bead.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize a bead instance.</p>
+<p>Sets symbol, index, sublattice type, and initializes turn qubits if applicable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em>) – One-letter amino acid symbol.</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – Position of the bead in the parent chain.</p></li>
+<li><p><strong>parent_chain_len</strong> (<em>int</em>) – Total number of beads in the parent chain.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="protein.bead.bead.Bead._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#protein.bead.bead.Bead._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.bead.Bead._initialize_turn_qubits">
+<span class="sig-name descname"><span class="pre">_initialize_turn_qubits</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.bead.Bead._initialize_turn_qubits" title="Link to this definition"></a></dt>
+<dd><p>Initializes the quantum turn qubits associated with this bead based on the selected conformation encoding.</p>
+<p>For each bead (except the last in the chain), the function builds a set of Pauli operators representing
+directional turns in the protein structure. The number of initialized qubits depends on whether the
+encoding is dense or sparse.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#exceptions.ConformationEncodingError" title="exceptions.ConformationEncodingError"><strong>ConformationEncodingError</strong></a> – If conformation encoding or qubit count is not set.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.bead.Bead.turn_0">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">turn_0</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.bead.Bead.turn_0" title="Link to this definition"></a></dt>
+<dd><p>Return Pauli operator representing turn in direction 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.bead.Bead.turn_1">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">turn_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.bead.Bead.turn_1" title="Link to this definition"></a></dt>
+<dd><p>Return Pauli operator representing turn in direction 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.bead.Bead.turn_2">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">turn_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.bead.Bead.turn_2" title="Link to this definition"></a></dt>
+<dd><p>Return Pauli operator representing turn in direction 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.bead.Bead.turn_3">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">turn_3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.bead.Bead.turn_3" title="Link to this definition"></a></dt>
+<dd><p>Return Pauli operator representing turn in direction 3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.bead.Bead.turn_funcs">
+<span class="sig-name descname"><span class="pre">turn_funcs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.bead.Bead.turn_funcs" title="Link to this definition"></a></dt>
+<dd><p>Return Pauli operators representing directional turns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of Pauli operators for turns (0-3), or <cite>None</cite> if no turn qubits exist.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp] | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-protein.bead.main_bead">
+<dt class="sig sig-object py" id="protein.bead.main_bead._MainBead">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">protein.bead.main_bead.</span></span><span class="sig-name descname"><span class="pre">_MainBead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_chain_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.main_bead._MainBead" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protein.bead.bead.Bead" title="protein.bead.bead.Bead"><code class="xref py py-class docutils literal notranslate"><span class="pre">Bead</span></code></a></p>
+<p>Represents a main bead in the protein’s backbone.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.main_bead._MainBead.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_chain_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.main_bead._MainBead.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the main bead and set up its turn qubits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em>) – Amino acid symbol.</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – Position of the bead in the chain.</p></li>
+<li><p><strong>parent_chain_len</strong> (<em>int</em>) – Total number of beads in the parent chain.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="protein.bead.main_bead._MainBead._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#protein.bead.main_bead._MainBead._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.main_bead._MainBead._dense_turn_fun_0">
+<span class="sig-name descname"><span class="pre">_dense_turn_fun_0</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.main_bead._MainBead._dense_turn_fun_0" title="Link to this definition"></a></dt>
+<dd><p>Compute the dense encoding operator for direction 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dense-encoded Pauli operator for direction 0.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SparsePauliOp</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.main_bead._MainBead._dense_turn_fun_1">
+<span class="sig-name descname"><span class="pre">_dense_turn_fun_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.main_bead._MainBead._dense_turn_fun_1" title="Link to this definition"></a></dt>
+<dd><p>Compute the dense encoding operator for direction 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dense-encoded Pauli operator for direction 1.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SparsePauliOp</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.main_bead._MainBead._dense_turn_fun_2">
+<span class="sig-name descname"><span class="pre">_dense_turn_fun_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.main_bead._MainBead._dense_turn_fun_2" title="Link to this definition"></a></dt>
+<dd><p>Compute the dense encoding operator for direction 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dense-encoded Pauli operator for direction 2.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SparsePauliOp</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.main_bead._MainBead._dense_turn_fun_3">
+<span class="sig-name descname"><span class="pre">_dense_turn_fun_3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.main_bead._MainBead._dense_turn_fun_3" title="Link to this definition"></a></dt>
+<dd><p>Compute the dense encoding operator for direction 3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dense-encoded Pauli operator for direction 3.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SparsePauliOp</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.main_bead._MainBead.turn_0">
+<span class="sig-name descname"><span class="pre">turn_0</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.main_bead._MainBead.turn_0" title="Link to this definition"></a></dt>
+<dd><p>Return the Pauli operator for the turn in direction 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pauli operator representing direction 0.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SparsePauliOp</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#exceptions.ConformationEncodingError" title="exceptions.ConformationEncodingError"><strong>ConformationEncodingError</strong></a> – If the conformation encoding is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.main_bead._MainBead.turn_1">
+<span class="sig-name descname"><span class="pre">turn_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.main_bead._MainBead.turn_1" title="Link to this definition"></a></dt>
+<dd><p>Return the Pauli operator for the turn in direction 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pauli operator representing direction 1.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SparsePauliOp</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#exceptions.ConformationEncodingError" title="exceptions.ConformationEncodingError"><strong>ConformationEncodingError</strong></a> – If the conformation encoding is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.main_bead._MainBead.turn_2">
+<span class="sig-name descname"><span class="pre">turn_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.main_bead._MainBead.turn_2" title="Link to this definition"></a></dt>
+<dd><p>Return the Pauli operator for the turn in direction 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pauli operator representing direction 2.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SparsePauliOp</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#exceptions.ConformationEncodingError" title="exceptions.ConformationEncodingError"><strong>ConformationEncodingError</strong></a> – If the conformation encoding is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.main_bead._MainBead.turn_3">
+<span class="sig-name descname"><span class="pre">turn_3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.main_bead._MainBead.turn_3" title="Link to this definition"></a></dt>
+<dd><p>Return the Pauli operator for the turn in direction 3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pauli operator representing direction 3.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SparsePauliOp</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#exceptions.ConformationEncodingError" title="exceptions.ConformationEncodingError"><strong>ConformationEncodingError</strong></a> – If the conformation encoding is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-protein.bead.side_bead">
+<dt class="sig sig-object py" id="protein.bead.side_bead._SideBead">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">protein.bead.side_bead.</span></span><span class="sig-name descname"><span class="pre">_SideBead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_chain_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.side_bead._SideBead" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protein.bead.bead.Bead" title="protein.bead.bead.Bead"><code class="xref py py-class docutils literal notranslate"><span class="pre">Bead</span></code></a></p>
+<p>Represents a side bead attached to a protein’s main chain.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.side_bead._SideBead.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_chain_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.side_bead._SideBead.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize a side bead with its symbol and position in the chain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em>) – Amino acid symbol representing the side bead.</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – Position of the bead in the chain.</p></li>
+<li><p><strong>parent_chain_len</strong> (<em>int</em>) – Total number of beads in the parent chain.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="protein.bead.side_bead._SideBead._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#protein.bead.side_bead._SideBead._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.side_bead._SideBead.turn_0">
+<span class="sig-name descname"><span class="pre">turn_0</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.side_bead._SideBead.turn_0" title="Link to this definition"></a></dt>
+<dd><p>Return the Pauli operator for a turn in direction 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – Always raised since side bead turns are not implemented.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.side_bead._SideBead.turn_1">
+<span class="sig-name descname"><span class="pre">turn_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.side_bead._SideBead.turn_1" title="Link to this definition"></a></dt>
+<dd><p>Return the Pauli operator for a turn in direction 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – Always raised since side bead turns are not implemented.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.side_bead._SideBead.turn_2">
+<span class="sig-name descname"><span class="pre">turn_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.side_bead._SideBead.turn_2" title="Link to this definition"></a></dt>
+<dd><p>Return the Pauli operator for a turn in direction 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – Always raised since side bead turns are not implemented.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.side_bead._SideBead.turn_3">
+<span class="sig-name descname"><span class="pre">turn_3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.side_bead._SideBead.turn_3" title="Link to this definition"></a></dt>
+<dd><p>Return the Pauli operator for a turn in direction 3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – Always raised since side bead turns are not implemented.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-protein.bead.placeholder_side_bead">
+<dt class="sig sig-object py" id="protein.bead.placeholder_side_bead._PlaceholderSideBead">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">protein.bead.placeholder_side_bead.</span></span><span class="sig-name descname"><span class="pre">_PlaceholderSideBead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_chain_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.placeholder_side_bead._PlaceholderSideBead" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protein.bead.bead.Bead" title="protein.bead.bead.Bead"><code class="xref py py-class docutils literal notranslate"><span class="pre">Bead</span></code></a></p>
+<p>Represents a empty side bead - not attached to a protein’s main chain, used as a placeholder for storing empty symbols and padding.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.placeholder_side_bead._PlaceholderSideBead.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_chain_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.placeholder_side_bead._PlaceholderSideBead.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the placeholder side bead.</p>
+<p>Note:
+Placeholder side beads do not have turn qubit operators. Any attempt to access them will raise NotImplementedError.
+Symbol of the placeholder bead is set to EMPTY_SIDECHAIN_PLACEHOLDER constant, as initialized in SideChain.
+The “parent_chain_len” arg is used for consistency with other bead types, although it has no functional impact on placeholder beads.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em>) – Empty symbol.</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – Position of the bead in the side chain.</p></li>
+<li><p><strong>parent_chain_len</strong> (<em>int</em>) – Total number of beads in the parent chain.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="protein.bead.placeholder_side_bead._PlaceholderSideBead._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#protein.bead.placeholder_side_bead._PlaceholderSideBead._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.placeholder_side_bead._PlaceholderSideBead.turn_0">
+<span class="sig-name descname"><span class="pre">turn_0</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.placeholder_side_bead._PlaceholderSideBead.turn_0" title="Link to this definition"></a></dt>
+<dd><p>Return the Pauli operator for a turn in direction 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – Always raised since placeholder side beads do not have turn qubits.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.placeholder_side_bead._PlaceholderSideBead.turn_1">
+<span class="sig-name descname"><span class="pre">turn_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.placeholder_side_bead._PlaceholderSideBead.turn_1" title="Link to this definition"></a></dt>
+<dd><p>Return the Pauli operator for a turn in direction 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – Always raised since placeholder side beads do not have turn qubits.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.placeholder_side_bead._PlaceholderSideBead.turn_2">
+<span class="sig-name descname"><span class="pre">turn_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.placeholder_side_bead._PlaceholderSideBead.turn_2" title="Link to this definition"></a></dt>
+<dd><p>Return the Pauli operator for a turn in direction 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – Always raised since placeholder side beads do not have turn qubits.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.bead.placeholder_side_bead._PlaceholderSideBead.turn_3">
+<span class="sig-name descname"><span class="pre">turn_3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.placeholder_side_bead._PlaceholderSideBead.turn_3" title="Link to this definition"></a></dt>
+<dd><p>Return the Pauli operator for a turn in direction 3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – Always raised since placeholder side beads do not have turn qubits.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-protein.chain.chain">
+<span id="subpackage-chain"></span><h2>Subpackage: chain<a class="headerlink" href="#module-protein.chain.chain" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="protein.chain.chain.Chain">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">protein.chain.chain.</span></span><span class="sig-name descname"><span class="pre">Chain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.chain.Chain" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract base class for protein chains, defining shared behavior for all chain types.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.chain.chain.Chain.__init__">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.chain.Chain.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the chain with an empty list of beads.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>protein_sequence</strong> (<em>str</em>) – The amino acid sequence representing the protein chain.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="protein.chain.chain.Chain._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#protein.chain.chain.Chain._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.chain.chain.Chain.get_symbol_at">
+<span class="sig-name descname"><span class="pre">get_symbol_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.chain.Chain.get_symbol_at" title="Link to this definition"></a></dt>
+<dd><p>Return the symbol of the bead at the given chain index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>index</strong> (<em>int</em>) – Index of the bead in the chain.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The symbol of the bead located at the specified index.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-protein.chain.main_chain">
+<dt class="sig sig-object py" id="protein.chain.main_chain._MainChain">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">protein.chain.main_chain.</span></span><span class="sig-name descname"><span class="pre">_MainChain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.main_chain._MainChain" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protein.chain.chain.Chain" title="protein.chain.chain.Chain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Chain</span></code></a></p>
+<p>Represents the main chain of a protein, a linear sequence of amino acids forming its backbone.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.chain.main_chain._MainChain.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.main_chain._MainChain.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the main chain with beads corresponding to the protein sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>protein_sequence</strong> (<em>str</em>) – Amino acid sequence of the protein backbone.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="protein.chain.main_chain._MainChain._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#protein.chain.main_chain._MainChain._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-protein.chain.side_chain">
+<dt class="sig sig-object py" id="protein.chain.side_chain._SideChain">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">protein.chain.side_chain.</span></span><span class="sig-name descname"><span class="pre">_SideChain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.side_chain._SideChain" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#protein.chain.chain.Chain" title="protein.chain.chain.Chain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Chain</span></code></a></p>
+<p>Represents the side chain of a protein, consisting of amino acids attached to residues of the main chain.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.chain.side_chain._SideChain.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.side_chain._SideChain.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the side chain with beads corresponding to the protein sequence.</p>
+<p>If a bead symbol matches the EMPTY_SIDECHAIN_PLACEHOLDER, a PlaceholderSideBead is created instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>protein_sequence</strong> (<em>str</em>) – Amino acid sequence of the protein side chain.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="protein.chain.side_chain._SideChain._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#protein.chain.side_chain._SideChain._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="logger.html" class="btn btn-neutral float-left" title="Logger" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="result.html" class="btn btn-neutral float-right" title="Result" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Lucjan Gackowski, Gracjan Żukowski, Stefan Furmański, Anna Sztukowska.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
