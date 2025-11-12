@@ -6,7 +6,7 @@ from exceptions import ConformationEncodingError
 from protein.bead import Bead
 
 
-class MainBead(Bead):
+class _MainBead(Bead):
     """Represents a main bead in the protein's backbone."""
 
     def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:
