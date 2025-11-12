@@ -18,7 +18,7 @@
 # Quantum Protein Folding
 <div align="center">
   <a href="https://github.com/QFold-Thesis/quantum-protein-folding">
-    <img src="../pf-logo.png" alt="Logo" width="400" height="400">
+    <img src="../logo.png" alt="Logo" width="400" height="400">
   </a>
 </div>
 
