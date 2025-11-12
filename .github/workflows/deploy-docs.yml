@@ -52,7 +52,7 @@ jobs:
           git fetch origin gh-pages
           git worktree add gh-pages origin/gh-pages
 
-          rsync -av --delete --exclude 'assets/' docs/sphinx/_build/html/ gh-pages/
+          rsync -av --delete --exclude 'assets/' --exclude '.git/' --exclude '.nojekyll' docs/sphinx/_build/html/ gh-pages/
 
           pushd gh-pages
           touch .nojekyll
