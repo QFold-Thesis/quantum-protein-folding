@@ -111,7 +111,6 @@ class MJInteraction(Interaction):
 
         Raises:
             UnsupportedAminoAcidSymbolError: If either residue symbol is not in the MJ matrix.
-            RuntimeError: If another unexpected error occurs during computation.
 
         """
         key = f"{symbol_i}{symbol_j}"

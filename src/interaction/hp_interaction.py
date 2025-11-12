@@ -125,7 +125,7 @@ class HPInteraction(Interaction):
             float: Interaction energy according to the HP model.
 
         Raises:
-            RuntimeError: If an error occurs while computing the pair energy.
+            UnsupportedAminoAcidSymbolError: If either residue symbol is not in the HP matrix.
 
         """
         if symbol_i not in self._valid_symbols or symbol_j not in self._valid_symbols:
