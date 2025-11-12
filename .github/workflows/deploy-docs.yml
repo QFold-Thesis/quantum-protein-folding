@@ -1,9 +1,10 @@
-name: Build and deploy Sphinx docs
+name: Build and deploy Sphinx docs (preserve assets)
 
 on:
   push:
     branches:
       - main
+      - fix/docs-deploy
 
 permissions:
   contents: write
@@ -38,10 +39,28 @@ jobs:
           mkdir -p docs/sphinx/_build/html
           sphinx-build -b html docs/sphinx docs/sphinx/_build/html
 
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/sphinx/_build/html
-          publish_branch: gh-pages
-          allow_empty_commit: true
+      - name: Deploy to gh-pages (preserve assets/)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions[bot]"
+
+          rm -rf .git/worktrees/gh-pages || true
+          git fetch origin gh-pages
+          git worktree add gh-pages origin/gh-pages
+
+          rsync -av --delete --exclude 'assets/' docs/sphinx/_build/html/ gh-pages/
+
+          pushd gh-pages
+          touch .nojekyll
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m \"Update Sphinx docs: ${GITHUB_SHA::7}\"
+            git push origin HEAD:gh-pages
+          else
+            echo \"No changes to publish\"
+          fi
+          popd
