@@ -1,6 +1,8 @@
 # Quantum Protein Folding
 
-A quantum computing approach to solving the protein folding problem using [Qiskit](https://qiskit.org/). This project implements Variational Quantum Eigensolver (VQE) algorithm to predict the 3D structure of proteins based on their amino acid sequence. Our implementation is **inspired by and extends** the methods described in  
+A quantum computing approach to solving the protein folding problem using [Qiskit](https://qiskit.org/). This project implements Variational Quantum Eigensolver (VQE) algorithm to predict the 3D structure of proteins based on their amino acid sequence. 
+
+Our implementation is **inspired by and extends** the methods described in  
 [*Protein Folding Problem: A Quantum Approach*](https://arxiv.org/pdf/1908.02163), and this repository: [quantum-protein-folding-qiskit](https://github.com/qiskit-community/quantum-protein-folding)
 
 ## 🧬 Overview
@@ -148,6 +150,20 @@ After running, check the `output/` directory for timestamped folders containing:
 - `raw_vqe_results.json` - Detailed VQE output
 - `vqe_iterations.txt` - Iteration-by-iteration energies
 
+## 📖 Documentation (Sphinx)
+
+The documentation for this repository is automatically built and deployed to GitHub Pages. You can view the latest published docs at:
+
+https://qfold-thesis.github.io/quantum-protein-folding
+
+You can also build the documentation locally with Sphinx. If you use `uv` as the project environment manager, the following command will run the Sphinx builder inside the project's environment:
+
+```bash
+uv run sphinx-build -b html docs/sphinx docs/sphinx/_build/html
+```
+
+After a successful build the generated HTML files will be placed in `docs/sphinx/_build/html`.
+
 ## 🧪 Running Tests
 
 ```bash
@@ -224,6 +240,13 @@ quantum-protein-folding/
 
 Contributions are welcome! Please feel free to submit issues or pull requests.
 
+## 🧞 Authors
+
+Anna Sztukowska
+Stefan Furmański
+Lucjan Gackowski
+Gracjan Żukowski
+
 ## 📄 License
 
-This project is part of a thesis work on quantum approaches to protein folding. Under MIT License.
+This project is released under the terms of the MIT license. See the `LICENSE` file for details.
