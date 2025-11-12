@@ -51,14 +51,14 @@ jobs:
           rm -rf .git/worktrees/gh-pages || true
           git fetch origin gh-pages
           git worktree add gh-pages origin/gh-pages
-
-          rsync -av --delete --exclude 'assets/' docs/sphinx/_build/html/ gh-pages/
+          
+          rsync -av --delete --exclude '.git' --exclude '.nojekyll' --exclude 'assets/' docs/sphinx/_build/html/ gh-pages/
 
           pushd gh-pages
           touch .nojekyll
           git add -A
           if ! git diff --cached --quiet; then
-            git commit -m \"Update Sphinx docs: ${GITHUB_SHA::7}\"
+            git commit -m "Update Sphinx docs: ${GITHUB_SHA::7}"
             git push origin HEAD:gh-pages
           else
             echo \"No changes to publish\"
