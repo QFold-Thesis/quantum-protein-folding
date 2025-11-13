@@ -74,7 +74,7 @@ The quantum optimization produces protein conformations that can be visualized i
 
 ### Rotating Animation
 <p align="center">
-  ![protein](https://qfold-thesis.github.io/quantum-protein-folding/assets/rotating_3d_visualization.gif)
+  <img src="https://raw.githubusercontent.com/QFold-Thesis/quantum-protein-folding/gh-pages/assets/rotating_3d_visualization.gif" alt="Rotating protein structure" width="601"/>
   <br>
   <em>Animated 360° rotation of the folded protein structure</em>
 </p>
