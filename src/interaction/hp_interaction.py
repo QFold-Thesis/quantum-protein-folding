@@ -56,7 +56,6 @@ class HPInteraction(Interaction):
         )
         self.valid_symbols = set(self._hydrophobic_symbols) | set(_polar_symbols)
 
-
         logger.debug(
             f"HPInteraction initialized with {len(self.valid_symbols)} valid amino acid symbols."
         )
