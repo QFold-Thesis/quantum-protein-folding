@@ -1,5 +1,4 @@
-name: Build and deploy Sphinx docs (preserve assets)
-
+name: Build and deploy Sphinx docs
 on:
   push:
     branches:
