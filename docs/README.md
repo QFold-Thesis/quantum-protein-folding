@@ -278,6 +278,8 @@ quantum-protein-folding/
 
 - **`protein/`**: Models proteins as main/side chains composed of beads with quantum turn operators
 - **`interaction/`**: Provides pairwise residue energies (HP or MJ models)
+- **`contact/`**: Computes contact map and converts residue–residue contacts into Hamiltonian terms
+- **`distance/`**: Builds distance operators and encodes geometric constraints
 - **`builder/`**: Constructs the full Hamiltonian from protein structure and interactions
 - **`backend/`**: Manages quantum backends (IBM Quantum, simulators)
 - **`result/`**: Interprets VQE results and generates visualizations
