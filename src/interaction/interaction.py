@@ -1,3 +1,10 @@
+"""
+Interaction models for protein folding.
+
+Defines the abstract base class `Interaction`, which loads an interaction matrix
+and computes interaction energies used in folding models such as HP or MJ.
+"""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod

@@ -1,3 +1,11 @@
+"""
+Bead abstraction for quantum protein folding.
+
+Defines the base class `Bead`, representing a single amino acid in the peptide
+chain and responsible for constructing turn-related quantum operators used in
+the folding model.
+"""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod

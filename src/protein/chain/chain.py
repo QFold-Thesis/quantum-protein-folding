@@ -1,3 +1,11 @@
+"""
+Base abstraction for protein chains.
+
+Provides the abstract `Chain` class, representing a sequence of `Bead` objects
+and defining common operations such as indexing, iteration, and string
+conversion.
+"""
+
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
 
