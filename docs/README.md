@@ -290,10 +290,10 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 <a name="authors"></a>
 ## 🧞 Authors
 
-Anna Sztukowska
-Stefan Furmański
-Lucjan Gackowski
-Gracjan Żukowski
+- [Anna Sztukowska](https://github.com/sztvk)
+- [Stefan Furmański](https://github.com/stfen)
+- [Lucjan Gackowski](https://github.com/varrios)
+- [Gracjan Żukowski](https://github.com/gzukowski)
 
 <a name="license"></a>
 ## 📄 License
