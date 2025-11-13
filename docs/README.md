@@ -22,6 +22,26 @@ A quantum computing approach to solving the protein folding problem using [Qiski
 Our implementation is **inspired by and extends** the methods described in  
 [*Protein Folding Problem: A Quantum Approach*](https://arxiv.org/pdf/1908.02163), and this repository: [quantum-protein-folding-qiskit](https://github.com/qiskit-community/quantum-protein-folding)
 
+
+- [Overview](#overview)
+- [Features](#features)
+- [Visualizations](#visualizations)
+  - [Interactive 3D Visualization](#interactive-3d-visualization)
+  - [Rotating Animation](#rotating-animation)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Documentation (Sphinx)](#documentation-sphinx)
+- [Running Tests](#running-tests)
+- [Adding Dependencies](#adding-dependencies)
+- [Project Structure](#project-structure)
+- [How It Works](#how-it-works)
+- [Key Modules](#key-modules)
+- [Contributing](#contributing)
+- [Authors](#authors)
+- [License](#license)
+
+<a name="overview"></a>
 ## 🧬 Overview
 
 Protein folding is one of the most challenging problems in computational biology. This project leverages quantum computing to explore protein conformations on a lattice model, using quantum optimization to find low-energy states that represent folded protein structures.
@@ -32,6 +52,7 @@ The implementation uses:
 - **Hamiltonian formulation** combining distance constraints, contact interactions, and backtracking penalties
 - **HP and MJ interaction models** for residue-residue energies
 
+<a name="features"></a>
 ## ✨ Features
 
 - 🔬 **Multiple interaction models**: Hydrophobic-Polar (HP) and Miyazawa-Jernigan (MJ)
@@ -39,19 +60,22 @@ The implementation uses:
 - 📊 **Rich visualizations**: 2D projections, interactive 3D plots, and animated rotations
 - 📈 **Result tracking**: Detailed logging of VQE iterations, energies, and convergence
 
+<a name="visualizations"></a>
 ## 🎨 Visualizations
 
 The quantum optimization produces protein conformations that can be visualized in multiple ways:
 
+<a name="interactive-3d-visualization"></a>
 ### Interactive 3D Visualization
 <p align="center">
   <a href="https://qfold-thesis.github.io/quantum-protein-folding/assets/interactive_3d_visualization.html" target="_blank">
-    <img src="assets/3d_visualization_static.png" alt="Protein Structure Preview" width="600"/>
+    <img src="https://qfold-thesis.github.io/quantum-protein-folding/assets/3d_visualization_static.png" alt="Protein Structure Preview" width="600"/>
   </a>
   <br>
   <em><b>Click</b> to view the interactive 3D visualization (HTML)</em>
 </p>
 
+<a name="rotating-animation"></a>
 ### Rotating Animation
 <p align="center">
   <img src="https://qfold-thesis.github.io/quantum-protein-folding/assets/rotating_3d_visualization.gif" alt="Rotating protein structure" width="600"/>
@@ -65,11 +89,13 @@ The visualizations show:
 - **3D spatial arrangement** on a discrete lattice
 - **Energy-minimized conformation** from VQE optimization
 
+<a name="requirements"></a>
 ## 📋 Requirements
 
 - Python 3.12 or higher
 - [`uv`](https://github.com/astral-sh/uv) - Fast Python package and environment manager
 
+<a name="installation"></a>
 ## 🚀 Installation
 
 ### 1. Install `uv`
@@ -125,6 +151,7 @@ IBM_QUANTUM_TOKEN="your_token_here"
 
 Get your token from [IBM Quantum](https://quantum.ibm.com/).
 
+<a name="usage"></a>
 ## 🎯 Usage
 
 ### Run a Basic Simulation
@@ -167,6 +194,7 @@ After running, check the `output/` directory for timestamped folders containing:
 - `raw_vqe_results.json` - Detailed VQE output
 - `vqe_iterations.txt` - Iteration-by-iteration energies
 
+<a name="documentation-sphinx"></a>
 ## 📖 Documentation (Sphinx)
 
 The documentation for this repository is automatically built and deployed to GitHub Pages. You can view the latest published docs at:
@@ -181,6 +209,7 @@ uv run sphinx-build -b html docs/sphinx docs/sphinx/_build/html
 
 After a successful build the generated HTML files will be placed in `docs/sphinx/_build/html`.
 
+<a name="running-tests"></a>
 ## 🧪 Running Tests
 
 ```bash
@@ -192,6 +221,7 @@ For specific test modules:
 uv run pytest tests/test_protein.py -v
 ```
 
+<a name="adding-dependencies"></a>
 ## 📦 Adding Dependencies
 
 To add a new package:
@@ -206,6 +236,7 @@ For development dependencies:
 uv add --dev <package-name>
 ```
 
+<a name="project-structure"></a>
 ## 🏗️ Project Structure
 
 ```
@@ -230,6 +261,7 @@ quantum-protein-folding/
 ├── ruff.toml             # Ruff configuration
 ```
 
+<a name="how-it-works"></a>
 ## 🔬 How It Works
 
 1. **Protein Representation**: Proteins are modeled as chains of beads on a tetrahedral lattice, with each bead representing an amino acid residue.
@@ -245,6 +277,7 @@ quantum-protein-folding/
 
 5. **Result Interpretation**: The optimal quantum state is decoded into 3D coordinates and visualized.
 
+<a name="key-modules"></a>
 ## 📚 Key Modules
 
 - **`protein/`**: Models proteins as main/side chains composed of beads with quantum turn operators
@@ -253,10 +286,12 @@ quantum-protein-folding/
 - **`backend/`**: Manages quantum backends (IBM Quantum, simulators)
 - **`result/`**: Interprets VQE results and generates visualizations
 
+<a name="contributing"></a>
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit issues or pull requests.
 
+<a name="authors"></a>
 ## 🧞 Authors
 
 Anna Sztukowska
@@ -264,6 +299,7 @@ Stefan Furmański
 Lucjan Gackowski
 Gracjan Żukowski
 
+<a name="license"></a>
 ## 📄 License
 
 This project is released under the terms of the MIT license. See the `LICENSE` file for details.
