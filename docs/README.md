@@ -26,8 +26,6 @@ Our implementation is **inspired by and extends** the methods described in
 - [Overview](#overview)
 - [Features](#features)
 - [Visualizations](#visualizations)
-  - [Interactive 3D Visualization](#interactive-3d-visualization)
-  - [Rotating Animation](#rotating-animation)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -76,7 +74,7 @@ The quantum optimization produces protein conformations that can be visualized i
 
 ### Rotating Animation
 <p align="center">
-  <img src="https://qfold-thesis.github.io/quantum-protein-folding/assets/rotating_3d_visualization.gif" alt="Rotating protein structure" width="600"/>
+  <img src="https://qfold-thesis.github.io/quantum-protein-folding/assets/rotating_3d_visualization.gif" alt="Rotating protein structure" width="601"/>
   <br>
   <em>Animated 360° rotation of the folded protein structure</em>
 </p>
