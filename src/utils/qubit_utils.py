@@ -23,6 +23,9 @@ from constants import (
     SIGN_FLIP_SIXTH_QUBIT_INDEX,
 )
 from exceptions import InvalidOperatorError
+from logger import get_logger
+
+logger = get_logger()
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
@@ -258,6 +261,7 @@ def pad_to_n_qubits(op: SparsePauliOp, target: int) -> SparsePauliOp:
         return op
     pad = target - op.num_qubits
     id_pad = build_identity_op(pad)
+    logger.debug(f"Padding operator from {op.num_qubits} to {target} qubits.")
     return id_pad ^ op
 
 

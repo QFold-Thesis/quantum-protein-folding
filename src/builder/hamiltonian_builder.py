@@ -78,6 +78,7 @@ class HamiltonianBuilder:
             InvalidOperatorError: If any part Hamiltonian has `num_qubits` set to None.
 
         """
+        logger.debug("Started process of building total Hamiltonian...")
         h_backbone: SparsePauliOp = self._build_backbone_contact_term()
         h_backtrack: SparsePauliOp = self._add_backtracking_penalty()
 
@@ -85,12 +86,13 @@ class HamiltonianBuilder:
 
         for hamiltonian in part_hamiltonians:
             if hamiltonian.num_qubits is None:
-                msg: str = "One of the part Hamiltonians has num_qubits set to None."
+                msg: str = "One of the part Hamiltonians has num_qubits set to None"
                 raise InvalidOperatorError(msg)
 
         target_qubits: int = max(
             int(hamiltonian.num_qubits) for hamiltonian in part_hamiltonians
         )
+        logger.debug(f"Target qubits count for the final Hamiltonian to be padded to: {target_qubits}")
 
         padded_hamiltonians: list[SparsePauliOp] = [
             pad_to_n_qubits(hamiltonian, target_qubits)
@@ -103,7 +105,9 @@ class HamiltonianBuilder:
         for hamiltonian in padded_hamiltonians:
             total_hamiltonian += hamiltonian
 
-        return total_hamiltonian.simplify()
+        result_hamiltonian: SparsePauliOp = total_hamiltonian.simplify()
+        logger.debug("Finished building total Hamiltonian.")
+        return result_hamiltonian
 
     def _build_backbone_contact_term(self) -> SparsePauliOp:
         """
@@ -114,7 +118,7 @@ class HamiltonianBuilder:
             SparsePauliOp: Hamiltonian term representing BB-BB interactions.
 
         """
-        logger.info("Creating h_backbone term (BB-BB interactions)")
+        logger.debug("Creating Hamiltonian term of Backbone-Backbone (BB-BB) contacts...")
 
         main_chain: _MainChain = self.protein.main_chain
         chain_len: int = len(main_chain)
@@ -132,7 +136,7 @@ class HamiltonianBuilder:
                     continue
 
                 if 0 <= i < chain_len and 0 <= j < chain_len:
-                    logger.debug(f"Adding BB-BB i={i}, j={j} (1st neighbor)")
+                    logger.debug(f"Adding Backbone-Backbone contact between Bead (index {i}) and Bead (index {j}) [1st neighbor contact]")
                     h_backbone += self.contact_map.main_main_contacts[i][
                         j
                     ] ^ self.get_first_neighbor_hamiltonian(
@@ -147,7 +151,7 @@ class HamiltonianBuilder:
                 ]:
                     ii, jj = i + di, j + dj
                     if 0 <= ii < chain_len and 0 <= jj < chain_len:
-                        logger.debug(f"Adding BB-BB i={ii}, j={jj} (2nd neighbor)")
+                        logger.debug(f"Adding Backbone-Backbone contact between Bead (index {ii}) and Bead (index {jj}) [2nd neighbor contact]")
                         h_backbone += self.contact_map.main_main_contacts[i][
                             j
                         ] ^ self.get_second_neighbor_hamiltonian(
@@ -157,7 +161,7 @@ class HamiltonianBuilder:
                 h_backbone = fix_qubits(h_backbone)
 
         logger.info(
-            f"Finished creating h_backbone term with {h_backbone.num_qubits} qubits."
+            f"Finished creating Hamiltonian term of Backbone-Backbone (BB-BB) contacts with {h_backbone.num_qubits} qubits."
         )
         return h_backbone
 
@@ -170,7 +174,7 @@ class HamiltonianBuilder:
             SparsePauliOp: Hamiltonian term representing backtracking penalties.
 
         """
-        logger.debug("Creating h_backtrack term")
+        logger.debug("Creating Hamiltonian term of backtracking penalty...")
 
         main_chain: _MainChain = self.protein.main_chain
         h_backtrack_num_qubits: int = (len(main_chain) - 1) * QUBITS_PER_TURN
@@ -179,13 +183,13 @@ class HamiltonianBuilder:
         )
 
         for i in range(1, len(main_chain) - 2):
-            logger.debug(f"Adding backtracking penalty between beads {i} and {i + 1}")
+            logger.debug(f"Adding backtracking penalty between Bead (index {i}) and Bead (index {i + 1})")
             h_backtrack += Penalties.BACK_PENALTY * self.get_turn_operators(
                 main_chain[i], main_chain[i + 1]
             )
 
-        logger.debug(
-            f"Finished creating h_backtrack term with {h_backtrack.num_qubits} qubits."
+        logger.info(
+            f"Finished creating Hamiltonian term of backtracking penalty with {h_backtrack.num_qubits} qubits."
         )
         return fix_qubits(h_backtrack)
 
@@ -213,9 +217,7 @@ class HamiltonianBuilder:
         ) = upper_bead.turn_funcs()
 
         if lower_turn_funcs is None or upper_turn_funcs is None:
-            logger.debug(
-                f"One of the beads {lower_bead.symbol}|{lower_bead.index} or {upper_bead.symbol}|{upper_bead.index} has no turn functions. Skipping turn operator calculation."
-            )
+            logger.info("One of the beads has no turn functions defined. Returning identity operator instead")
             return build_identity_op(
                 (len(self.protein.main_chain) - 1) * QUBITS_PER_TURN,
                 EMPTY_OP_COEFF,
