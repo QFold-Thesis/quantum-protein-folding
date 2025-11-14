@@ -19,6 +19,10 @@ ROOT_PROJECT_PATH: Path = Path(__file__).parent.parent
 
 load_dotenv(ROOT_PROJECT_PATH / ".env")
 
+LOGS_DIRPATH: Path = (
+    ROOT_PROJECT_PATH / "logs"
+)
+
 MJ_INTERACTION_MATRIX_FILEPATH: Path = (
     ROOT_PROJECT_PATH / "src" / "resources" / "mj_matrix.txt"
 )
