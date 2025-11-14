@@ -57,7 +57,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#interaction.hp_interaction.HPInteraction.__init__"><code class="docutils literal notranslate"><span class="pre">HPInteraction.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#interaction.hp_interaction.HPInteraction._abc_impl"><code class="docutils literal notranslate"><span class="pre">HPInteraction._abc_impl</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#interaction.hp_interaction.HPInteraction._is_hydrophobic"><code class="docutils literal notranslate"><span class="pre">HPInteraction._is_hydrophobic()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#interaction.hp_interaction.HPInteraction._load_hydrophobic_symbols"><code class="docutils literal notranslate"><span class="pre">HPInteraction._load_hydrophobic_symbols()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interaction.hp_interaction.HPInteraction._load_hp_symbols"><code class="docutils literal notranslate"><span class="pre">HPInteraction._load_hp_symbols()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#interaction.hp_interaction.HPInteraction.get_energy"><code class="docutils literal notranslate"><span class="pre">HPInteraction.get_energy()</span></code></a></li>
 </ul>
 </li>
@@ -188,24 +188,24 @@ All other pairs have energy 0.0.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="interaction.hp_interaction.HPInteraction._load_hydrophobic_symbols">
-<span class="sig-name descname"><span class="pre">_load_hydrophobic_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hp_filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/quantum-protein-folding/quantum-protein-folding/src/resources/hp_matrix.txt')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.hp_interaction.HPInteraction._load_hydrophobic_symbols" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="interaction.hp_interaction.HPInteraction._load_hp_symbols">
+<span class="sig-name descname"><span class="pre">_load_hp_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hp_filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/quantum-protein-folding/quantum-protein-folding/src/resources/hp_matrix.txt')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.hp_interaction.HPInteraction._load_hp_symbols" title="Link to this definition"></a></dt>
 <dd><p>Load hydrophobic amino acid symbols from a HP interaction matrix file.</p>
 <p>Parses a small, strict matrix file where each line has the format ‘&lt;SYMBOL&gt; &lt;0|1&gt;’.
-Ignores blank lines and lines starting with ‘#’. Only symbols with value ‘1’ are returned.</p>
+Ignores blank lines and lines starting with ‘#’. Lines with ‘1’ indicate hydrophobic residues.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span></p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>hp_filepath</strong> (<em>Path</em><em>, </em><em>optional</em>) – Path to the HP interaction matrix file.
 Defaults to HP_INTERACTION_MATRIX_FILEPATH.</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List of hydrophobic amino acid symbols.</p>
+<dd class="field-odd"><p>Tuple containing lists of hydrophobic and polar amino acid symbols.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[str]</p>
+<dd class="field-even"><p>tuple[list[str], list[str]]</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>Exception</strong> – If the HP matrix file cannot be read or parsed.</p>
