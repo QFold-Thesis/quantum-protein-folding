@@ -51,12 +51,13 @@ class HPInteraction(Interaction):
         interaction_matrix_path: Path = HP_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
         super().__init__(interaction_matrix_path)
+        logger.debug("Initializing HPInteraction...")
         self._hydrophobic_symbols, _polar_symbols = self._load_hp_symbols(
             self._interaction_matrix_path
         )
         self.valid_symbols = set(self._hydrophobic_symbols) | set(_polar_symbols)
 
-        logger.debug(
+        logger.info(
             f"HPInteraction initialized with {len(self.valid_symbols)} valid amino acid symbols."
         )
 
@@ -94,7 +95,7 @@ class HPInteraction(Interaction):
             logger.exception("Error loading HP matrix")
             raise
         else:
-            logger.debug(
+            logger.info(
                 f"Successfully loaded {len(hydrophobic)} hydrophobic and {len(polar)} polar symbols from HP matrix at: {hp_filepath}"
             )
             return hydrophobic, polar
