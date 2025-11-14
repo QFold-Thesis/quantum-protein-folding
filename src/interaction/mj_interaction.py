@@ -54,7 +54,7 @@ class MJInteraction(Interaction):
         self.valid_symbols = {symbol for pair in self._energy_pairs for symbol in pair}
 
         logger.info(
-            f"MJInteraction initialized with {len(self.valid_symbols)} valid amino acid symbols."
+            f"MJInteraction initialized with {len(self.valid_symbols)} valid amino acid symbols"
         )
 
     def _prepare_mj_interaction_matrix(
@@ -118,5 +118,5 @@ class MJInteraction(Interaction):
         try:
             return self._energy_pairs[key]
         except KeyError as e:
-            msg: str = f"Energy pair of '{key}' not supported in loaded MJ interaction model."
+            msg: str = f"Energy pair of '{key}' not supported in loaded MJ interaction model"
             raise UnsupportedAminoAcidSymbolError(msg) from e

@@ -58,7 +58,7 @@ class HPInteraction(Interaction):
         self.valid_symbols = set(self._hydrophobic_symbols) | set(_polar_symbols)
 
         logger.info(
-            f"HPInteraction initialized with {len(self.valid_symbols)} valid amino acid symbols."
+            f"HPInteraction initialized with {len(self.valid_symbols)} valid amino acid symbols"
         )
 
     def _load_hp_symbols(
@@ -132,7 +132,7 @@ class HPInteraction(Interaction):
 
         """
         if symbol_i not in self.valid_symbols or symbol_j not in self.valid_symbols:
-            msg: str = f"Amino acid symbols of {symbol_i}, {symbol_j} not supported in loaded HP interaction model."
+            msg: str = f"Amino acid symbols of {symbol_i}, {symbol_j} not supported in loaded HP interaction model"
             logger.error(msg)
             raise UnsupportedAminoAcidSymbolError(msg)
 
