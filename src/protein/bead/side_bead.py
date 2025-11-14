@@ -19,7 +19,9 @@ class _SideBead(Bead):
             parent_chain_len (int): Total number of beads in the parent chain.
 
         """
-        super().__init__(symbol=symbol, index=index, parent_chain_len=parent_chain_len)
+        _msg: str = "Side beads are not yet implemented!"
+        logger.error(_msg)
+        raise NotImplementedError(_msg)
 
     def turn_0(self) -> SparsePauliOp:
         """
