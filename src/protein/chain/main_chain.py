@@ -17,9 +17,7 @@ class _MainChain(Chain):
 
         """
         super().__init__(protein_sequence=protein_sequence)
-        logger.debug(
-            "Initializing MainChain with protein sequence: %s", protein_sequence
-        )
+        logger.debug(f"Initializing MainChain based from protein sequence: {protein_sequence}...")
 
         self.beads = [
             _MainBead(
@@ -29,3 +27,6 @@ class _MainChain(Chain):
             )
             for index, bead in enumerate(protein_sequence)
         ]
+
+        logger.info(f"MainChain for {protein_sequence} initialized with {len(self.beads)} MainBeads.")
+
