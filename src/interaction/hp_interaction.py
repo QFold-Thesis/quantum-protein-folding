@@ -51,51 +51,53 @@ class HPInteraction(Interaction):
         interaction_matrix_path: Path = HP_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
         super().__init__(interaction_matrix_path)
-        self._hydrophobic_symbols: list[str] = self._load_hydrophobic_symbols(
+        self._hydrophobic_symbols, _polar_symbols = self._load_hp_symbols(
             self._interaction_matrix_path
         )
-
-        self._valid_symbols = set(self._hydrophobic_symbols)
+        self.valid_symbols = set(self._hydrophobic_symbols) | set(_polar_symbols)
 
         logger.debug(
-            f"HPInteraction initialized with {len(self._valid_symbols)} valid amino acid symbols."
+            f"HPInteraction initialized with {len(self.valid_symbols)} valid amino acid symbols."
         )
 
-    def _load_hydrophobic_symbols(
+    def _load_hp_symbols(
         self, hp_filepath: Path = HP_INTERACTION_MATRIX_FILEPATH
-    ) -> list[str]:
+    ) -> tuple[list[str], list[str]]:
         """
         Load hydrophobic amino acid symbols from a HP interaction matrix file.
 
         Parses a small, strict matrix file where each line has the format '<SYMBOL> <0|1>'.
-        Ignores blank lines and lines starting with '#'. Only symbols with value '1' are returned.
+        Ignores blank lines and lines starting with '#'. Lines with '1' indicate hydrophobic residues.
 
         Args:
             hp_filepath (Path, optional): Path to the HP interaction matrix file.
                 Defaults to HP_INTERACTION_MATRIX_FILEPATH.
 
         Returns:
-            list[str]: List of hydrophobic amino acid symbols.
+            tuple[list[str], list[str]]: Tuple containing lists of hydrophobic and polar amino acid symbols.
 
         Raises:
             Exception: If the HP matrix file cannot be read or parsed.
 
         """
-        hydros: list[str] = []
+        hydrophobic: list[str] = []
+        polar: list[str] = []
         try:
             hp_matrix = np.loadtxt(hp_filepath, dtype=str)
-            for row in range(1, np.shape(hp_matrix)[0]):
-                for col in range(1, np.shape(hp_matrix)[1]):
-                    if hp_matrix[row, col] == "1":
-                        hydros.extend(hp_matrix[0, col])
+
+            for line in hp_matrix:
+                if line[1] == "1":
+                    hydrophobic.extend(line[0])
+                else:
+                    polar.extend(line[0])
         except Exception:
             logger.exception("Error loading HP matrix")
             raise
         else:
             logger.debug(
-                f"Successfully loaded {len(hydros)} hydrophobic symbols from HP matrix at: {hp_filepath}"
+                f"Successfully loaded {len(hydrophobic)} hydrophobic and {len(polar)} polar symbols from HP matrix at: {hp_filepath}"
             )
-            return hydros
+            return hydrophobic, polar
 
     def _is_hydrophobic(self, symbol: str) -> bool:
         """
@@ -128,7 +130,7 @@ class HPInteraction(Interaction):
             UnsupportedAminoAcidSymbolError: If either residue symbol is not in the HP matrix.
 
         """
-        if symbol_i not in self._valid_symbols or symbol_j not in self._valid_symbols:
+        if symbol_i not in self.valid_symbols or symbol_j not in self.valid_symbols:
             msg: str = f"Amino acid symbols of {symbol_i}, {symbol_j} not supported in loaded HP interaction model."
             logger.error(msg)
             raise UnsupportedAminoAcidSymbolError(msg)
