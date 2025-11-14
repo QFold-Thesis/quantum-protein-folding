@@ -3,8 +3,8 @@ Contact map utilities for protein folding simulations.
 
 This module provides the `ContactMap` class that:
 
-- Initializes contact operators between beads of a protein's main chain,
-- Ensures minimum bond separation between beads to consider contacts,
+- Initializes contact operators between MainBeads of a Protein's MainChain,
+- Ensures minimum bond separation between MainBeads to consider contacts,
 - Represents contacts as qubit operators (SparsePauliOp) suitable for quantum simulations.
 """
 
@@ -29,7 +29,7 @@ class ContactMap:
     """
     Represents a contact map for a protein's main chain.
 
-    Stores pairwise contact operators between beads, using Pauli operators
+    Stores pairwise contact operators between MainBeads, using Pauli operators
     to encode whether contacts are present, respecting minimum bond distances
     and sublattice constraints.
     """
@@ -73,11 +73,11 @@ class ContactMap:
             logger.debug("Initializing ContactMap...")
             self._initialize_contact_map()
         except Exception:
-            logger.exception("Error in initializing contact map")
+            logger.exception("Error in initializing ContactMap")
             raise
         else:
             logger.info(
-                f"Contact map initialized with {self.contacts_detected} contacts detected."
+                f"ContactMap initialized with {self.contacts_detected} contacts detected."
             )
 
     def _initialize_contact_map(self):
@@ -91,12 +91,12 @@ class ContactMap:
                 upper_bead: Bead = self._protein.main_chain[upper_bead_idx]
                 lower_bead: Bead = self._protein.main_chain[lower_bead_idx]
                 logger.debug(
-                    f"Evaluating potential contact between beads: {upper_bead.symbol} (index: {upper_bead.index}) and {lower_bead.symbol} (index: {lower_bead.index})"
+                    f"Evaluating potential contact between MainBeads: {upper_bead.symbol} (index: {upper_bead.index}) and {lower_bead.symbol} (index: {lower_bead.index})"
                 )
 
                 if upper_bead.sublattice == lower_bead.sublattice:
                     logger.debug(
-                        f"Skipping contact between beads: {upper_bead.symbol} (index: {upper_bead.index}) and {lower_bead.symbol} (index: {lower_bead.index}) due to same sublattice"
+                        f"Skipping contact between MainBeads: {upper_bead.symbol} (index: {upper_bead.index}) and {lower_bead.symbol} (index: {lower_bead.index}) due to same sublattice"
                     )
                     logger.debug(" ")
                     continue
@@ -106,7 +106,7 @@ class ContactMap:
                     < MIN_DISTANCE_BETWEEN_CONTACTS
                 ):
                     logger.debug(
-                        f"Skipping contact between beads: {upper_bead.symbol} (index: {upper_bead.index}) and {lower_bead.symbol} (index: {lower_bead.index}) due to insufficient bond separation (min={MIN_DISTANCE_BETWEEN_CONTACTS}, actual={abs(upper_bead.index - lower_bead.index)})"
+                        f"Skipping contact between MainBeads: {upper_bead.symbol} (index: {upper_bead.index}) and {lower_bead.symbol} (index: {lower_bead.index}) due to insufficient bond separation (min={MIN_DISTANCE_BETWEEN_CONTACTS}, actual={abs(upper_bead.index - lower_bead.index)})"
                     )
                     logger.debug(" ")
                     continue
@@ -130,14 +130,14 @@ class ContactMap:
         self, upper_bead: Bead, lower_bead: Bead
     ) -> SparsePauliOp:
         """
-        Creates a contact operator between two main chain beads.
+        Creates a contact operator between two main chain MainBeads.
 
         Args:
             lower_bead (Bead): The bead from the main chain at the lower index.
             upper_bead (Bead): The bead from the main chain at the upper index.
 
         Returns:
-            SparsePauliOp: Pauli-Z operator for the contact between the two beads.
+            SparsePauliOp: Pauli-Z operator for the contact between the two MainBeads.
 
         """
         z_op_index: int = (lower_bead.index) * (len(self._protein.main_chain) - 1) + (
@@ -149,6 +149,6 @@ class ContactMap:
         )
 
         logger.debug(
-            f"Created contact operator between beads: {lower_bead.symbol} (index: {lower_bead.index}) and {upper_bead.symbol} (index: {upper_bead.index})"
+            f"Created contact operator between MainBeads: {lower_bead.symbol} (index: {lower_bead.index}) and {upper_bead.symbol} (index: {upper_bead.index})"
         )
         return convert_to_qubits(contact_operator)
