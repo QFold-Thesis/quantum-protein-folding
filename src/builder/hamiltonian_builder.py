@@ -108,7 +108,7 @@ class HamiltonianBuilder:
             total_hamiltonian += hamiltonian
 
         result_hamiltonian: SparsePauliOp = total_hamiltonian.simplify()
-        logger.debug("Finished building total Hamiltonian.")
+        logger.info("Finished building total Hamiltonian.")
         return result_hamiltonian
 
     def _build_backbone_contact_term(self) -> SparsePauliOp:
