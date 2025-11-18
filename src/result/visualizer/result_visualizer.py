@@ -443,7 +443,7 @@ class ResultVisualizer:
             frameon=False,
         )
         ax.set_title(
-            f"3D Protein Folding Visualization for main chain sequence: {''.join(symbols)}",
+            f"2D Protein Folding Visualization for main chain sequence: {''.join(symbols)}",
             fontsize=14,
         )
 
