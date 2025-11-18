@@ -131,7 +131,7 @@ class ResultInterpreter:
             dict[int, int]: A dictionary mapping bead index `i` to bead index `j` for each detected interaction (we don't store contacts symmetrically, assume contacts are bidirectional).
 
         """
-        logger.debug("Finding main-main contacts from interaction bits")
+        logger.debug("Finding main-main contacts from interaction bits...")
 
         raw_bitstring: str = self._vqe_output.bitstring
         num_beads: int = len(self._protein.main_chain)
@@ -224,7 +224,7 @@ class ResultInterpreter:
             ValueError: If the best measurement data is incomplete or missing.
 
         """
-        logger.debug(f"Interpreting raw VQE results for {self._dirpath}")
+        logger.debug(f"Interpreting raw VQE results for {self._dirpath}...")
 
         best_measurement = self._raw_results.best_measurement
 
@@ -272,7 +272,7 @@ class ResultInterpreter:
             str: The preprocessed bitstring ready for turn sequence decoding.
 
         """
-        logger.debug("Preprocessing bitstring for turn sequence decoding")
+        logger.debug("Preprocessing bitstring for turn sequence decoding...")
 
         target_bitstring_length: int = self._get_target_sequence_length_main_chain()
 
@@ -343,7 +343,7 @@ class ResultInterpreter:
             ConformationEncodingError: If the decoded turns contain unknown encodings.
 
         """
-        logger.debug("Generating turn sequence from processed bitstring")
+        logger.debug("Generating turn sequence from processed bitstring...")
         turns_length = len(self._processed_bitstring) // QUBITS_PER_TURN
         turns = [
             self._processed_bitstring[i * QUBITS_PER_TURN : (i + 1) * QUBITS_PER_TURN]
@@ -378,7 +378,7 @@ class ResultInterpreter:
             ConformationEncodingError: If the decoded turns contain unknown encodings.
 
         """
-        logger.debug("Generating 3D coordinates from processed bitstring")
+        logger.debug("Generating 3D coordinates from processed bitstring...")
         tetrahedral_basis_vector: NDArray[np.float64] = FCC_BASIS.copy()
 
         tetrahedral_basis_vector /= np.linalg.norm(tetrahedral_basis_vector[0])
