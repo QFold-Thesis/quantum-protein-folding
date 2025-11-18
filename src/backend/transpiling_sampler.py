@@ -56,6 +56,8 @@ class TranspilingSampler(BaseSamplerV2):
             PrimitiveResult[PubResult]: Results from the underlying sampler with transpiled circuits.
 
         """
+        logger.debug("Running sampler with automatic transpilation of circuits")
+
         pub_list: list[SamplerPubLike] = list(pubs)
         transpiled_pubs: list[SamplerPubLike] = []
 
@@ -82,5 +84,7 @@ class TranspilingSampler(BaseSamplerV2):
                 transpiled_pubs.append((transpiled_circuit, *pub[1:]))
             else:
                 transpiled_pubs.append(transpiled_circuit)
+
+        logger.debug("All circuits transpiled. Submitting to underlying sampler.")
 
         return self._sampler.run(transpiled_pubs, shots=shots)
