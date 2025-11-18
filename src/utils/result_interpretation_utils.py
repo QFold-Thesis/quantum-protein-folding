@@ -101,7 +101,9 @@ def read_xyz_file(filepath: Path) -> list[BeadPosition]:
     except Exception:
         logger.exception("Error reading XYZ file")
         raise
-    return coords
+    else:
+        logger.info(f"Read {len(coords)} bead positions from XYZ file at {filepath}")
+        return coords
 
 
 def sanitize_for_json(obj: Any) -> Any:

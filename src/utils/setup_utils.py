@@ -99,10 +99,10 @@ def build_and_compress_hamiltonian(
     )
 
     hamiltonian = h_builder.sum_hamiltonians()
-    logger.debug(f"Original hamiltonian qubits: {hamiltonian.num_qubits}")
+    logger.info(f"Original hamiltonian qubits: {hamiltonian.num_qubits}")
 
     compressed_h = remove_unused_qubits(hamiltonian)
-    logger.debug(f"Compressed hamiltonian qubits: {compressed_h.num_qubits}")
+    logger.info(f"Compressed hamiltonian qubits: {compressed_h.num_qubits}")
 
     return hamiltonian, compressed_h
 
@@ -178,7 +178,7 @@ def run_vqe_optimization(
     duration: float = time.perf_counter() - start_time
     minutes, seconds = divmod(duration, 60)
 
-    logger.debug(f"VQE optimization completed in {int(minutes)}m {seconds:.2f}s")
+    logger.info(f"VQE optimization completed in {int(minutes)}m {seconds:.2f}s")
     return raw_results
 
 
