@@ -51,4 +51,5 @@ def get_logger(name: str = GLOBAL_LOGGER_NAME) -> logging.Logger:
             logger.addHandler(handler)
 
         logger.setLevel(LOGGER_DEFAULT_LEVEL)
+        logger.info("Logger and handlers initialized")
     return logger
