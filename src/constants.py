@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
+from datetime import UTC, tzinfo
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -30,6 +31,8 @@ MJ_INTERACTION_MATRIX_FILEPATH: Path = (
 HP_INTERACTION_MATRIX_FILEPATH: Path = (
     ROOT_PROJECT_PATH / "src" / "resources" / "hp_matrix.txt"
 )
+
+DEFAULT_TIMEZONE: tzinfo = UTC
 
 CONFORMATION_ENCODING: ConformationEncoding = ConformationEncoding.DENSE
 
@@ -130,7 +133,7 @@ BACKEND_TYPE: BackendType = BackendType.LOCAL_STATEVECTOR
 
 IBM_QUANTUM_TOKEN: str | None = os.environ.get("IBM_QUANTUM_TOKEN")
 
-IBM_QUANTUM_BACKEND_NAME: str = "ibm_marrakesh"
+IBM_QUANTUM_BACKEND_NAME: str | None = "ibm_marrakesh"
 
 IBM_QUANTUM_SHOTS: int = 1024
 

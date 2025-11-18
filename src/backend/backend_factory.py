@@ -72,7 +72,9 @@ def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, Backend]:
     from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2
 
     token: str | None = IBM_QUANTUM_TOKEN
-    if not token:
+    backend_name: str | None = IBM_QUANTUM_BACKEND_NAME
+
+    if not token or not backend_name:
         msg: str = (
             "IBM Quantum token not configured. Set IBM_QUANTUM_TOKEN in constants.py "
             "or as environment variable."
@@ -82,8 +84,8 @@ def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, Backend]:
     logger.info("Connecting to IBM Quantum service...")
     service = QiskitRuntimeService(channel="ibm_quantum_platform", token=token)
 
-    backend = service.backend(IBM_QUANTUM_BACKEND_NAME)
-    logger.info(f"Using IBM Quantum backend: {IBM_QUANTUM_BACKEND_NAME}")
+    backend = service.backend(backend_name)
+    logger.info(f"Using IBM Quantum backend: {backend_name}")
     logger.info(f"Backend status: {backend.status()}")
 
     ibm_sampler = SamplerV2(mode=backend)

@@ -84,7 +84,7 @@ class ContactMap:
         """Initializes all contact maps to empty dictionaries."""
         main_main_contacts_count: int = 0
         main_chain_length: int = len(self._protein.main_chain)
-        logger.debug(f"Initializing MainBead-MainBead contacts...")
+        logger.debug("Initializing MainBead-MainBead contacts...")
 
         for lower_bead_idx in range(main_chain_length - 2):
             for upper_bead_idx in range(lower_bead_idx + 2, main_chain_length):

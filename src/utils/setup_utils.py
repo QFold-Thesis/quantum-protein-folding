@@ -4,7 +4,7 @@ Hamiltonian construction, VQE setup, and result processing.
 """
 
 import time
-from datetime import UTC, datetime
+from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
@@ -15,7 +15,7 @@ from qiskit_algorithms.optimizers import COBYLA
 
 from backend import get_sampler
 from builder import HamiltonianBuilder
-from constants import INTERACTION_TYPE, OUTPUT_DATA_DIR
+from constants import DEFAULT_TIMEZONE, INTERACTION_TYPE, OUTPUT_DATA_DIR
 from contact import ContactMap
 from distance import DistanceMap
 from enums import InteractionType
@@ -201,7 +201,9 @@ def setup_result_analysis(
         tuple[ResultInterpreter, ResultVisualizer]: The result interpreter and visualizer instances.
 
     """
-    timestamp: str = datetime.now(tz=UTC).strftime("%Y_%m_%d-%H_%M_%S")
+    timestamp: str = datetime.now(tz=DEFAULT_TIMEZONE).strftime("%Y_%m_%d-%H_%M_%S")
+    OUTPUT_DATA_DIR.mkdir(parents=True, exist_ok=True)
+
     dirpath: Path = (
         OUTPUT_DATA_DIR / f"{timestamp}-{protein.main_chain!s}-{protein.side_chain!s}"
     )

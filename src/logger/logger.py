@@ -1,7 +1,16 @@
-from datetime import datetime
 import logging
+from datetime import datetime
+from typing import TYPE_CHECKING
 
-from constants import GLOBAL_LOGGER_NAME, LOGGER_DEFAULT_LEVEL, LOGS_DIRPATH
+from constants import (
+    DEFAULT_TIMEZONE,
+    GLOBAL_LOGGER_NAME,
+    LOGGER_DEFAULT_LEVEL,
+    LOGS_DIRPATH,
+)
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def get_logger(name: str = GLOBAL_LOGGER_NAME) -> logging.Logger:
@@ -17,14 +26,17 @@ def get_logger(name: str = GLOBAL_LOGGER_NAME) -> logging.Logger:
     """
     logger = logging.getLogger(name)
     if not logger.hasHandlers():
-        timestamp: str = datetime.now().strftime("%Y_%m_%d__%H_%M_%S")
+        timestamp: str = datetime.now(tz=DEFAULT_TIMEZONE).strftime("%Y_%m_%d__%H_%M_%S")
 
         log_handlers: list[logging.Handler] = []
 
         stream_handler: logging.Handler = logging.StreamHandler()
         log_handlers.append(stream_handler)
 
-        file_handler: logging.Handler = logging.FileHandler(LOGS_DIRPATH / f"{timestamp}.log")
+        log_filepath: Path = LOGS_DIRPATH / f"{timestamp}.log"
+        LOGS_DIRPATH.mkdir(parents=True, exist_ok=True)
+
+        file_handler: logging.Handler = logging.FileHandler(log_filepath)
         log_handlers.append(file_handler)
 
         formatter = logging.Formatter(

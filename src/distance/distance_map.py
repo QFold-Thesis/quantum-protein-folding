@@ -11,17 +11,20 @@ This module provides the ``DistanceMap`` class, which:
 """
 
 from collections import defaultdict
+from typing import TYPE_CHECKING
 
 from qiskit.quantum_info import SparsePauliOp
 
 from constants import DIST_VECTOR_AXES, EMPTY_OP_COEFF, QUBITS_PER_TURN
 from logger import get_logger
 from protein import Protein
-from protein.bead.bead import Bead
 from utils.qubit_utils import (
     build_identity_op,
     fix_qubits,
 )
+
+if TYPE_CHECKING:
+    from protein.bead.bead import Bead
 
 logger = get_logger()
 
@@ -80,7 +83,7 @@ class DistanceMap:
 
                 lower_bead: Bead = self._protein.main_chain[lower_bead_idx]
                 upper_bead: Bead = self._protein.main_chain[upper_bead_idx]
-            
+
                 axes_vector: list[SparsePauliOp] = [
                     build_identity_op(self._pauli_op_len, EMPTY_OP_COEFF)
                     for _ in range(DIST_VECTOR_AXES)
