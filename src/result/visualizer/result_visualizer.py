@@ -76,6 +76,8 @@ class ResultVisualizer:
         import plotly.graph_objects as go
         from matplotlib import cm
 
+        logger.debug("Generating interactive 3D HTML visualization of the conformation...")
+
         coords: NDArray[np.float64] = np.array(
             [(b.x, b.y, b.z) for b in self._coordinates_3d]
         )
@@ -253,6 +255,8 @@ class ResultVisualizer:
         import numpy as np
         from matplotlib import animation
 
+        logger.debug("Generating 3D rotating GIF visualization of the conformation...")
+
         coords: NDArray[np.float64] = np.array(
             [(b.x, b.y, b.z) for b in self._coordinates_3d]
         )
@@ -335,6 +339,8 @@ class ResultVisualizer:
         import matplotlib.pyplot as plt
         import numpy as np
         from matplotlib.lines import Line2D
+
+        logger.debug("Generating 2D flat visualization of the conformation...")
 
         symbols: list[str] = [b.symbol for b in self._coordinates_3d]
         contacts: dict[int, int] = self._main_main_contacts_detected

@@ -146,8 +146,7 @@ class ResultInterpreter:
             for j in range(i + 5, num_beads, 2):
                 if qubit_index >= len(interaction_bits):
                     logger.warning(
-                        f"Ran out of interaction bits while checking pair ({i}, {j}). "
-                        f"Expected more bits."
+                        f"Ran out of interaction bits while checking pair ({i}, {j}). Expected more bits."
                     )
                     break
                 if interaction_bits[qubit_index] == "1":
@@ -159,8 +158,7 @@ class ResultInterpreter:
 
         if qubit_index < len(interaction_bits):
             logger.warning(
-                f"Finished checking all pairs, but {len(interaction_bits) - qubit_index} "
-                f"interaction bits were left over."
+                f"Finished checking all pairs, but {len(interaction_bits) - qubit_index} interaction bits were left over."
             )
         return contacts
 
@@ -226,7 +224,7 @@ class ResultInterpreter:
             ValueError: If the best measurement data is incomplete or missing.
 
         """
-        logger.info(f"Interpreting raw VQE results for {self._dirpath}")
+        logger.debug(f"Interpreting raw VQE results for {self._dirpath}")
 
         best_measurement = self._raw_results.best_measurement
 
@@ -243,7 +241,7 @@ class ResultInterpreter:
             msg: str = "Incomplete best measurement data in VQE output."
             raise ValueError(msg)
 
-        logger.info("VQE interpretation complete")
+        logger.info("VQE interpretation completed")
         logger.info(f"Best state found: {state} (probability: {probability})")
         logger.info(f"Bitstring: {bitstring}")
         logger.info(f"Energy value: {energy_value}")
@@ -274,6 +272,8 @@ class ResultInterpreter:
             str: The preprocessed bitstring ready for turn sequence decoding.
 
         """
+        logger.debug("Preprocessing bitstring for turn sequence decoding")
+
         target_bitstring_length: int = self._get_target_sequence_length_main_chain()
 
         result_bitstring: str = bitstring[-target_bitstring_length:]
@@ -295,7 +295,7 @@ class ResultInterpreter:
                 + result_bitstring[-(SIDE_CHAIN_FIFTH_POSITION_INDEX + 1) :]
             )
             logger.info(
-                "Fifth bead has no sidechain. Turn 3 encoded as fixed '1' value."
+                "Fifth bead has no sidechain. Turn #3 encoded as fixed '1' value."
             )
 
         logger.info(
@@ -343,6 +343,7 @@ class ResultInterpreter:
             ConformationEncodingError: If the decoded turns contain unknown encodings.
 
         """
+        logger.debug("Generating turn sequence from processed bitstring")
         turns_length = len(self._processed_bitstring) // QUBITS_PER_TURN
         turns = [
             self._processed_bitstring[i * QUBITS_PER_TURN : (i + 1) * QUBITS_PER_TURN]
@@ -377,6 +378,7 @@ class ResultInterpreter:
             ConformationEncodingError: If the decoded turns contain unknown encodings.
 
         """
+        logger.debug("Generating 3D coordinates from processed bitstring")
         tetrahedral_basis_vector: NDArray[np.float64] = FCC_BASIS.copy()
 
         tetrahedral_basis_vector /= np.linalg.norm(tetrahedral_basis_vector[0])
