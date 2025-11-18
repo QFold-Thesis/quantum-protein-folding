@@ -122,9 +122,7 @@ class ContactMap:
                 main_main_contacts_count += 1
                 logger.debug(" ")
 
-        logger.info(
-            f"Calculated {main_main_contacts_count} MainBead-MainBead contacts"
-            )
+        logger.info(f"Calculated {main_main_contacts_count} MainBead-MainBead contacts")
 
     def _create_main_main_contact(
         self, upper_bead: Bead, lower_bead: Bead

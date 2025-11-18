@@ -61,9 +61,7 @@ class DistanceMap:
             logger.debug("Initializing DistanceMap for MainChain...")
             self._calc_distances_main_chain()
         except Exception:
-            logger.exception(
-                "Error in initializing DistanceMap for MainChain"
-            )
+            logger.exception("Error in initializing DistanceMap for MainChain")
             raise
         else:
             logger.info(
@@ -80,7 +78,6 @@ class DistanceMap:
         """
         for lower_bead_idx in range(self._main_chain_len):
             for upper_bead_idx in range(lower_bead_idx + 1, self._main_chain_len):
-
                 lower_bead: Bead = self._protein.main_chain[lower_bead_idx]
                 upper_bead: Bead = self._protein.main_chain[upper_bead_idx]
 

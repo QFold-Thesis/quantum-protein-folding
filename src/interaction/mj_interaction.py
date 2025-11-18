@@ -118,5 +118,7 @@ class MJInteraction(Interaction):
         try:
             return self._energy_pairs[key]
         except KeyError as e:
-            msg: str = f"Energy pair of '{key}' not supported in loaded MJ interaction model"
+            msg: str = (
+                f"Energy pair of '{key}' not supported in loaded MJ interaction model"
+            )
             raise UnsupportedAminoAcidSymbolError(msg) from e

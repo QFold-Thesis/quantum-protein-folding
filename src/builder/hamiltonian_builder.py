@@ -92,7 +92,9 @@ class HamiltonianBuilder:
         target_qubits: int = max(
             int(hamiltonian.num_qubits) for hamiltonian in part_hamiltonians
         )
-        logger.debug(f"Target qubits count for the final Hamiltonian to be padded to: {target_qubits}")
+        logger.debug(
+            f"Target qubits count for the final Hamiltonian to be padded to: {target_qubits}"
+        )
 
         padded_hamiltonians: list[SparsePauliOp] = [
             pad_to_n_qubits(hamiltonian, target_qubits)
@@ -118,7 +120,9 @@ class HamiltonianBuilder:
             SparsePauliOp: Hamiltonian term representing BB-BB interactions.
 
         """
-        logger.debug("Creating Hamiltonian term of Backbone-Backbone (BB-BB) contacts...")
+        logger.debug(
+            "Creating Hamiltonian term of Backbone-Backbone (BB-BB) contacts..."
+        )
 
         main_chain: _MainChain = self.protein.main_chain
         chain_len: int = len(main_chain)
@@ -136,7 +140,9 @@ class HamiltonianBuilder:
                     continue
 
                 if 0 <= i < chain_len and 0 <= j < chain_len:
-                    logger.debug(f"Adding Backbone-Backbone contact between Bead (index {i}) and Bead (index {j}) [1st neighbor contact]")
+                    logger.debug(
+                        f"Adding Backbone-Backbone contact between Bead (index {i}) and Bead (index {j}) [1st neighbor contact]"
+                    )
                     h_backbone += self.contact_map.main_main_contacts[i][
                         j
                     ] ^ self.get_first_neighbor_hamiltonian(
@@ -151,7 +157,9 @@ class HamiltonianBuilder:
                 ]:
                     ii, jj = i + di, j + dj
                     if 0 <= ii < chain_len and 0 <= jj < chain_len:
-                        logger.debug(f"Adding Backbone-Backbone contact between Bead (index {ii}) and Bead (index {jj}) [2nd neighbor contact]")
+                        logger.debug(
+                            f"Adding Backbone-Backbone contact between Bead (index {ii}) and Bead (index {jj}) [2nd neighbor contact]"
+                        )
                         h_backbone += self.contact_map.main_main_contacts[i][
                             j
                         ] ^ self.get_second_neighbor_hamiltonian(
@@ -183,7 +191,9 @@ class HamiltonianBuilder:
         )
 
         for i in range(1, len(main_chain) - 2):
-            logger.debug(f"Adding backtracking penalty between Bead (index {i}) and Bead (index {i + 1})")
+            logger.debug(
+                f"Adding backtracking penalty between Bead (index {i}) and Bead (index {i + 1})"
+            )
             h_backtrack += Penalties.BACK_PENALTY * self.get_turn_operators(
                 main_chain[i], main_chain[i + 1]
             )
@@ -217,7 +227,9 @@ class HamiltonianBuilder:
         ) = upper_bead.turn_funcs()
 
         if lower_turn_funcs is None or upper_turn_funcs is None:
-            logger.info("One of the beads has no turn functions defined. Returning identity operator instead")
+            logger.info(
+                "One of the beads has no turn functions defined. Returning identity operator instead"
+            )
             return build_identity_op(
                 (len(self.protein.main_chain) - 1) * QUBITS_PER_TURN,
                 EMPTY_OP_COEFF,

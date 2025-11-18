@@ -26,7 +26,9 @@ def get_logger(name: str = GLOBAL_LOGGER_NAME) -> logging.Logger:
     """
     logger = logging.getLogger(name)
     if not logger.hasHandlers():
-        timestamp: str = datetime.now(tz=DEFAULT_TIMEZONE).strftime("%Y_%m_%d__%H_%M_%S")
+        timestamp: str = datetime.now(tz=DEFAULT_TIMEZONE).strftime(
+            "%Y_%m_%d__%H_%M_%S"
+        )
 
         log_handlers: list[logging.Handler] = []
 
