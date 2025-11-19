@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import datetime
 import logging
 import os
-from datetime import timezone, tzinfo
+from datetime import tzinfo
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -30,7 +31,7 @@ HP_INTERACTION_MATRIX_FILEPATH: Path = (
     ROOT_PROJECT_PATH / "src" / "resources" / "hp_matrix.txt"
 )
 
-DEFAULT_TIMEZONE: tzinfo = timezone.utc
+DEFAULT_TIMEZONE: tzinfo = datetime.UTC
 
 CONFORMATION_ENCODING: ConformationEncoding = ConformationEncoding.DENSE
 
