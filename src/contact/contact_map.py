@@ -49,18 +49,6 @@ class ContactMap:
             lambda: defaultdict()
         )
 
-        """
-        # self.main_side_contacts: dict[int, dict[int, SparsePauliOp]] = defaultdict(
-        #     lambda: defaultdict()
-        # )
-        # self.side_main_contacts: dict[int, dict[int, SparsePauliOp]] = defaultdict(
-        #     lambda: defaultdict()
-        # )
-        # self.side_side_contacts: dict[int, dict[int, SparsePauliOp]] = defaultdict(
-        #     lambda: defaultdict()
-        # )
-        """
-
         self.contacts_detected: int = 0
         self._protein: Protein = protein
 
