@@ -30,6 +30,14 @@ logger = get_logger()
 
 
 class MJInteraction(Interaction):
+    """
+    MJ interaction model that loads the MJ matrix and exposes
+    pairwise residue contact energies.
+
+    Attributes:
+        valid_symbols (set[str]): Set of valid amino acid symbols for the interaction model.
+    """
+
     def __init__(
         self,
         interaction_matrix_path: Path = MJ_INTERACTION_MATRIX_FILEPATH,

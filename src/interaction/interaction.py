@@ -20,6 +20,9 @@ class Interaction(ABC):
 
     Subclasses must implement `get_energy` to return a numeric energy value and define their own initialization logic.
     Subclasses should also manage to properly set the `valid_symbols` set to determine which amino acid symbols they support.
+
+    Attributes:
+        valid_symbols (set[str]): Set of valid amino acid symbols for the interaction model.
     """
 
     @abstractmethod

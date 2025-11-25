@@ -30,6 +30,14 @@ logger = get_logger()
 
 
 class DistanceMap:
+    """
+    Represents a distance map for a protein's main chain.
+    
+    Computes and stores quantum pairwise distances between beads in the protein's
+    main chain, producing axis-wise Pauli operator vectors, applying qubit fixes,
+    and exposing a ready-to-use distance map for Hamiltonian construction.
+    """
+
     def __init__(self, protein: Protein):
         """
         Initializes the distance map for the given protein's main chain,

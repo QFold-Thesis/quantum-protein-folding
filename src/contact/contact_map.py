@@ -32,6 +32,10 @@ class ContactMap:
     Stores pairwise contact operators between MainBeads, using Pauli operators
     to encode whether contacts are present, respecting minimum bond distances
     and sublattice constraints.
+
+    Attributes:
+        main_main_contacts (dict[int, dict[int, SparsePauliOp]]): Contact operators between main chain beads.
+        contacts_detected (int): Total number of contacts detected in the map.
     """
 
     def __init__(self, protein: Protein):
