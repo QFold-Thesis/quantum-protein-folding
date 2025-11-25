@@ -49,7 +49,7 @@ class MJInteraction(Interaction):
         residue-residue pairs to their contact energies.
 
         Args:
-            interaction_matrix_path (Path): Path to the MJ interaction matrix file.
+            interaction_matrix_path (Path): Path to the MJ interaction matrix file. Defaults to MJ_INTERACTION_MATRIX_FILEPATH.
 
         """
         super().__init__(interaction_matrix_path)
@@ -76,7 +76,7 @@ class MJInteraction(Interaction):
         dictionary of symmetric residue-residue contact energies.
 
         Args:
-            mj_filepath (Path): Path to the MJ matrix file.
+            mj_filepath (Path): Path to the MJ matrix file. Defaults to MJ_INTERACTION_MATRIX_FILEPATH.
 
         Returns:
             dict[str, float]: Dictionary mapping residue pair codes to energies.
