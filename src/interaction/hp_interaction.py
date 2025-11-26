@@ -62,7 +62,7 @@ class HPInteraction(Interaction):
         the HP matrix file and preparing the supported symbol set.
 
         Args:
-            interaction_matrix_path (Path, optional): Path to the HP interaction matrix file.
+            interaction_matrix_path (Path, optional): Path to the HP interaction matrix file. Defaults to HP_INTERACTION_MATRIX_FILEPATH.
         """
         super().__init__(interaction_matrix_path)
         logger.debug("Initializing HPInteraction...")
