@@ -84,9 +84,9 @@ class HamiltonianBuilder:
 
         part_hamiltonians: list[SparsePauliOp] = [h_backbone, h_backtrack]
 
-        for hamiltonian in part_hamiltonians:
+        for idx, hamiltonian in enumerate(part_hamiltonians):
             if hamiltonian.num_qubits is None:
-                msg: str = "One of the part Hamiltonians has num_qubits set to None"
+                msg: str = f"Hamiltonian of part {idx} has num_qubits set to None"
                 raise InvalidOperatorError(msg)
 
         target_qubits: int = max(
@@ -107,9 +107,8 @@ class HamiltonianBuilder:
         for hamiltonian in padded_hamiltonians:
             total_hamiltonian += hamiltonian
 
-        result_hamiltonian: SparsePauliOp = total_hamiltonian.simplify()
         logger.info("Finished building total hamiltonian.")
-        return result_hamiltonian
+        return total_hamiltonian.simplify()
 
     def _build_backbone_contact_term(self) -> SparsePauliOp:
         """
