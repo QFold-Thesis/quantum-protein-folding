@@ -99,10 +99,10 @@ def build_and_compress_hamiltonian(
     )
 
     hamiltonian = h_builder.sum_hamiltonians()
-    logger.info(f"Original hamiltonian qubits: {hamiltonian.num_qubits}")
+    logger.info("Original hamiltonian qubits: %s", hamiltonian.num_qubits)
 
     compressed_h = remove_unused_qubits(hamiltonian)
-    logger.info(f"Compressed hamiltonian qubits: {compressed_h.num_qubits}")
+    logger.info("Compressed hamiltonian qubits: %s", compressed_h.num_qubits)
 
     return hamiltonian, compressed_h
 
@@ -139,7 +139,7 @@ def setup_vqe_optimization(
 
     sampler, backend = get_sampler()
     if backend is not None:
-        logger.debug(f"Using backend: {backend.name}")
+        logger.debug("Using backend: %s", backend.name)
         logger.debug("Transpilation will be handled by the sampler during execution")
 
     vqe = SamplingVQE(
@@ -178,7 +178,7 @@ def run_vqe_optimization(
     duration: float = time.perf_counter() - start_time
     minutes, seconds = divmod(duration, 60)
 
-    logger.info(f"VQE optimization completed in {int(minutes)}m {seconds:.2f}s")
+    logger.info("VQE optimization completed in %sm %.2fs", int(minutes), seconds)
     return raw_results
 
 

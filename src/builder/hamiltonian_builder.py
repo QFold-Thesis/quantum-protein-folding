@@ -93,7 +93,8 @@ class HamiltonianBuilder:
             int(hamiltonian.num_qubits) for hamiltonian in part_hamiltonians
         )
         logger.debug(
-            f"Target qubits count for the final hamiltonian to be padded to: {target_qubits}"
+            "Target qubits count for the final hamiltonian to be padded to: %s",
+            target_qubits,
         )
 
         padded_hamiltonians: list[SparsePauliOp] = [
@@ -140,7 +141,9 @@ class HamiltonianBuilder:
 
                 if 0 <= i < chain_len and 0 <= j < chain_len:
                     logger.debug(
-                        f"Adding backbone-backbone contact between Bead (index {i}) and Bead (index {j}) [1st neighbor contact]"
+                        "Adding backbone-backbone contact between Bead (index %s) and Bead (index %s) [1st neighbor contact]",
+                        i,
+                        j,
                     )
                     h_backbone += self.contact_map.main_main_contacts[i][
                         j
@@ -157,7 +160,9 @@ class HamiltonianBuilder:
                     ii, jj = i + di, j + dj
                     if 0 <= ii < chain_len and 0 <= jj < chain_len:
                         logger.debug(
-                            f"Adding backbone-backbone contact between Bead (index {ii}) and Bead (index {jj}) [2nd neighbor contact]"
+                            "Adding backbone-backbone contact between Bead (index %s) and Bead (index %s) [2nd neighbor contact]",
+                            ii,
+                            jj,
                         )
                         h_backbone += self.contact_map.main_main_contacts[i][
                             j
@@ -168,7 +173,8 @@ class HamiltonianBuilder:
                 h_backbone = fix_qubits(h_backbone)
 
         logger.info(
-            f"Finished creating hamiltonian term of backbone-backbone (BB-BB) contacts with {h_backbone.num_qubits} qubits."
+            "Finished creating hamiltonian term of backbone-backbone (BB-BB) contacts with %s qubits.",
+            h_backbone.num_qubits,
         )
         return h_backbone
 
@@ -191,14 +197,17 @@ class HamiltonianBuilder:
 
         for i in range(1, len(main_chain) - 2):
             logger.debug(
-                f"Adding backtracking penalty between Bead (index {i}) and Bead (index {i + 1})"
+                "Adding backtracking penalty between Bead (index %s) and Bead (index %s)",
+                i,
+                i + 1,
             )
             h_backtrack += Penalties.BACK_PENALTY * self.get_turn_operators(
                 main_chain[i], main_chain[i + 1]
             )
 
         logger.info(
-            f"Finished creating hamiltonian term of backtracking penalty with {h_backtrack.num_qubits} qubits."
+            "Finished creating hamiltonian term of backtracking penalty with %s qubits.",
+            h_backtrack.num_qubits,
         )
         return fix_qubits(h_backtrack)
 

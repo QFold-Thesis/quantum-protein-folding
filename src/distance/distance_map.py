@@ -65,7 +65,8 @@ class DistanceMap:
             raise
         else:
             logger.info(
-                f"DistanceMap for MainChain initialized with {self._main_chain_distances_detected} distances detected"
+                "DistanceMap for MainChain initialized with %s distances detected",
+                self._main_chain_distances_detected,
             )
 
     def _calc_distances_main_chain(self) -> None:
@@ -90,7 +91,11 @@ class DistanceMap:
                     indic_funcs = self._protein.main_chain[k].turn_funcs()
                     if indic_funcs is None:
                         logger.debug(
-                            f"Skipping distance calculation between MainBeads: {lower_bead.symbol} (index: {lower_bead.index}) and {upper_bead.symbol} (index: {upper_bead.index}) due to undefined turn functions"
+                            "Skipping distance calculation between MainBeads: %s (index: %s) and %s (index: %s) due to undefined turn functions",
+                            lower_bead.symbol,
+                            lower_bead.index,
+                            upper_bead.symbol,
+                            upper_bead.index,
                         )
                         continue
 
@@ -111,7 +116,11 @@ class DistanceMap:
                 self._main_chain_distances_detected += 1
 
                 logger.debug(
-                    f"Calculated distance operator between MainBeads: {lower_bead.symbol} (index: {lower_bead.index}) and {upper_bead.symbol} (index: {upper_bead.index})"
+                    "Calculated distance operator between MainBeads: %s (index: %s) and %s (index: %s)",
+                    lower_bead.symbol,
+                    lower_bead.index,
+                    upper_bead.symbol,
+                    upper_bead.index,
                 )
 
     def __getitem__(self, key: int) -> defaultdict[int, SparsePauliOp]:

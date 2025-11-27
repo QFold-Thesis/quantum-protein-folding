@@ -146,7 +146,9 @@ class ResultInterpreter:
             for j in range(i + 5, num_beads, 2):
                 if qubit_index >= len(interaction_bits):
                     logger.warning(
-                        f"Ran out of interaction bits while checking pair ({i}, {j}). Expected more bits."
+                        "Ran out of interaction bits while checking pair (%s, %s). Expected more bits.",
+                        i,
+                        j,
                     )
                     break
                 if interaction_bits[qubit_index] == "1":
@@ -158,7 +160,8 @@ class ResultInterpreter:
 
         if qubit_index < len(interaction_bits):
             logger.warning(
-                f"Finished checking all pairs, but {len(interaction_bits) - qubit_index} interaction bits were left over."
+                "Finished checking all pairs, but %s interaction bits were left over.",
+                len(interaction_bits) - qubit_index,
             )
         return contacts
 
@@ -168,14 +171,17 @@ class ResultInterpreter:
             logger.warning("No turn sequence to log.")
             return
 
-        logger.info(f"Turn sequence decoded for {len(self._turn_sequence)} turns.")
+        logger.info("Turn sequence decoded for %s turns.", len(self._turn_sequence))
         idx_width: int = len(str(len(self._turn_sequence)))
         val_width: int = max(len(str(t.value)) for t in self._turn_sequence)
         name_width: int = max(len(t.name) for t in self._turn_sequence)
 
         for i, turn in enumerate(self._turn_sequence, start=1):
             logger.info(
-                f"Turn {i:>{idx_width}} - {turn.value!s:>{val_width}} ({turn.name:<{name_width}})"
+                "Turn %s - %s (%s)",
+                f"{i:>{idx_width}}",
+                f"{turn.value!s:>{val_width}}",
+                f"{turn.name:<{name_width}}",
             )
 
     def _log_coordinates_3d(self) -> None:
@@ -184,7 +190,7 @@ class ResultInterpreter:
             logger.warning("No 3D coordinates to log.")
             return
 
-        logger.info(f"3D coordinates generated for {len(self._coordinates_3d)} beads.")
+        logger.info("3D coordinates generated for %s beads.", len(self._coordinates_3d))
 
         idx_width: int = len(str(len(self._coordinates_3d) - 1))
         symbol_width: int = max(len(b.symbol) for b in self._coordinates_3d)
@@ -224,7 +230,7 @@ class ResultInterpreter:
             ValueError: If the best measurement data is incomplete or missing.
 
         """
-        logger.debug(f"Interpreting raw VQE results for {self._dirpath}...")
+        logger.debug("Interpreting raw VQE results for %s...", self._dirpath)
 
         best_measurement = self._raw_results.best_measurement
 
@@ -242,9 +248,9 @@ class ResultInterpreter:
             raise ValueError(msg)
 
         logger.info("VQE interpretation completed")
-        logger.info(f"Best state found: {state} (probability: {probability})")
-        logger.info(f"Bitstring: {bitstring}")
-        logger.info(f"Energy value: {energy_value}")
+        logger.info("Best state found: %s (probability: %s)", state, probability)
+        logger.info("Bitstring: %s", bitstring)
+        logger.info("Energy value: %s", energy_value)
 
         return SparseVQEOutput(
             bitstring=bitstring,
@@ -299,7 +305,9 @@ class ResultInterpreter:
             )
 
         logger.info(
-            f"Preprocessed bitstring to target length of {target_bitstring_length} bits: {result_bitstring}"
+            "Preprocessed bitstring to target length of %s bits: %s",
+            target_bitstring_length,
+            result_bitstring,
         )
         return result_bitstring[::-1]
 
@@ -452,7 +460,7 @@ class ResultInterpreter:
             logger.exception("Error dumping VQE iterations to file")
             raise
         else:
-            logger.info(f"VQE iterations saved to {vqe_iterations_filepath}")
+            logger.info("VQE iterations saved to %s", vqe_iterations_filepath)
 
     def _dump_result_dict_to_json(
         self,
@@ -480,7 +488,7 @@ class ResultInterpreter:
             logger.exception("Error sanitizing results for JSON")
             raise
         else:
-            logger.info(f"JSON results saved to {results_filepath}")
+            logger.info("JSON results saved to %s", results_filepath)
 
     @property
     def coordinates_3d(self) -> list[BeadPosition]:

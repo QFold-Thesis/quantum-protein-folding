@@ -54,7 +54,8 @@ class MJInteraction(Interaction):
         self.valid_symbols = {symbol for pair in self._energy_pairs for symbol in pair}
 
         logger.info(
-            f"MJInteraction initialized with {len(self.valid_symbols)} valid amino acid symbols"
+            "MJInteraction initialized with %s valid amino acid symbols",
+            len(self.valid_symbols),
         )
 
     def _prepare_mj_interaction_matrix(
@@ -95,7 +96,9 @@ class MJInteraction(Interaction):
             raise
         else:
             logger.info(
-                f"Successfully loaded {len(energy_pairs)} energy pairs from MJ matrix at: {mj_filepath}"
+                "Successfully loaded %s energy pairs from MJ matrix at: %s",
+                len(energy_pairs),
+                mj_filepath,
             )
             return energy_pairs
 

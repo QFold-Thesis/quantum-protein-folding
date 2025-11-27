@@ -40,7 +40,7 @@ class TranspilingSampler(BaseSamplerV2):
         """
         self._sampler: BaseSamplerV2 = sampler
         self._backend: Backend = backend
-        logger.debug(f"TranspilingSampler initialized for backend: {backend.name}")
+        logger.debug("TranspilingSampler initialized for backend: %s", backend.name)
 
     def run(
         self, pubs: Iterable[SamplerPubLike], *, shots: int | None = None
@@ -69,15 +69,16 @@ class TranspilingSampler(BaseSamplerV2):
             else:
                 circuit = pub
 
-            logger.debug(f"Transpiling circuit with {circuit.num_qubits} qubits")
+            logger.debug("Transpiling circuit with %s qubits", circuit.num_qubits)
             transpiled_circuit = transpile(
                 circuit,
                 backend=self._backend,
                 optimization_level=3,
             )
             logger.debug(
-                f"Transpiled to {transpiled_circuit.num_qubits} qubits "
-                f"({transpiled_circuit.size()} gates)"
+                "Transpiled to %s qubits (%s gates)",
+                transpiled_circuit.num_qubits,
+                transpiled_circuit.size(),
             )
 
             if hasattr(pub, "circuit") or isinstance(pub, tuple):

@@ -58,7 +58,8 @@ class HPInteraction(Interaction):
         self.valid_symbols = set(self._hydrophobic_symbols) | set(_polar_symbols)
 
         logger.info(
-            f"HPInteraction initialized with {len(self.valid_symbols)} valid amino acid symbols"
+            "HPInteraction initialized with %s valid amino acid symbols",
+            len(self.valid_symbols),
         )
 
     def _load_hp_symbols(
@@ -96,7 +97,10 @@ class HPInteraction(Interaction):
             raise
         else:
             logger.info(
-                f"Successfully loaded {len(hydrophobic)} hydrophobic and {len(polar)} polar symbols from HP matrix at: {hp_filepath}"
+                "Successfully loaded %s hydrophobic and %s polar symbols from HP matrix at: %s",
+                len(hydrophobic),
+                len(polar),
+                hp_filepath,
             )
             return hydrophobic, polar
 

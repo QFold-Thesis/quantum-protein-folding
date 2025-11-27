@@ -92,15 +92,15 @@ def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, Backend]:
     service = QiskitRuntimeService(channel="ibm_quantum_platform", token=token)
 
     backend = service.backend(backend_name)
-    logger.info(f"Using IBM Quantum backend: {backend_name}")
-    logger.info(f"Backend status: {backend.status()}")
+    logger.info("Using IBM Quantum backend: %s", backend_name)
+    logger.info("Backend status: %s", backend.status())
 
     ibm_sampler = SamplerV2(mode=backend)
     ibm_sampler.options.default_shots = IBM_QUANTUM_SHOTS
 
     sampler = TranspilingSampler(sampler=ibm_sampler, backend=backend)
 
-    logger.info(f"Configured with {IBM_QUANTUM_SHOTS} shots")
+    logger.info("Configured with %s shots", IBM_QUANTUM_SHOTS)
     logger.info("Circuits will be transpiled automatically before execution")
 
     return sampler, backend

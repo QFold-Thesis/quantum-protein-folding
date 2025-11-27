@@ -77,7 +77,8 @@ class ContactMap:
             raise
         else:
             logger.info(
-                f"ContactMap initialized with {self.contacts_detected} contacts detected."
+                "ContactMap initialized with %s contacts detected.",
+                self.contacts_detected,
             )
 
     def _initialize_contact_map(self):
@@ -91,12 +92,20 @@ class ContactMap:
                 upper_bead: Bead = self._protein.main_chain[upper_bead_idx]
                 lower_bead: Bead = self._protein.main_chain[lower_bead_idx]
                 logger.debug(
-                    f"Evaluating potential contact between MainBeads: {upper_bead.symbol} (index: {upper_bead.index}) and {lower_bead.symbol} (index: {lower_bead.index})"
+                    "Evaluating potential contact between MainBeads: %s (index: %s) and %s (index: %s)",
+                    upper_bead.symbol,
+                    upper_bead.index,
+                    lower_bead.symbol,
+                    lower_bead.index,
                 )
 
                 if upper_bead.sublattice == lower_bead.sublattice:
                     logger.debug(
-                        f"Skipping contact between MainBeads: {upper_bead.symbol} (index: {upper_bead.index}) and {lower_bead.symbol} (index: {lower_bead.index}) due to same sublattice \n"
+                        "Skipping contact between MainBeads: %s (index: %s) and %s (index: %s) due to same sublattice \n",
+                        upper_bead.symbol,
+                        upper_bead.index,
+                        lower_bead.symbol,
+                        lower_bead.index,
                     )
                     continue
 
@@ -105,7 +114,13 @@ class ContactMap:
                     < MIN_DISTANCE_BETWEEN_CONTACTS
                 ):
                     logger.debug(
-                        f"Skipping contact between MainBeads: {upper_bead.symbol} (index: {upper_bead.index}) and {lower_bead.symbol} (index: {lower_bead.index}) due to insufficient bond separation (min={MIN_DISTANCE_BETWEEN_CONTACTS}, actual={abs(upper_bead.index - lower_bead.index)})\n"
+                        "Skipping contact between MainBeads: %s (index: %s) and %s (index: %s) due to insufficient bond separation (min=%s, actual=%s)\n",
+                        upper_bead.symbol,
+                        upper_bead.index,
+                        lower_bead.symbol,
+                        lower_bead.index,
+                        MIN_DISTANCE_BETWEEN_CONTACTS,
+                        abs(upper_bead.index - lower_bead.index),
                     )
                     continue
 
@@ -120,7 +135,9 @@ class ContactMap:
                 main_main_contacts_count += 1
                 logger.debug(" ")
 
-        logger.info(f"Calculated {main_main_contacts_count} MainBead-MainBead contacts")
+        logger.info(
+            "Calculated %s MainBead-MainBead contacts", main_main_contacts_count
+        )
 
     def _create_main_main_contact(
         self, upper_bead: Bead, lower_bead: Bead
@@ -145,6 +162,10 @@ class ContactMap:
         )
 
         logger.debug(
-            f"Created contact operator between MainBeads: {lower_bead.symbol} (index: {lower_bead.index}) and {upper_bead.symbol} (index: {upper_bead.index})"
+            "Created contact operator between MainBeads: %s (index: %s) and %s (index: %s)",
+            lower_bead.symbol,
+            lower_bead.index,
+            upper_bead.symbol,
+            upper_bead.index,
         )
         return convert_to_qubits(contact_operator)
