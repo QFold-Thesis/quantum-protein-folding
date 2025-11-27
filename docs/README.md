@@ -253,8 +253,9 @@ quantum-protein-folding/
 │   ├── enums.py          # Enumerations
 │   └── main.py           # Main entry point
 ├── tests/                # Unit tests
-├── output/               # Generated results and visualizations
-├── logs/                 # Generated logfiles
+├── output/               # 
+│   ├── results/          # Generated results and visualizations
+│   └── logs/             # Generated logfiles
 ├── pyproject.toml        # Project metadata and dependencies
 ├── .env.example          # Example of .env file
 ├── ruff.toml             # Ruff configuration
