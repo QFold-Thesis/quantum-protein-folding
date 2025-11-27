@@ -74,9 +74,16 @@ def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, Backend]:
     token: str | None = IBM_QUANTUM_TOKEN
     backend_name: str | None = IBM_QUANTUM_BACKEND_NAME
 
-    if not token or not backend_name:
+    if not token:
         msg: str = (
             "IBM Quantum token not configured. Set IBM_QUANTUM_TOKEN in constants.py "
+            "or as environment variable."
+        )
+        raise InvalidBackendError(msg)
+
+    if not backend_name:
+        msg: str = (
+            "IBM Quantum backend name not configured. Set IBM_QUANTUM_BACKEND_NAME in constants.py "
             "or as environment variable."
         )
         raise InvalidBackendError(msg)
