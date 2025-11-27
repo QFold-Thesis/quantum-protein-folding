@@ -9,7 +9,7 @@ logger = get_logger()
 class _SideBead(Bead):
     """Represents a side bead attached to a protein's main chain."""
 
-    def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:  # noqa: ARG002
+    def __init__(self, _symbol: str, _index: int, _parent_chain_len: int) -> None:
         """
         Initialize a side bead with its symbol and position in the chain.
 

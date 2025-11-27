@@ -96,9 +96,8 @@ class ContactMap:
 
                 if upper_bead.sublattice == lower_bead.sublattice:
                     logger.debug(
-                        f"Skipping contact between MainBeads: {upper_bead.symbol} (index: {upper_bead.index}) and {lower_bead.symbol} (index: {lower_bead.index}) due to same sublattice"
+                        f"Skipping contact between MainBeads: {upper_bead.symbol} (index: {upper_bead.index}) and {lower_bead.symbol} (index: {lower_bead.index}) due to same sublattice \n"
                     )
-                    logger.debug(" ")
                     continue
 
                 if (
@@ -106,9 +105,8 @@ class ContactMap:
                     < MIN_DISTANCE_BETWEEN_CONTACTS
                 ):
                     logger.debug(
-                        f"Skipping contact between MainBeads: {upper_bead.symbol} (index: {upper_bead.index}) and {lower_bead.symbol} (index: {lower_bead.index}) due to insufficient bond separation (min={MIN_DISTANCE_BETWEEN_CONTACTS}, actual={abs(upper_bead.index - lower_bead.index)})"
+                        f"Skipping contact between MainBeads: {upper_bead.symbol} (index: {upper_bead.index}) and {lower_bead.symbol} (index: {lower_bead.index}) due to insufficient bond separation (min={MIN_DISTANCE_BETWEEN_CONTACTS}, actual={abs(upper_bead.index - lower_bead.index)})\n"
                     )
-                    logger.debug(" ")
                     continue
 
                 contact_operator: SparsePauliOp = self._create_main_main_contact(
