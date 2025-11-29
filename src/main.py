@@ -25,6 +25,7 @@ def main() -> None:
 
     Note:
         The main chain sequence is hardcoded here for demonstration purposes.
+
     """
     main_chain: str = "APRLRFY"
     side_chain: str = EMPTY_SIDECHAIN_PLACEHOLDER * len(main_chain)
