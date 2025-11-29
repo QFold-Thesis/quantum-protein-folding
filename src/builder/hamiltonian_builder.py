@@ -79,6 +79,12 @@ class HamiltonianBuilder:
         Constructs the backbone and backtracking terms, checks qubit consistency,
         pads them to the same qubit count, and sums them into a single hamiltonian.
 
+        Note:
+            The padding step ensures that all SparsePauliOp operators have the same
+            number of qubits, which is required for valid operator addition.
+            The total hamiltonian is initialized with an identity operator and then
+            each padded component is added sequentially.
+
         Returns:
             SparsePauliOp: The total hamiltonian operator, simplified and ready for use.
 
@@ -123,6 +129,12 @@ class HamiltonianBuilder:
         """
         Builds the hamiltonian term corresponding to backbone_backbone (BB-BB) interactions.
         Includes both 1st neighbor and 2nd neighbor contributions (with shifts i±1, j±1).
+
+        Note:
+            Only pairs that belong to different sublattices are considered for first-neighbor interactions.
+            For each valid pair, two contributions are added: one for first-neighbor interactions and one for
+            second-neighbor interactions with nearby beads. The second-neighbor contribution applies a penalty
+            to avoid overlaps.
 
         Returns:
             SparsePauliOp: hamiltonian term representing BB-BB interactions.
@@ -271,6 +283,11 @@ class HamiltonianBuilder:
         """
         Computes the hamiltonian contribution for first-neighbor bead pairs,
         combining distance-based and interaction contact energies.
+
+        Note:
+             lambda_0 combines the bounding constant, bead separation, and lambda_1
+            to scale the distance-based penalty. MJ_ENERGY_MULTIPLIER scales the
+            contribution from the Miyazawa-Jernigan interaction energy.
 
         Args:
             lower_bead_idx (int): Index of the lower bead in the main chain.

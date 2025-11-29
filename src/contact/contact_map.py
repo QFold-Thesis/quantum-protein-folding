@@ -74,7 +74,16 @@ class ContactMap:
             )
 
     def _initialize_contact_map(self):
-        """Initializes all contact maps to empty dictionaries."""
+        """
+        Initializes all contact maps to empty dictionaries.
+        
+        Note:
+            The minimum distance between residues for forming a contact is set by the constant
+            MIN_DISTANCE_BETWEEN_CONTACTS = 5. This ensures that contacts are only considered
+            between residues separated by at least five positions in the sequence, which is
+            consistent with the geometric constraints of the tetrahedral lattice representation.
+
+        """
         main_main_contacts_count: int = 0
         main_chain_length: int = len(self._protein.main_chain)
         logger.debug("Initializing MainBead-MainBead contacts...")

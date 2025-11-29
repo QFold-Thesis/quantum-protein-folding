@@ -84,6 +84,12 @@ class DistanceMap:
         For each bead pair (lower_bead_idx, upper_bead_idx), computes a vector of quantum operators
         representing the squared distance along each axis, using turn functions and sublattice signs.
         Results are stored in the distance map for use in quantum Hamiltonian construction.
+
+        Note:
+            Each axis in the distance vector corresponds to a dimension in the
+            tetrahedral lattice representation. The `sub_lattice_sign` alternates between +1 and -1 depending
+            on the bead index, reflecting the sublattice structure of the main chain.
+
         """
         for lower_bead_idx in range(self._main_chain_len):
             for upper_bead_idx in range(lower_bead_idx + 1, self._main_chain_len):
