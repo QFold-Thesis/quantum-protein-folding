@@ -205,7 +205,8 @@ def setup_result_analysis(
     RESULTS_DATA_DIRPATH.mkdir(parents=True, exist_ok=True)
 
     dirpath: Path = (
-        RESULTS_DATA_DIRPATH / f"{timestamp}-{protein.main_chain!s}-{protein.side_chain!s}"
+        RESULTS_DATA_DIRPATH
+        / f"{timestamp}-{protein.main_chain!s}-{protein.side_chain!s}"
     )
     dirpath.mkdir(parents=True, exist_ok=True)
 
