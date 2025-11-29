@@ -15,7 +15,7 @@ from qiskit_algorithms.optimizers import COBYLA
 
 from backend import get_sampler
 from builder import HamiltonianBuilder
-from constants import DEFAULT_TIMEZONE, INTERACTION_TYPE, OUTPUT_DATA_DIR
+from constants import DEFAULT_TIMEZONE, INTERACTION_TYPE, RESULTS_DATA_DIRPATH
 from contact import ContactMap
 from distance import DistanceMap
 from enums import InteractionType
@@ -202,10 +202,10 @@ def setup_result_analysis(
 
     """
     timestamp: str = datetime.now(tz=DEFAULT_TIMEZONE).strftime("%Y_%m_%d-%H_%M_%S")
-    OUTPUT_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    RESULTS_DATA_DIRPATH.mkdir(parents=True, exist_ok=True)
 
     dirpath: Path = (
-        OUTPUT_DATA_DIR / f"{timestamp}-{protein.main_chain!s}-{protein.side_chain!s}"
+        RESULTS_DATA_DIRPATH / f"{timestamp}-{protein.main_chain!s}-{protein.side_chain!s}"
     )
     dirpath.mkdir(parents=True, exist_ok=True)
 
