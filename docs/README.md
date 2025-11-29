@@ -216,7 +216,7 @@ uv run pytest -v -s
 
 For specific test modules:
 ```bash
-uv run pytest tests/test_protein.py -v
+uv run pytest tests/test_utils.py -v
 ```
 
 <a name="adding-dependencies"></a>
@@ -258,7 +258,6 @@ quantum-protein-folding/
 │   └── logs/             # Generated logfiles
 ├── pyproject.toml        # Project metadata and dependencies
 ├── .env.example          # Example of .env file
-├── ruff.toml             # Ruff configuration
 ```
 
 <a name="how-it-works"></a>
@@ -287,6 +286,38 @@ quantum-protein-folding/
 - **`builder/`**: Constructs the full Hamiltonian from protein structure and interactions
 - **`backend/`**: Manages quantum backends (IBM Quantum, simulators)
 - **`result/`**: Interprets VQE results and generates visualizations
+
+<a name="development-and-code-quality"></a>
+## 🛠️ Development & Code Quality
+
+This project maintains high code quality standards using a strict stack managed by `uv`. We enforce static typing, rigorous linting, and documentation coverage. 
+
+Quality Assurance Tools are listed under `dev` dependency group in `pyproject.toml`. Each tool has it's own config section in the file.
+
+Linting and Formatting is handled by [`Ruff`](https://github.com/astral-sh/ruff):
+```bash
+# Check for errors
+uv run ruff check .
+
+# Auto-fix import sorting and simple style issues
+uv run ruff check --fix .
+
+# Reformat code (black-style)
+uv run ruff format .
+```
+
+Static code analysis is performed by [`Pyrefly`](https://github.com/facebook/pyrefly):
+```bash
+# Run type check
+uv run pyrefly check
+```
+
+We require at least 80% docstring coverage for the project (excluding tests) using [`Interrogate`](https://github.com/econchick/interrogate):
+```bash
+# Check coverage
+uv run interrogate -v
+```
+
 
 <a name="contributing"></a>
 ## 🤝 Contributing
