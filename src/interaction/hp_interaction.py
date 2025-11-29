@@ -24,9 +24,8 @@ the residue symbol (single character) and a flag (``0`` or ``1``).
 
 Symmetry / Energies
 -------------------
-The classical lattice HP model assigns the same energy to any hydrophobic-
-hydrophobic contact independent of residue identities (here set to -1.0).
-All other pairs have energy 0.0.
+The classical lattice HP model assigns the same energy to any hydrophobic-hydrophobic contact
+independent of residue identities (here set to -1.0). All other pairs have energy 0.0.
 """
 
 from pathlib import Path
