@@ -1,3 +1,7 @@
+# ==============================================================================
+# PROJECT METADATA
+# ==============================================================================
+
 [project]
 name = "quantum-protein-folding"
 version = "0.1.0"
@@ -24,6 +28,10 @@ dev = [
     "ruff>=0.14.7",
 ]
 
+# ==============================================================================
+# LINTING (RUFF)
+# ==============================================================================
+
 [tool.ruff]
 line-length = 88
 target-version = "py312"
@@ -35,20 +43,35 @@ extend-exclude = [
 [tool.ruff.lint]
 select = [
     "E",    # pycodestyle errors
-    "F",    # Pyflakes
+    "F",    # pyflakes
     "I",    # isort
     "B",    # flake8-bugbear
     "UP",   # pyupgrade
     "SIM",  # flake8-simplify
-    "D",    # pydocstyle
-    "RUF",  # Ruff-specific rules
+    # "D",    # pydocstyle
+    "RUF",  # ruff-specific rules
+    "N",    # PEP8 Naming
+    "PL",   # pylint
+    "ARG",  # flake8-unused-arguments
+    "ERA",  # eradicate
+    "TID",  # tidy imports
 ]
 
 ignore = [
-    "E501", # ignore line too long -> handled by black
+    "E501", # Line length (handled by formatter)
+    "PLR0913", # Too many arguments in function definition
+    "PLR2004", # Magic value used in comparison
 ]
 
 fixable = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "D",       # No docstrings in tests
+    "S101",    # Allow 'assert' in tests
+    "PLR2004", # Allow magic values in tests
+    "ARG",     # Allow unused args in tests
+]
 
 [tool.ruff.format]
 quote-style = "double"
@@ -61,6 +84,30 @@ convention = "google"
 
 [tool.ruff.lint.isort]
 known-first-party = ["src"]
+
+# ==============================================================================
+# TYPE CHECKING (PYREFLY)
+# ==============================================================================
+
+[tool.pyrefly]
+search-path = ["src", "typings"]
+project-includes = ["src/**/*.py"]
+python-version = "3.12"
+untyped_def_behavior = "check-and-infer-return-any"
+
+[tool.pyrefly.errors]
+implicit-any = true
+untyped-import = true
+bad-return = true
+bad-assignment = true
+bad-argument-type = true
+missing-import = true
+bad-function-definition = true
+bad-class-definition = true
+
+# ==============================================================================
+# DOCUMENTATION COVERAGE (INTERROGATE)
+# ==============================================================================
 
 [tool.interrogate]
 ignore-init-module = true
