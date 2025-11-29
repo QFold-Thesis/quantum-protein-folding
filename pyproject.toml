@@ -19,6 +19,10 @@ dev = [
     "sphinx-rtd-theme>=3.0.2",
     "sphinx>=8.2.3",
     "sphinx-autodoc-typehints>=3.5.2",
+    "pydocstyle>=6.3.0",
+    "interrogate>=1.7.0",
+    "pyrefly>=0.43.1",
+    "ruff>=0.14.7",
 ]
 
 [tool.pytest.ini_options]
