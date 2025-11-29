@@ -190,6 +190,8 @@ After running, check the `output/` directory for timestamped folders containing:
 - `raw_vqe_results.json` - Detailed VQE output
 - `vqe_iterations.txt` - Iteration-by-iteration energies
 
+Additionally, each test run generates timestamped logfiles - check the `logs/` directory to inspect them.
+
 <a name="documentation-sphinx"></a>
 ## 📖 Documentation (Sphinx)
 
@@ -251,7 +253,9 @@ quantum-protein-folding/
 │   ├── enums.py          # Enumerations
 │   └── main.py           # Main entry point
 ├── tests/                # Unit tests
-├── output/               # Generated results and visualizations
+├── output/               # 
+│   ├── results/          # Generated results and visualizations
+│   └── logs/             # Generated logfiles
 ├── pyproject.toml        # Project metadata and dependencies
 ├── .env.example          # Example of .env file
 ├── ruff.toml             # Ruff configuration

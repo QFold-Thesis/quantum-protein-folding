@@ -45,6 +45,7 @@ class MJInteraction(Interaction):
 
         """
         super().__init__(interaction_matrix_path)
+        logger.debug("Initializing MJInteraction...")
 
         self._energy_pairs: dict[str, float] = self._prepare_mj_interaction_matrix(
             self._interaction_matrix_path
@@ -52,8 +53,9 @@ class MJInteraction(Interaction):
 
         self.valid_symbols = {symbol for pair in self._energy_pairs for symbol in pair}
 
-        logger.debug(
-            f"MJInteraction initialized with {len(self.valid_symbols)} valid amino acid symbols."
+        logger.info(
+            "MJInteraction initialized with %s valid amino acid symbols",
+            len(self.valid_symbols),
         )
 
     def _prepare_mj_interaction_matrix(
@@ -93,8 +95,10 @@ class MJInteraction(Interaction):
             logger.exception("Error loading MJ matrix")
             raise
         else:
-            logger.debug(
-                f"Successfully loaded {len(energy_pairs)} energy pairs from MJ matrix at: {mj_filepath}"
+            logger.info(
+                "Successfully loaded %s energy pairs from MJ matrix at: %s",
+                len(energy_pairs),
+                mj_filepath,
             )
             return energy_pairs
 
@@ -117,5 +121,7 @@ class MJInteraction(Interaction):
         try:
             return self._energy_pairs[key]
         except KeyError as e:
-            msg: str = f"Energy pair of '{key}' not found in MJ interaction matrix."
+            msg: str = (
+                f"Energy pair of '{key}' not supported in loaded MJ interaction model"
+            )
             raise UnsupportedAminoAcidSymbolError(msg) from e

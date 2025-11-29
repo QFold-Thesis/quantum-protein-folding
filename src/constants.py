@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import datetime
 import logging
 import os
+from datetime import tzinfo
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -19,6 +21,8 @@ ROOT_PROJECT_PATH: Path = Path(__file__).parent.parent
 
 load_dotenv(ROOT_PROJECT_PATH / ".env")
 
+LOGS_DIRPATH: Path = ROOT_PROJECT_PATH / "output" / "logs"
+
 MJ_INTERACTION_MATRIX_FILEPATH: Path = (
     ROOT_PROJECT_PATH / "src" / "resources" / "mj_matrix.txt"
 )
@@ -26,6 +30,8 @@ MJ_INTERACTION_MATRIX_FILEPATH: Path = (
 HP_INTERACTION_MATRIX_FILEPATH: Path = (
     ROOT_PROJECT_PATH / "src" / "resources" / "hp_matrix.txt"
 )
+
+DEFAULT_TIMEZONE: tzinfo = datetime.UTC
 
 CONFORMATION_ENCODING: ConformationEncoding = ConformationEncoding.DENSE
 
@@ -84,7 +90,7 @@ XYZ_FILE_LINE_START_INDEX: int = 2  # First two lines are header in .xyz files
 
 XYZ_FILE_PARTS_PER_LINE: int = 4  # Each line has symbol, x, y, z
 
-OUTPUT_DATA_DIR: Path = ROOT_PROJECT_PATH / "output"
+RESULTS_DATA_DIRPATH: Path = ROOT_PROJECT_PATH / "output" / "results"
 
 RAW_VQE_RESULTS_FILENAME: str = "raw_vqe_results.json"
 
@@ -126,7 +132,7 @@ BACKEND_TYPE: BackendType = BackendType.LOCAL_STATEVECTOR
 
 IBM_QUANTUM_TOKEN: str | None = os.environ.get("IBM_QUANTUM_TOKEN")
 
-IBM_QUANTUM_BACKEND_NAME: str = "ibm_marrakesh"
+IBM_QUANTUM_BACKEND_NAME: str | None = "ibm_marrakesh"
 
 IBM_QUANTUM_SHOTS: int = 1024
 

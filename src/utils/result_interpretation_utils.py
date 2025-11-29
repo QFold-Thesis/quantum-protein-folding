@@ -58,7 +58,7 @@ def create_xyz_file(coords: list[BeadPosition], dirpath: Path) -> Path:
         logger.exception("Error creating XYZ file")
         raise
     else:
-        logger.info(f"XYZ file created at {filepath}")
+        logger.info("XYZ file created at %s", filepath)
         return filepath
 
 
@@ -92,7 +92,7 @@ def read_xyz_file(filepath: Path) -> list[BeadPosition]:
             ):
                 parts = line.split()
                 if len(parts) != XYZ_FILE_PARTS_PER_LINE:
-                    logger.warning(f"Invalid line in XYZ file: {line.strip()}")
+                    logger.warning("Invalid line in XYZ file: %s", line.strip())
                     continue
 
                 symbol = parts[0]
@@ -101,7 +101,9 @@ def read_xyz_file(filepath: Path) -> list[BeadPosition]:
     except Exception:
         logger.exception("Error reading XYZ file")
         raise
-    return coords
+    else:
+        logger.info("Read %s bead positions from XYZ file at %s", len(coords), filepath)
+        return coords
 
 
 def sanitize_for_json(obj: Any) -> Any:

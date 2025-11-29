@@ -72,6 +72,8 @@ def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, Backend]:
     from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2
 
     token: str | None = IBM_QUANTUM_TOKEN
+    backend_name: str | None = IBM_QUANTUM_BACKEND_NAME
+
     if not token:
         msg: str = (
             "IBM Quantum token not configured. Set IBM_QUANTUM_TOKEN in constants.py "
@@ -79,19 +81,26 @@ def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, Backend]:
         )
         raise InvalidBackendError(msg)
 
+    if not backend_name:
+        msg: str = (
+            "IBM Quantum backend name not configured. Set IBM_QUANTUM_BACKEND_NAME in constants.py "
+            "or as environment variable."
+        )
+        raise InvalidBackendError(msg)
+
     logger.info("Connecting to IBM Quantum service...")
     service = QiskitRuntimeService(channel="ibm_quantum_platform", token=token)
 
-    backend = service.backend(IBM_QUANTUM_BACKEND_NAME)
-    logger.info(f"Using IBM Quantum backend: {IBM_QUANTUM_BACKEND_NAME}")
-    logger.info(f"Backend status: {backend.status()}")
+    backend = service.backend(backend_name)
+    logger.info("Using IBM Quantum backend: %s", backend_name)
+    logger.info("Backend status: %s", backend.status())
 
     ibm_sampler = SamplerV2(mode=backend)
     ibm_sampler.options.default_shots = IBM_QUANTUM_SHOTS
 
     sampler = TranspilingSampler(sampler=ibm_sampler, backend=backend)
 
-    logger.info(f"Configured with {IBM_QUANTUM_SHOTS} shots")
+    logger.info("Configured with %s shots", IBM_QUANTUM_SHOTS)
     logger.info("Circuits will be transpiled automatically before execution")
 
     return sampler, backend

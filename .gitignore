@@ -5,11 +5,13 @@ test.py
 
 temp/
 
-output/*
 src/.env
 .env
-!output/.gitkeep
 
+output/logs/*
+output/results/*
+
+!output/*/.gitkeep
 
 .DS_Store
 .vscode/

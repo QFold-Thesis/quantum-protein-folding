@@ -76,6 +76,10 @@ class ResultVisualizer:
         import plotly.graph_objects as go
         from matplotlib import cm
 
+        logger.debug(
+            "Generating interactive 3D HTML visualization of the conformation..."
+        )
+
         coords: NDArray[np.float64] = np.array(
             [(b.x, b.y, b.z) for b in self._coordinates_3d]
         )
@@ -210,7 +214,7 @@ class ResultVisualizer:
 
         html_path: Path = self._dirpath / filename
         fig.write_html(html_path, include_plotlyjs=True, auto_open=False)
-        logger.info(f"Interactive 3D HTML visualization saved to: {html_path}")
+        logger.info("Interactive 3D HTML visualization saved to: %s", html_path)
 
     @staticmethod
     def _get_text_color(rgb_color: str, brightness_threshhold: float = 0.5) -> str:
@@ -252,6 +256,8 @@ class ResultVisualizer:
         import matplotlib.pyplot as plt
         import numpy as np
         from matplotlib import animation
+
+        logger.debug("Generating 3D rotating GIF visualization of the conformation...")
 
         coords: NDArray[np.float64] = np.array(
             [(b.x, b.y, b.z) for b in self._coordinates_3d]
@@ -321,7 +327,7 @@ class ResultVisualizer:
         ani.save(gif_path, writer=writer)
 
         plt.close(fig)
-        logger.info(f"3D rotating GIF visualization saved to: {gif_path}")
+        logger.info("3D rotating GIF visualization saved to: %s", gif_path)
 
     def visualize_2d(self, filename: str = FLAT_VISUALIZATION_FILENAME) -> None:
         """
@@ -335,6 +341,8 @@ class ResultVisualizer:
         import matplotlib.pyplot as plt
         import numpy as np
         from matplotlib.lines import Line2D
+
+        logger.debug("Generating 2D flat visualization of the conformation...")
 
         symbols: list[str] = [b.symbol for b in self._coordinates_3d]
         contacts: dict[int, int] = self._main_main_contacts_detected
@@ -443,7 +451,7 @@ class ResultVisualizer:
             frameon=False,
         )
         ax.set_title(
-            f"3D Protein Folding Visualization for main chain sequence: {''.join(symbols)}",
+            f"2D Protein Folding Visualization for main chain sequence: {''.join(symbols)}",
             fontsize=14,
         )
 
@@ -453,7 +461,7 @@ class ResultVisualizer:
         filepath: Path = self._dirpath / filename
         plt.savefig(filepath, format="png", bbox_inches="tight", dpi=150)
         plt.close(fig)
-        logger.info(f"2D flat visualization saved to: {filepath}")
+        logger.info("2D flat visualization saved to: %s", filepath)
 
     def _generate_lattice_points(
         self, coords: NDArray[np.float64], padding: int = TETRAHEDRAL_LATTICE_PADDING

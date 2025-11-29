@@ -11,6 +11,7 @@ This module provides the ``DistanceMap`` class, which:
 """
 
 from collections import defaultdict
+from typing import TYPE_CHECKING
 
 from qiskit.quantum_info import SparsePauliOp
 
@@ -21,6 +22,9 @@ from utils.qubit_utils import (
     build_identity_op,
     fix_qubits,
 )
+
+if TYPE_CHECKING:
+    from protein.bead.bead import Bead
 
 logger = get_logger()
 
@@ -54,15 +58,15 @@ class DistanceMap:
         self._main_chain_distances_detected: int = 0
 
         try:
+            logger.debug("Initializing DistanceMap for MainChain...")
             self._calc_distances_main_chain()
         except Exception:
-            logger.exception(
-                "Error occurred while calculating distances for main_chain"
-            )
+            logger.exception("Error in initializing DistanceMap for MainChain")
             raise
         else:
-            logger.debug(
-                f"Distance map for main_chain initialized successfully with {self._main_chain_distances_detected} distances detected."
+            logger.info(
+                "DistanceMap for MainChain initialized with %s distances detected",
+                self._main_chain_distances_detected,
             )
 
     def _calc_distances_main_chain(self) -> None:
@@ -75,6 +79,9 @@ class DistanceMap:
         """
         for lower_bead_idx in range(self._main_chain_len):
             for upper_bead_idx in range(lower_bead_idx + 1, self._main_chain_len):
+                lower_bead: Bead = self._protein.main_chain[lower_bead_idx]
+                upper_bead: Bead = self._protein.main_chain[upper_bead_idx]
+
                 axes_vector: list[SparsePauliOp] = [
                     build_identity_op(self._pauli_op_len, EMPTY_OP_COEFF)
                     for _ in range(DIST_VECTOR_AXES)
@@ -84,7 +91,11 @@ class DistanceMap:
                     indic_funcs = self._protein.main_chain[k].turn_funcs()
                     if indic_funcs is None:
                         logger.debug(
-                            f"No turn functions for bead {k}, skipping calculating distance..."
+                            "Skipping distance calculation between MainBeads: %s (index: %s) and %s (index: %s) due to undefined turn functions",
+                            lower_bead.symbol,
+                            lower_bead.index,
+                            upper_bead.symbol,
+                            upper_bead.index,
                         )
                         continue
 
@@ -105,7 +116,11 @@ class DistanceMap:
                 self._main_chain_distances_detected += 1
 
                 logger.debug(
-                    f"Calculated distance for main_chain_{lower_bead_idx} -> main_chain_{upper_bead_idx} | Num qubits: {self._distance_map[lower_bead_idx][upper_bead_idx].num_qubits}"
+                    "Calculated distance operator between MainBeads: %s (index: %s) and %s (index: %s)",
+                    lower_bead.symbol,
+                    lower_bead.index,
+                    upper_bead.symbol,
+                    upper_bead.index,
                 )
 
     def __getitem__(self, key: int) -> defaultdict[int, SparsePauliOp]:

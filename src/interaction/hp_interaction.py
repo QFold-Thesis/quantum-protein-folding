@@ -51,13 +51,15 @@ class HPInteraction(Interaction):
         interaction_matrix_path: Path = HP_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
         super().__init__(interaction_matrix_path)
+        logger.debug("Initializing HPInteraction...")
         self._hydrophobic_symbols, _polar_symbols = self._load_hp_symbols(
             self._interaction_matrix_path
         )
         self.valid_symbols = set(self._hydrophobic_symbols) | set(_polar_symbols)
 
-        logger.debug(
-            f"HPInteraction initialized with {len(self.valid_symbols)} valid amino acid symbols."
+        logger.info(
+            "HPInteraction initialized with %s valid amino acid symbols",
+            len(self.valid_symbols),
         )
 
     def _load_hp_symbols(
@@ -94,8 +96,11 @@ class HPInteraction(Interaction):
             logger.exception("Error loading HP matrix")
             raise
         else:
-            logger.debug(
-                f"Successfully loaded {len(hydrophobic)} hydrophobic and {len(polar)} polar symbols from HP matrix at: {hp_filepath}"
+            logger.info(
+                "Successfully loaded %s hydrophobic and %s polar symbols from HP matrix at: %s",
+                len(hydrophobic),
+                len(polar),
+                hp_filepath,
             )
             return hydrophobic, polar
 
@@ -131,7 +136,7 @@ class HPInteraction(Interaction):
 
         """
         if symbol_i not in self.valid_symbols or symbol_j not in self.valid_symbols:
-            msg: str = f"Amino acid symbols of {symbol_i}, {symbol_j} not supported in loaded HP interaction model."
+            msg: str = f"Amino acid symbols of {symbol_i}, {symbol_j} not supported in loaded HP interaction model"
             logger.error(msg)
             raise UnsupportedAminoAcidSymbolError(msg)
 

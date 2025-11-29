@@ -9,7 +9,7 @@ logger = get_logger()
 class _SideBead(Bead):
     """Represents a side bead attached to a protein's main chain."""
 
-    def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:
+    def __init__(self, _symbol: str, _index: int, _parent_chain_len: int) -> None:
         """
         Initialize a side bead with its symbol and position in the chain.
 
@@ -19,7 +19,9 @@ class _SideBead(Bead):
             parent_chain_len (int): Total number of beads in the parent chain.
 
         """
-        super().__init__(symbol=symbol, index=index, parent_chain_len=parent_chain_len)
+        _msg: str = "Side beads are not yet implemented!"
+        logger.error(_msg)
+        raise NotImplementedError(_msg)
 
     def turn_0(self) -> SparsePauliOp:
         """

@@ -4,7 +4,7 @@ Hamiltonian construction, VQE setup, and result processing.
 """
 
 import time
-from datetime import UTC, datetime
+from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
@@ -15,7 +15,7 @@ from qiskit_algorithms.optimizers import COBYLA
 
 from backend import get_sampler
 from builder import HamiltonianBuilder
-from constants import INTERACTION_TYPE, OUTPUT_DATA_DIR
+from constants import DEFAULT_TIMEZONE, INTERACTION_TYPE, RESULTS_DATA_DIRPATH
 from contact import ContactMap
 from distance import DistanceMap
 from enums import InteractionType
@@ -99,10 +99,10 @@ def build_and_compress_hamiltonian(
     )
 
     hamiltonian = h_builder.sum_hamiltonians()
-    logger.debug(f"Original hamiltonian qubits: {hamiltonian.num_qubits}")
+    logger.info("Original hamiltonian qubits: %s", hamiltonian.num_qubits)
 
     compressed_h = remove_unused_qubits(hamiltonian)
-    logger.debug(f"Compressed hamiltonian qubits: {compressed_h.num_qubits}")
+    logger.info("Compressed hamiltonian qubits: %s", compressed_h.num_qubits)
 
     return hamiltonian, compressed_h
 
@@ -139,7 +139,7 @@ def setup_vqe_optimization(
 
     sampler, backend = get_sampler()
     if backend is not None:
-        logger.debug(f"Using backend: {backend.name}")
+        logger.debug("Using backend: %s", backend.name)
         logger.debug("Transpilation will be handled by the sampler during execution")
 
     vqe = SamplingVQE(
@@ -178,7 +178,7 @@ def run_vqe_optimization(
     duration: float = time.perf_counter() - start_time
     minutes, seconds = divmod(duration, 60)
 
-    logger.debug(f"VQE optimization completed in {int(minutes)}m {seconds:.2f}s")
+    logger.info("VQE optimization completed in %sm %.2fs", int(minutes), seconds)
     return raw_results
 
 
@@ -201,9 +201,12 @@ def setup_result_analysis(
         tuple[ResultInterpreter, ResultVisualizer]: The result interpreter and visualizer instances.
 
     """
-    timestamp: str = datetime.now(tz=UTC).strftime("%Y_%m_%d-%H_%M_%S")
+    timestamp: str = datetime.now(tz=DEFAULT_TIMEZONE).strftime("%Y_%m_%d-%H_%M_%S")
+    RESULTS_DATA_DIRPATH.mkdir(parents=True, exist_ok=True)
+
     dirpath: Path = (
-        OUTPUT_DATA_DIR / f"{timestamp}-{protein.main_chain!s}-{protein.side_chain!s}"
+        RESULTS_DATA_DIRPATH
+        / f"{timestamp}-{protein.main_chain!s}-{protein.side_chain!s}"
     )
     dirpath.mkdir(parents=True, exist_ok=True)
 

@@ -1,7 +1,7 @@
 """
-Utilities for building the Hamiltonian of a protein for quantum simulations.
+Utilities for building the hamiltonian of a protein for quantum simulations.
 
-This module provides the HamiltonianBuilder class, which constructs Hamiltonian
+This module provides the HamiltonianBuilder class, which constructs hamiltonian
 operators for a given protein, including backbone interactions, backtracking
 penalties, and neighbor-based contact terms, using distance and interaction maps.
 """
@@ -39,7 +39,7 @@ logger = get_logger()
 
 
 class HamiltonianBuilder:
-    """Constructs Hamiltonian operators for a given protein, including backbone interactions and backtracking penalties."""
+    """Constructs hamiltonian operators for a given protein, including backbone interactions and backtracking penalties."""
 
     def __init__(
         self,
@@ -66,30 +66,35 @@ class HamiltonianBuilder:
 
     def sum_hamiltonians(self) -> SparsePauliOp:
         """
-        Build and sum all Hamiltonian components, padding to a common qubit size.
+        Build and sum all hamiltonian components, padding to a common qubit size.
 
         Constructs the backbone and backtracking terms, checks qubit consistency,
-        pads them to the same qubit count, and sums them into a single Hamiltonian.
+        pads them to the same qubit count, and sums them into a single hamiltonian.
 
         Returns:
-            SparsePauliOp: The total Hamiltonian operator, simplified and ready for use.
+            SparsePauliOp: The total hamiltonian operator, simplified and ready for use.
 
         Raises:
-            InvalidOperatorError: If any part Hamiltonian has `num_qubits` set to None.
+            InvalidOperatorError: If any part hamiltonian has `num_qubits` set to None.
 
         """
+        logger.debug("Started process of building total hamiltonian...")
         h_backbone: SparsePauliOp = self._build_backbone_contact_term()
         h_backtrack: SparsePauliOp = self._add_backtracking_penalty()
 
         part_hamiltonians: list[SparsePauliOp] = [h_backbone, h_backtrack]
 
-        for hamiltonian in part_hamiltonians:
+        for idx, hamiltonian in enumerate(part_hamiltonians):
             if hamiltonian.num_qubits is None:
-                msg: str = "One of the part Hamiltonians has num_qubits set to None."
+                msg: str = f"Hamiltonian of part {idx} has num_qubits set to None"
                 raise InvalidOperatorError(msg)
 
         target_qubits: int = max(
             int(hamiltonian.num_qubits) for hamiltonian in part_hamiltonians
+        )
+        logger.debug(
+            "Target qubits count for the final hamiltonian to be padded to: %s",
+            target_qubits,
         )
 
         padded_hamiltonians: list[SparsePauliOp] = [
@@ -103,18 +108,21 @@ class HamiltonianBuilder:
         for hamiltonian in padded_hamiltonians:
             total_hamiltonian += hamiltonian
 
+        logger.info("Finished building total hamiltonian.")
         return total_hamiltonian.simplify()
 
     def _build_backbone_contact_term(self) -> SparsePauliOp:
         """
-        Builds the Hamiltonian term corresponding to backbone_backbone (BB-BB) interactions.
+        Builds the hamiltonian term corresponding to backbone_backbone (BB-BB) interactions.
         Includes both 1st neighbor and 2nd neighbor contributions (with shifts i±1, j±1).
 
         Returns:
-            SparsePauliOp: Hamiltonian term representing BB-BB interactions.
+            SparsePauliOp: hamiltonian term representing BB-BB interactions.
 
         """
-        logger.info("Creating h_backbone term (BB-BB interactions)")
+        logger.debug(
+            "Creating hamiltonian term of backbone-backbone (BB-BB) contacts..."
+        )
 
         main_chain: _MainChain = self.protein.main_chain
         chain_len: int = len(main_chain)
@@ -132,7 +140,11 @@ class HamiltonianBuilder:
                     continue
 
                 if 0 <= i < chain_len and 0 <= j < chain_len:
-                    logger.debug(f"Adding BB-BB i={i}, j={j} (1st neighbor)")
+                    logger.debug(
+                        "Adding backbone-backbone contact between Bead (index %s) and Bead (index %s) [1st neighbor contact]",
+                        i,
+                        j,
+                    )
                     h_backbone += self.contact_map.main_main_contacts[i][
                         j
                     ] ^ self.get_first_neighbor_hamiltonian(
@@ -147,7 +159,11 @@ class HamiltonianBuilder:
                 ]:
                     ii, jj = i + di, j + dj
                     if 0 <= ii < chain_len and 0 <= jj < chain_len:
-                        logger.debug(f"Adding BB-BB i={ii}, j={jj} (2nd neighbor)")
+                        logger.debug(
+                            "Adding backbone-backbone contact between Bead (index %s) and Bead (index %s) [2nd neighbor contact]",
+                            ii,
+                            jj,
+                        )
                         h_backbone += self.contact_map.main_main_contacts[i][
                             j
                         ] ^ self.get_second_neighbor_hamiltonian(
@@ -157,20 +173,21 @@ class HamiltonianBuilder:
                 h_backbone = fix_qubits(h_backbone)
 
         logger.info(
-            f"Finished creating h_backbone term with {h_backbone.num_qubits} qubits."
+            "Finished creating hamiltonian term of backbone-backbone (BB-BB) contacts with %s qubits.",
+            h_backbone.num_qubits,
         )
         return h_backbone
 
     def _add_backtracking_penalty(self) -> SparsePauliOp:
         """
-        Adds a penalty term to the Hamiltonian to discourage backtracking
+        Adds a penalty term to the hamiltonian to discourage backtracking
         in the main chain configuration.
 
         Returns:
-            SparsePauliOp: Hamiltonian term representing backtracking penalties.
+            SparsePauliOp: hamiltonian term representing backtracking penalties.
 
         """
-        logger.debug("Creating h_backtrack term")
+        logger.debug("Creating hamiltonian term of backtracking penalty...")
 
         main_chain: _MainChain = self.protein.main_chain
         h_backtrack_num_qubits: int = (len(main_chain) - 1) * QUBITS_PER_TURN
@@ -179,13 +196,18 @@ class HamiltonianBuilder:
         )
 
         for i in range(1, len(main_chain) - 2):
-            logger.debug(f"Adding backtracking penalty between beads {i} and {i + 1}")
+            logger.debug(
+                "Adding backtracking penalty between Bead (index %s) and Bead (index %s)",
+                i,
+                i + 1,
+            )
             h_backtrack += Penalties.BACK_PENALTY * self.get_turn_operators(
                 main_chain[i], main_chain[i + 1]
             )
 
-        logger.debug(
-            f"Finished creating h_backtrack term with {h_backtrack.num_qubits} qubits."
+        logger.info(
+            "Finished creating hamiltonian term of backtracking penalty with %s qubits.",
+            h_backtrack.num_qubits,
         )
         return fix_qubits(h_backtrack)
 
@@ -213,8 +235,8 @@ class HamiltonianBuilder:
         ) = upper_bead.turn_funcs()
 
         if lower_turn_funcs is None or upper_turn_funcs is None:
-            logger.debug(
-                f"One of the beads {lower_bead.symbol}|{lower_bead.index} or {upper_bead.symbol}|{upper_bead.index} has no turn functions. Skipping turn operator calculation."
+            logger.info(
+                "One of the beads has no turn functions defined. Returning identity operator instead"
             )
             return build_identity_op(
                 (len(self.protein.main_chain) - 1) * QUBITS_PER_TURN,
@@ -239,7 +261,7 @@ class HamiltonianBuilder:
         lambda_1: float,
     ) -> SparsePauliOp:
         """
-        Computes the Hamiltonian contribution for first-neighbor bead pairs,
+        Computes the hamiltonian contribution for first-neighbor bead pairs,
         combining distance-based and interaction contact energies.
 
         Args:
@@ -248,7 +270,7 @@ class HamiltonianBuilder:
             lambda_1 (float): Penalty coefficient for first neighbor interaction.
 
         Returns:
-            SparsePauliOp: Quantum operator representing the first neighbor Hamiltonian term.
+            SparsePauliOp: Quantum operator representing the first neighbor hamiltonian term.
 
         Raises:
             InvalidOperatorError: If the number of qubits in the operator is None.
@@ -264,7 +286,7 @@ class HamiltonianBuilder:
         x: SparsePauliOp = self.distance_map[lower_bead_idx][upper_bead_idx]
 
         if x.num_qubits is None:
-            msg: str = "x.num_qubits is None, cannot build first neighbor Hamiltonian."
+            msg: str = "x.num_qubits is None, cannot build first neighbor hamiltonian."
             raise InvalidOperatorError(msg)
 
         expression: SparsePauliOp = lambda_0 * (x - build_identity_op(x.num_qubits)) + (
@@ -280,7 +302,7 @@ class HamiltonianBuilder:
         lambda_1: float,
     ) -> SparsePauliOp:
         """
-        Computes the Hamiltonian contribution for second-neighbor bead pairs,
+        Computes the hamiltonian contribution for second-neighbor bead pairs,
         including distance-based and interaction terms.
 
         Args:
@@ -289,7 +311,7 @@ class HamiltonianBuilder:
             lambda_1 (float): Penalty coefficient for second neighbor interaction.
 
         Returns:
-            SparsePauliOp: Quantum operator representing the second neighbor Hamiltonian term.
+            SparsePauliOp: Quantum operator representing the second neighbor hamiltonian term.
 
         Raises:
             InvalidOperatorError: If the number of qubits in the operator is None.
@@ -302,7 +324,7 @@ class HamiltonianBuilder:
         x: SparsePauliOp = self.distance_map[lower_bead_idx][upper_bead_idx]
 
         if x.num_qubits is None:
-            msg: str = "x.num_qubits is None, cannot build second neighbor Hamiltonian."
+            msg: str = "x.num_qubits is None, cannot build second neighbor hamiltonian."
             raise InvalidOperatorError(msg)
 
         expression: SparsePauliOp = lambda_1 * (
