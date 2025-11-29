@@ -99,8 +99,8 @@
 <p id="module-contact.contact_map">Contact map utilities for protein folding simulations.</p>
 <p>This module provides the <cite>ContactMap</cite> class that:</p>
 <ul class="simple">
-<li><p>Initializes contact operators between beads of a protein’s main chain,</p></li>
-<li><p>Ensures minimum bond separation between beads to consider contacts,</p></li>
+<li><p>Initializes contact operators between MainBeads of a Protein’s MainChain,</p></li>
+<li><p>Ensures minimum bond separation between MainBeads to consider contacts,</p></li>
 <li><p>Represents contacts as qubit operators (SparsePauliOp) suitable for quantum simulations.</p></li>
 </ul>
 <dl class="py class">
@@ -108,7 +108,7 @@
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">contact.contact_map.</span></span><span class="sig-name descname"><span class="pre">ContactMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#contact.contact_map.ContactMap" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Represents a contact map for a protein’s main chain.</p>
-<p>Stores pairwise contact operators between beads, using Pauli operators
+<p>Stores pairwise contact operators between MainBeads, using Pauli operators
 to encode whether contacts are present, respecting minimum bond distances
 and sublattice constraints.</p>
 <dl class="py method">
@@ -128,7 +128,7 @@ and sublattice constraints.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="contact.contact_map.ContactMap._create_main_main_contact">
 <span class="sig-name descname"><span class="pre">_create_main_main_contact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">upper_bead</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_bead</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#contact.contact_map.ContactMap._create_main_main_contact" title="Link to this definition"></a></dt>
-<dd><p>Creates a contact operator between two main chain beads.</p>
+<dd><p>Creates a contact operator between two main chain MainBeads.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
@@ -140,7 +140,7 @@ and sublattice constraints.</p>
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Pauli-Z operator for the contact between the two beads.</p>
+<dd class="field-odd"><p>Pauli-Z operator for the contact between the two MainBeads.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>SparsePauliOp</p>

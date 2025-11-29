@@ -99,15 +99,15 @@
   <section id="builder">
 <h1>Builder<a class="headerlink" href="#builder" title="Link to this heading"></a></h1>
 <p>Hamiltonian builder utilities.</p>
-<p id="module-builder.hamiltonian_builder">Utilities for building the Hamiltonian of a protein for quantum simulations.</p>
-<p>This module provides the HamiltonianBuilder class, which constructs Hamiltonian
+<p id="module-builder.hamiltonian_builder">Utilities for building the hamiltonian of a protein for quantum simulations.</p>
+<p>This module provides the HamiltonianBuilder class, which constructs hamiltonian
 operators for a given protein, including backbone interactions, backtracking
 penalties, and neighbor-based contact terms, using distance and interaction maps.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">builder.hamiltonian_builder.</span></span><span class="sig-name descname"><span class="pre">HamiltonianBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Constructs Hamiltonian operators for a given protein, including backbone interactions and backtracking penalties.</p>
+<p>Constructs hamiltonian operators for a given protein, including backbone interactions and backtracking penalties.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder.__init__" title="Link to this definition"></a></dt>
@@ -128,14 +128,14 @@ and interaction maps.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder._add_backtracking_penalty">
 <span class="sig-name descname"><span class="pre">_add_backtracking_penalty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder._add_backtracking_penalty" title="Link to this definition"></a></dt>
-<dd><p>Adds a penalty term to the Hamiltonian to discourage backtracking
+<dd><p>Adds a penalty term to the hamiltonian to discourage backtracking
 in the main chain configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Hamiltonian term representing backtracking penalties.</p>
+<dd class="field-even"><p>hamiltonian term representing backtracking penalties.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>SparsePauliOp</p>
@@ -146,14 +146,14 @@ in the main chain configuration.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder._build_backbone_contact_term">
 <span class="sig-name descname"><span class="pre">_build_backbone_contact_term</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder._build_backbone_contact_term" title="Link to this definition"></a></dt>
-<dd><p>Builds the Hamiltonian term corresponding to backbone_backbone (BB-BB) interactions.
+<dd><p>Builds the hamiltonian term corresponding to backbone_backbone (BB-BB) interactions.
 Includes both 1st neighbor and 2nd neighbor contributions (with shifts i±1, j±1).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Hamiltonian term representing BB-BB interactions.</p>
+<dd class="field-even"><p>hamiltonian term representing BB-BB interactions.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>SparsePauliOp</p>
@@ -164,7 +164,7 @@ Includes both 1st neighbor and 2nd neighbor contributions (with shifts i±1, j±
 <dl class="py method">
 <dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder.get_first_neighbor_hamiltonian">
 <span class="sig-name descname"><span class="pre">get_first_neighbor_hamiltonian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bead_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bead_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder.get_first_neighbor_hamiltonian" title="Link to this definition"></a></dt>
-<dd><p>Computes the Hamiltonian contribution for first-neighbor bead pairs,
+<dd><p>Computes the hamiltonian contribution for first-neighbor bead pairs,
 combining distance-based and interaction contact energies.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -178,7 +178,7 @@ combining distance-based and interaction contact energies.</p>
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Quantum operator representing the first neighbor Hamiltonian term.</p>
+<dd class="field-odd"><p>Quantum operator representing the first neighbor hamiltonian term.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>SparsePauliOp</p>
@@ -192,7 +192,7 @@ combining distance-based and interaction contact energies.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder.get_second_neighbor_hamiltonian">
 <span class="sig-name descname"><span class="pre">get_second_neighbor_hamiltonian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bead_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bead_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder.get_second_neighbor_hamiltonian" title="Link to this definition"></a></dt>
-<dd><p>Computes the Hamiltonian contribution for second-neighbor bead pairs,
+<dd><p>Computes the hamiltonian contribution for second-neighbor bead pairs,
 including distance-based and interaction terms.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -206,7 +206,7 @@ including distance-based and interaction terms.</p>
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Quantum operator representing the second neighbor Hamiltonian term.</p>
+<dd class="field-odd"><p>Quantum operator representing the second neighbor hamiltonian term.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>SparsePauliOp</p>
@@ -246,21 +246,21 @@ defined turn functions, an identity operator is returned.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder.sum_hamiltonians">
 <span class="sig-name descname"><span class="pre">sum_hamiltonians</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder.sum_hamiltonians" title="Link to this definition"></a></dt>
-<dd><p>Build and sum all Hamiltonian components, padding to a common qubit size.</p>
+<dd><p>Build and sum all hamiltonian components, padding to a common qubit size.</p>
 <p>Constructs the backbone and backtracking terms, checks qubit consistency,
-pads them to the same qubit count, and sums them into a single Hamiltonian.</p>
+pads them to the same qubit count, and sums them into a single hamiltonian.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The total Hamiltonian operator, simplified and ready for use.</p>
+<dd class="field-even"><p>The total hamiltonian operator, simplified and ready for use.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>SparsePauliOp</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="core.html#exceptions.InvalidOperatorError" title="exceptions.InvalidOperatorError"><strong>InvalidOperatorError</strong></a> – If any part Hamiltonian has <cite>num_qubits</cite> set to None.</p>
+<dd class="field-even"><p><a class="reference internal" href="core.html#exceptions.InvalidOperatorError" title="exceptions.InvalidOperatorError"><strong>InvalidOperatorError</strong></a> – If any part hamiltonian has <cite>num_qubits</cite> set to None.</p>
 </dd>
 </dl>
 </dd></dl>
