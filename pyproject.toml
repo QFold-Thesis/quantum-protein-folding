@@ -19,11 +19,55 @@ dev = [
     "sphinx-rtd-theme>=3.0.2",
     "sphinx>=8.2.3",
     "sphinx-autodoc-typehints>=3.5.2",
-    "pydocstyle>=6.3.0",
     "interrogate>=1.7.0",
     "pyrefly>=0.43.1",
     "ruff>=0.14.7",
 ]
 
-[tool.pytest.ini_options]
-pythonpath = ["src"]
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+extend-exclude = [
+    "tests",
+    "docs",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # Pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+    "SIM",  # flake8-simplify
+    "D",    # pydocstyle
+    "RUF",  # Ruff-specific rules
+]
+
+ignore = [
+    "E501", # ignore line too long -> handled by black
+]
+
+fixable = ["ALL"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+
+[tool.interrogate]
+ignore-init-module = true
+fail-under = 90
+exclude = [
+    "tests",
+    "docs",
+]
+verbose = 2
+color = true
