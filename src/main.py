@@ -17,6 +17,16 @@ logger = get_logger()
 
 
 def main() -> None:
+    """
+    Executes the full quantum protein folding workflow for a sample chain.
+
+    This includes system setup, hamiltonian construction and compression, VQE
+    optimization, and result analysis and visualization in 2D and 3D.
+
+    Note:
+        The main chain sequence is hardcoded here for demonstration purposes.
+
+    """
     main_chain: str = "APRLRFY"
     side_chain: str = EMPTY_SIDECHAIN_PLACEHOLDER * len(main_chain)
 

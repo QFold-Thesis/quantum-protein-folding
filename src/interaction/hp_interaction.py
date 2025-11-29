@@ -24,9 +24,8 @@ the residue symbol (single character) and a flag (``0`` or ``1``).
 
 Symmetry / Energies
 -------------------
-The classical lattice HP model assigns the same energy to any hydrophobic-
-hydrophobic contact independent of residue identities (here set to -1.0).
-All other pairs have energy 0.0.
+The classical lattice HP model assigns the same energy to any hydrophobic-hydrophobic contact
+independent of residue identities (here set to -1.0). All other pairs have energy 0.0.
 """
 
 from pathlib import Path
@@ -46,10 +45,25 @@ logger = get_logger()
 
 
 class HPInteraction(Interaction):
+    """
+    Interaction model implementing the classical Hydrophobic/Polar (HP) scheme.
+
+    Loads a binary HP matrix, tracks hydrophobic symbols, and provides a
+    pairwise energy function where only H-H contacts contribute negatively.
+    """
+
     def __init__(
         self,
         interaction_matrix_path: Path = HP_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
+        """
+        Initialize the HP interaction model by loading hydrophobic residues from
+        the HP matrix file and preparing the supported symbol set.
+
+        Args:
+            interaction_matrix_path (Path, optional): Path to the HP interaction matrix file. Defaults to HP_INTERACTION_MATRIX_FILEPATH.
+
+        """
         super().__init__(interaction_matrix_path)
         logger.debug("Initializing HPInteraction...")
         self._hydrophobic_symbols, _polar_symbols = self._load_hp_symbols(

@@ -7,16 +7,24 @@ logger = get_logger()
 
 
 class _PlaceholderSideBead(Bead):
-    """Represents a empty side bead - not attached to a protein's main chain, used as a placeholder for storing empty symbols and padding."""
+    """
+    Represents a empty side bead - not attached to a protein's main chain, used as a placeholder for storing empty symbols and padding.
+
+    Attributes:
+        symbol (str): Empty symbol.
+        index (int): Position of the bead in the side chain.
+        parent_chain_len (int): Total number of beads in the parent chain.
+
+    """
 
     def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:
         """
         Initialize the placeholder side bead.
 
         Note:
-        Placeholder side beads do not have turn qubit operators. Any attempt to access them will raise NotImplementedError.
-        Symbol of the placeholder bead is set to EMPTY_SIDECHAIN_PLACEHOLDER constant, as initialized in SideChain.
-        The "parent_chain_len" arg is used for consistency with other bead types, although it has no functional impact on placeholder beads.
+            Placeholder side beads do not have turn qubit operators. Any attempt to access them will raise NotImplementedError.
+            Symbol of the placeholder bead is set to EMPTY_SIDECHAIN_PLACEHOLDER constant, as initialized in SideChain.
+            The "parent_chain_len" arg is used for consistency with other bead types, although it has no functional impact on placeholder beads.
 
         Args:
             symbol (str): Empty symbol.

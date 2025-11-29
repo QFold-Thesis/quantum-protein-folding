@@ -315,7 +315,7 @@ class ResultInterpreter:
         """
         Calculates the target length (in bits) of the turn sequence for the main chain.
 
-        Notes:
+        Note:
             Each turn is represented by a fixed number of qubits (QUBITS_PER_TURN).
             The number of turns is N - 1, where N is the number of beads in the main chain.
             However, by the symmetry of tetrahedral lattice we can assume that:

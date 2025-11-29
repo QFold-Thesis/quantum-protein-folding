@@ -1,3 +1,11 @@
+"""
+Bead abstraction for quantum protein folding.
+
+Defines the base class `Bead`, representing a single amino acid in the peptide
+chain and responsible for constructing turn-related quantum operators used in
+the folding model.
+"""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -18,7 +26,16 @@ logger = get_logger()
 
 
 class Bead(ABC):
-    """An abstract class defining a bead of a peptide."""
+    """
+    An abstract class defining a bead of a peptide.
+
+    Attributes:
+        symbol (str): One-letter amino acid symbol.
+        index (int): Position of the bead in the parent chain.
+        turn_qubits (tuple[SparsePauliOp, ...]): Quantum turn qubits associated with this bead.
+        sublattice (SubLattice): Sublattice type (A or B) based on bead index.
+
+    """
 
     def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:
         """

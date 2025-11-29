@@ -32,6 +32,11 @@ class ContactMap:
     Stores pairwise contact operators between MainBeads, using Pauli operators
     to encode whether contacts are present, respecting minimum bond distances
     and sublattice constraints.
+
+    Attributes:
+        main_main_contacts (dict[int, dict[int, SparsePauliOp]]): Contact operators between main chain beads.
+        contacts_detected (int): Total number of contacts detected in the map.
+
     """
 
     def __init__(self, protein: Protein):
@@ -48,18 +53,6 @@ class ContactMap:
         self.main_main_contacts: dict[int, dict[int, SparsePauliOp]] = defaultdict(
             lambda: defaultdict()
         )
-
-        """
-        # self.main_side_contacts: dict[int, dict[int, SparsePauliOp]] = defaultdict(
-        #     lambda: defaultdict()
-        # )
-        # self.side_main_contacts: dict[int, dict[int, SparsePauliOp]] = defaultdict(
-        #     lambda: defaultdict()
-        # )
-        # self.side_side_contacts: dict[int, dict[int, SparsePauliOp]] = defaultdict(
-        #     lambda: defaultdict()
-        # )
-        """
 
         self.contacts_detected: int = 0
         self._protein: Protein = protein
@@ -82,7 +75,16 @@ class ContactMap:
             )
 
     def _initialize_contact_map(self):
-        """Initializes all contact maps to empty dictionaries."""
+        """
+        Initializes all contact maps to empty dictionaries.
+
+        Note:
+            The minimum distance between residues for forming a contact is set by the constant
+            MIN_DISTANCE_BETWEEN_CONTACTS = 5. This ensures that contacts are only considered
+            between residues separated by at least five positions in the sequence, which is
+            consistent with the geometric constraints of the tetrahedral lattice representation.
+
+        """
         main_main_contacts_count: int = 0
         main_chain_length: int = len(self._protein.main_chain)
         logger.debug("Initializing MainBead-MainBead contacts...")

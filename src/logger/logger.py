@@ -1,3 +1,10 @@
+"""
+Logger utility for the application.
+
+Provides a simple helper `get_logger` that returns a ready-to-use logger
+configured in a consistent way across the whole program.
+"""
+
 import logging
 from datetime import datetime
 from typing import TYPE_CHECKING
