@@ -107,6 +107,10 @@ quantum simulations of protein folding.</p></li>
 <dt class="sig sig-object py" id="distance.distance_map.DistanceMap">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">distance.distance_map.</span></span><span class="sig-name descname"><span class="pre">DistanceMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#distance.distance_map.DistanceMap" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a distance map for a protein’s main chain.</p>
+<p>Computes and stores quantum pairwise distances between beads in the protein’s
+main chain, producing axis-wise Pauli operator vectors, applying qubit fixes,
+and exposing a ready-to-use distance map for Hamiltonian construction.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="distance.distance_map.DistanceMap.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#distance.distance_map.DistanceMap.__init__" title="Link to this definition"></a></dt>
@@ -135,6 +139,12 @@ Results are stored in the distance map for use in quantum Hamiltonian constructi
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Each axis in the distance vector corresponds to a dimension in the
+tetrahedral lattice representation. The <cite>sub_lattice_sign</cite> alternates between +1 and -1 depending
+on the bead index, reflecting the sublattice structure of the main chain.</p>
+</div>
 </dd></dl>
 
 </dd></dl>

@@ -108,6 +108,16 @@ penalties, and neighbor-based contact terms, using distance and interaction maps
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">builder.hamiltonian_builder.</span></span><span class="sig-name descname"><span class="pre">HamiltonianBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Constructs hamiltonian operators for a given protein, including backbone interactions and backtracking penalties.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>protein</strong> (<a class="reference internal" href="protein.html#protein.protein.Protein" title="protein.protein.Protein"><em>Protein</em></a>) – The Protein object that includes all information about protein.</p></li>
+<li><p><strong>interaction</strong> (<a class="reference internal" href="interaction.html#interaction.interaction.Interaction" title="interaction.interaction.Interaction"><em>Interaction</em></a>) – Interaction model between beads of the protein.</p></li>
+<li><p><strong>distance_map</strong> (<a class="reference internal" href="distance.html#distance.distance_map.DistanceMap" title="distance.distance_map.DistanceMap"><em>DistanceMap</em></a>) – Matrix of pairwise distances between residues.</p></li>
+<li><p><strong>contact_map</strong> (<a class="reference internal" href="contact.html#contact.contact_map.ContactMap" title="contact.contact_map.ContactMap"><em>ContactMap</em></a>) – Matrix indicating residue-residue contacts.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder.__init__" title="Link to this definition"></a></dt>
@@ -152,11 +162,20 @@ Includes both 1st neighbor and 2nd neighbor contributions (with shifts i±1, j±
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>hamiltonian term representing BB-BB interactions.</p>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only pairs that belong to different sublattices are considered for first-neighbor interactions.
+For each valid pair, two contributions are added: one for first-neighbor interactions and one for
+second-neighbor interactions with nearby beads. The second-neighbor contribution applies a penalty
+to avoid overlaps.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>hamiltonian term representing BB-BB interactions.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>SparsePauliOp</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SparsePauliOp</p>
 </dd>
 </dl>
 </dd></dl>
@@ -170,21 +189,29 @@ combining distance-based and interaction contact energies.</p>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
 </dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>lambda_0 combines the bounding constant, bead separation, and lambda_1</p>
+<p>to scale the distance-based penalty. MJ_ENERGY_MULTIPLIER scales the
+contribution from the Miyazawa-Jernigan interaction energy.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
 <li><p><strong>lower_bead_idx</strong> (<em>int</em>) – Index of the lower bead in the main chain.</p></li>
 <li><p><strong>upper_bead_idx</strong> (<em>int</em>) – Index of the upper bead in the main chain.</p></li>
 <li><p><strong>lambda_1</strong> (<em>float</em>) – Penalty coefficient for first neighbor interaction.</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Quantum operator representing the first neighbor hamiltonian term.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Quantum operator representing the first neighbor hamiltonian term.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>SparsePauliOp</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SparsePauliOp</p>
 </dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="core.html#exceptions.InvalidOperatorError" title="exceptions.InvalidOperatorError"><strong>InvalidOperatorError</strong></a> – If the number of qubits in the operator is None.</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#exceptions.InvalidOperatorError" title="exceptions.InvalidOperatorError"><strong>InvalidOperatorError</strong></a> – If the number of qubits in the operator is None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -253,14 +280,23 @@ pads them to the same qubit count, and sums them into a single hamiltonian.</p>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The total hamiltonian operator, simplified and ready for use.</p>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The padding step ensures that all SparsePauliOp operators have the same
+number of qubits, which is required for valid operator addition.
+The total hamiltonian is initialized with an identity operator and then
+each padded component is added sequentially.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The total hamiltonian operator, simplified and ready for use.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>SparsePauliOp</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SparsePauliOp</p>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="core.html#exceptions.InvalidOperatorError" title="exceptions.InvalidOperatorError"><strong>InvalidOperatorError</strong></a> – If any part hamiltonian has <cite>num_qubits</cite> set to None.</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core.html#exceptions.InvalidOperatorError" title="exceptions.InvalidOperatorError"><strong>InvalidOperatorError</strong></a> – If any part hamiltonian has <cite>num_qubits</cite> set to None.</p>
 </dd>
 </dl>
 </dd></dl>

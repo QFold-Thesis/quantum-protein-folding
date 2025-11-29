@@ -148,11 +148,25 @@ the corresponding chain objects.</p>
 
 <section id="module-protein.bead.bead">
 <span id="subpackage-bead"></span><h2>Subpackage: bead<a class="headerlink" href="#module-protein.bead.bead" title="Link to this heading"></a></h2>
+<p>Bead abstraction for quantum protein folding.</p>
+<p>Defines the base class <cite>Bead</cite>, representing a single amino acid in the peptide
+chain and responsible for constructing turn-related quantum operators used in
+the folding model.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="protein.bead.bead.Bead">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">protein.bead.bead.</span></span><span class="sig-name descname"><span class="pre">Bead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_chain_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.bead.Bead" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>An abstract class defining a bead of a peptide.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em>) – One-letter amino acid symbol.</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – Position of the bead in the parent chain.</p></li>
+<li><p><strong>turn_qubits</strong> (<em>tuple</em><em>[</em><em>SparsePauliOp</em><em>, </em><em>...</em><em>]</em>) – Quantum turn qubits associated with this bead.</p></li>
+<li><p><strong>sublattice</strong> (<a class="reference internal" href="core.html#enums.SubLattice" title="enums.SubLattice"><em>SubLattice</em></a>) – Sublattice type (A or B) based on bead index.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="protein.bead.bead.Bead.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_chain_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.bead.Bead.__init__" title="Link to this definition"></a></dt>
@@ -517,14 +531,25 @@ encoding is dense or sparse.</p>
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">protein.bead.placeholder_side_bead.</span></span><span class="sig-name descname"><span class="pre">_PlaceholderSideBead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_chain_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.placeholder_side_bead._PlaceholderSideBead" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#protein.bead.bead.Bead" title="protein.bead.bead.Bead"><code class="xref py py-class docutils literal notranslate"><span class="pre">Bead</span></code></a></p>
 <p>Represents a empty side bead - not attached to a protein’s main chain, used as a placeholder for storing empty symbols and padding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em>) – Empty symbol.</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – Position of the bead in the side chain.</p></li>
+<li><p><strong>parent_chain_len</strong> (<em>int</em>) – Total number of beads in the parent chain.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="protein.bead.placeholder_side_bead._PlaceholderSideBead.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_chain_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.bead.placeholder_side_bead._PlaceholderSideBead.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initialize the placeholder side bead.</p>
-<p>Note:
-Placeholder side beads do not have turn qubit operators. Any attempt to access them will raise NotImplementedError.
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Placeholder side beads do not have turn qubit operators. Any attempt to access them will raise NotImplementedError.
 Symbol of the placeholder bead is set to EMPTY_SIDECHAIN_PLACEHOLDER constant, as initialized in SideChain.
 The “parent_chain_len” arg is used for consistency with other bead types, although it has no functional impact on placeholder beads.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -602,11 +627,20 @@ The “parent_chain_len” arg is used for consistency with other bead types, al
 </section>
 <section id="module-protein.chain.chain">
 <span id="subpackage-chain"></span><h2>Subpackage: chain<a class="headerlink" href="#module-protein.chain.chain" title="Link to this heading"></a></h2>
+<p>Base abstraction for protein chains.</p>
+<p>Provides the abstract <cite>Chain</cite> class, representing a sequence of <cite>Bead</cite> objects
+and defining common operations such as indexing, iteration, and string
+conversion.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="protein.chain.chain.Chain">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">protein.chain.chain.</span></span><span class="sig-name descname"><span class="pre">Chain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.chain.Chain" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Abstract base class for protein chains, defining shared behavior for all chain types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>beads</strong> (<em>list</em><em>[</em><a class="reference internal" href="#protein.bead.bead.Bead" title="protein.bead.bead.Bead"><em>Bead</em></a><em>]</em>) – List of beads comprising the protein chain.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="protein.chain.chain.Chain.__init__">
 <em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.chain.Chain.__init__" title="Link to this definition"></a></dt>
@@ -650,6 +684,11 @@ The “parent_chain_len” arg is used for consistency with other bead types, al
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">protein.chain.main_chain.</span></span><span class="sig-name descname"><span class="pre">_MainChain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.main_chain._MainChain" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#protein.chain.chain.Chain" title="protein.chain.chain.Chain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Chain</span></code></a></p>
 <p>Represents the main chain of a protein, a linear sequence of amino acids forming its backbone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>beads</strong> (<em>list</em><em>[</em><a class="reference internal" href="#protein.bead.main_bead._MainBead" title="protein.bead.main_bead._MainBead"><em>_MainBead</em></a><em>]</em>) – List of main beads in the protein’s backbone.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="protein.chain.main_chain._MainChain.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.main_chain._MainChain.__init__" title="Link to this definition"></a></dt>
@@ -673,6 +712,11 @@ The “parent_chain_len” arg is used for consistency with other bead types, al
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">protein.chain.side_chain.</span></span><span class="sig-name descname"><span class="pre">_SideChain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.side_chain._SideChain" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#protein.chain.chain.Chain" title="protein.chain.chain.Chain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Chain</span></code></a></p>
 <p>Represents the side chain of a protein, consisting of amino acids attached to residues of the main chain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>beads</strong> (<em>list</em><em>[</em><a class="reference internal" href="#protein.bead.side_bead._SideBead" title="protein.bead.side_bead._SideBead"><em>_SideBead</em></a><em> | </em><a class="reference internal" href="#protein.bead.placeholder_side_bead._PlaceholderSideBead" title="protein.bead.placeholder_side_bead._PlaceholderSideBead"><em>_PlaceholderSideBead</em></a><em>]</em>) – List of side beads in the protein’s side chain.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="protein.chain.side_chain._SideChain.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.side_chain._SideChain.__init__" title="Link to this definition"></a></dt>

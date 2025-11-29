@@ -53,7 +53,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#contact.contact_map.ContactMap.__init__"><code class="docutils literal notranslate"><span class="pre">ContactMap.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#contact.contact_map.ContactMap._create_main_main_contact"><code class="docutils literal notranslate"><span class="pre">ContactMap._create_main_main_contact()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#contact.contact_map.ContactMap._initialize_contact_map"><code class="docutils literal notranslate"><span class="pre">ContactMap._initialize_contact_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#contact.contact_map.ContactMap.main_main_contacts"><code class="docutils literal notranslate"><span class="pre">ContactMap.main_main_contacts</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -111,6 +110,14 @@
 <p>Stores pairwise contact operators between MainBeads, using Pauli operators
 to encode whether contacts are present, respecting minimum bond distances
 and sublattice constraints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>main_main_contacts</strong> (<em>dict</em><em>[</em><em>int</em><em>, </em><em>dict</em><em>[</em><em>int</em><em>, </em><em>SparsePauliOp</em><em>]</em><em>]</em>) – Contact operators between main chain beads.</p></li>
+<li><p><strong>contacts_detected</strong> (<em>int</em>) – Total number of contacts detected in the map.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="contact.contact_map.ContactMap.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#contact.contact_map.ContactMap.__init__" title="Link to this definition"></a></dt>
@@ -152,25 +159,13 @@ and sublattice constraints.</p>
 <dt class="sig sig-object py" id="contact.contact_map.ContactMap._initialize_contact_map">
 <span class="sig-name descname"><span class="pre">_initialize_contact_map</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#contact.contact_map.ContactMap._initialize_contact_map" title="Link to this definition"></a></dt>
 <dd><p>Initializes all contact maps to empty dictionaries.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="contact.contact_map.ContactMap.main_main_contacts">
-<span class="sig-name descname"><span class="pre">main_main_contacts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code><span class="pre">,</span> <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code><span class="pre">,</span> <code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code><span class="pre">]]</span></em><a class="headerlink" href="#contact.contact_map.ContactMap.main_main_contacts" title="Link to this definition"></a></dt>
-<dd><p>dict[int, dict[int, SparsePauliOp]] = defaultdict(
-#     lambda: defaultdict()
-# )
-# self.side_main_contacts: dict[int, dict[int, SparsePauliOp]] = defaultdict(
-#     lambda: defaultdict()
-# )
-# self.side_side_contacts: dict[int, dict[int, SparsePauliOp]] = defaultdict(
-#     lambda: defaultdict()
-# )</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p># self.main_side_contacts</p>
-</dd>
-</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The minimum distance between residues for forming a contact is set by the constant
+MIN_DISTANCE_BETWEEN_CONTACTS = 5. This ensures that contacts are only considered
+between residues separated by at least five positions in the sequence, which is
+consistent with the geometric constraints of the tetrahedral lattice representation.</p>
+</div>
 </dd></dl>
 
 </dd></dl>

@@ -116,6 +116,109 @@ exceptions, and main execution logic.</p>
 <section id="module-constants">
 <span id="constants"></span><h2>Constants<a class="headerlink" href="#module-constants" title="Link to this heading"></a></h2>
 <p>Definitions of constants used throughout the protein folding simulations.</p>
+<p>This module centralizes configuration parameters, file paths, numeric constants,
+energy coefficients, and backend options required by different components of the
+project.</p>
+<dl class="simple">
+<dt>ROOT_PROJECT_PATH<span class="classifier">Path</span></dt><dd><p>Root directory of the repository.</p>
+</dd>
+<dt>LOGS_DIRPATH<span class="classifier">Path</span></dt><dd><p>Directory where log files are stored.</p>
+</dd>
+<dt>MJ_INTERACTION_MATRIX_FILEPATH<span class="classifier">Path</span></dt><dd><p>Path to the Miyazawa-Jernigan interaction matrix file.</p>
+</dd>
+<dt>HP_INTERACTION_MATRIX_FILEPATH<span class="classifier">Path</span></dt><dd><p>Path to the hydrophobic-polar matrix file.</p>
+</dd>
+<dt>DEFAULT_TIMEZONE<span class="classifier">tzinfo</span></dt><dd><p>Timezone used for timestamping logs and outputs.</p>
+</dd>
+<dt>CONFORMATION_ENCODING<span class="classifier">ConformationEncoding</span></dt><dd><p>Selected encoding type for representing turns in the lattice.</p>
+</dd>
+<dt>QUBITS_PER_TURN<span class="classifier">int</span></dt><dd><p>Number of qubits required to encode a single turn.</p>
+</dd>
+<dt>EMPTY_SIDECHAIN_PLACEHOLDER<span class="classifier">str</span></dt><dd><p>Placeholder symbol for missing side-chain positions.</p>
+</dd>
+<dt>NORM_FACTOR<span class="classifier">float</span></dt><dd><p>Normalization factor applied during distance vector construction.</p>
+</dd>
+<dt>SIGN_FLIP_SECOND_QUBIT_INDEX<span class="classifier">int</span></dt><dd><p>Index of the second qubit whose sign may require inversion.</p>
+</dd>
+<dt>SIGN_FLIP_SIXTH_QUBIT_INDEX<span class="classifier">int</span></dt><dd><p>Index of the sixth qubit whose sign may require inversion.</p>
+</dd>
+<dt>DIST_VECTOR_AXES<span class="classifier">int</span></dt><dd><p>Number of axes in the distance operator vector.</p>
+</dd>
+<dt>BOUNDING_CONSTANT<span class="classifier">int</span></dt><dd><p>Limits how far the chain is allowed to spread in space, preventing exploration of physically impossible conformations.</p>
+</dd>
+<dt>MJ_ENERGY_MULTIPLIER<span class="classifier">float</span></dt><dd><p>Scaling factor applied to Miyazawa-Jernigan energies.</p>
+</dd>
+<dt>HP_HH_CONTACT_ENERGY<span class="classifier">float</span></dt><dd><p>Energy contribution for hydrophobic-hydrophobic contact in the HP model.</p>
+</dd>
+<dt>HP_NON_HH_CONTACT_ENERGY<span class="classifier">float</span></dt><dd><p>Energy contribution for non-hydrophobic contacts in the HP model.</p>
+</dd>
+<dt>GLOBAL_LOGGER_NAME<span class="classifier">str</span></dt><dd><p>Name of the root logger for the project.</p>
+</dd>
+<dt>LOGGER_DEFAULT_LEVEL<span class="classifier">int</span></dt><dd><p>Default logging verbosity.</p>
+</dd>
+<dt>MIN_DISTANCE_BETWEEN_CONTACTS<span class="classifier">int</span></dt><dd><p>Smallest allowed distance along the chain for beads to form a valid contact.</p>
+</dd>
+<dt>MAIN_CHAIN_FIXED_POSITIONS<span class="classifier">list[int]</span></dt><dd><p>Main-chain bead indices that must be assigned predefined values during encoding.</p>
+</dd>
+<dt>MAIN_CHAIN_FIFTH_FIXED_POSITION<span class="classifier">int</span></dt><dd><p>Index of the bead with a predetermined position in the chain.</p>
+</dd>
+<dt>INTERACTION_TYPE<span class="classifier">InteractionType</span></dt><dd><p>Selected interaction model (MJ or HP).</p>
+</dd>
+<dt>IDENTITY_OP_COEFF<span class="classifier">float</span></dt><dd><p>Coefficient applied to the identity operator when building the Hamiltonian.</p>
+</dd>
+<dt>EMPTY_OP_COEFF<span class="classifier">float</span></dt><dd><p>Coefficient used when an operator contributes no term.</p>
+</dd>
+<dt>SPARSE_TURN_INDICATORS<span class="classifier">dict[TurnDirection, str]</span></dt><dd><p>Sparse encoding for turn directions.</p>
+</dd>
+<dt>DENSE_TURN_INDICATORS<span class="classifier">dict[TurnDirection, str]</span></dt><dd><p>Dense encoding for turn directions.</p>
+</dd>
+<dt>XYZ_FILE_LINE_START_INDEX<span class="classifier">int</span></dt><dd><p>Number of header lines in .xyz coordinate files.</p>
+</dd>
+<dt>XYZ_FILE_PARTS_PER_LINE<span class="classifier">int</span></dt><dd><p>Expected number of fields per line in .xyz files.</p>
+</dd>
+<dt>RESULTS_DATA_DIRPATH<span class="classifier">Path</span></dt><dd><p>Directory where simulation’s results are written.</p>
+</dd>
+<dt>RAW_VQE_RESULTS_FILENAME<span class="classifier">str</span></dt><dd><p>Filename for raw VQE results.</p>
+</dd>
+<dt>XYZ_FILENAME<span class="classifier">str</span></dt><dd><p>Name of the output XYZ coordinate file.</p>
+</dd>
+<dt>SPARSE_VQE_RESULTS_FILENAME<span class="classifier">str</span></dt><dd><p>Filename for sparse VQE result summaries.</p>
+</dd>
+<dt>VQE_ITERATIONS_FILENAME<span class="classifier">str</span></dt><dd><p>Filename recording energy per iteration.</p>
+</dd>
+<dt>GIF_VISUALIZATION_FILENAME<span class="classifier">str</span></dt><dd><p>Name of the generated 3D GIF visualization.</p>
+</dd>
+<dt>HTML_VISUALIZATION_FILENAME<span class="classifier">str</span></dt><dd><p>Name of the interactive HTML visualization.</p>
+</dd>
+<dt>FLAT_VISUALIZATION_FILENAME<span class="classifier">str</span></dt><dd><p>Name of the 2D conformational plot.</p>
+</dd>
+<dt>TETRAHEDRAL_LATTICE_PADDING<span class="classifier">int</span></dt><dd><p>Extra spacing added to bead coordinates to prevent index conflicts.</p>
+</dd>
+<dt>INDEX_COLNAME<span class="classifier">str</span></dt><dd><p>Column name for bead indices.</p>
+</dd>
+<dt>SYMBOL_COLNAME<span class="classifier">str</span></dt><dd><p>Column name for residue symbols.</p>
+</dd>
+<dt>ITERATION_COLNAME<span class="classifier">str</span></dt><dd><p>Column name for iteration counters.</p>
+</dd>
+<dt>COORDINATES_COLUMN_WIDTH<span class="classifier">int</span></dt><dd><p>Output formatting width for coordinate columns.</p>
+</dd>
+<dt>FCC_EDGE_LENGTH<span class="classifier">float</span></dt><dd><p>Edge length of fractional FCC unit vectors.</p>
+</dd>
+<dt>FCC_BASIS<span class="classifier">ndarray</span></dt><dd><p>Basis vectors of the face-centered cubic lattice.</p>
+</dd>
+<dt>SIDE_CHAIN_FIFTH_POSITION_INDEX<span class="classifier">int</span></dt><dd><p>Index of the side-chain bead associated with the fifth main-chain position.</p>
+</dd>
+<dt>BACKEND_TYPE<span class="classifier">BackendType</span></dt><dd><p>Selected quantum backend type.</p>
+</dd>
+<dt>IBM_QUANTUM_TOKEN<span class="classifier">str or None</span></dt><dd><p>IBM Quantum API token loaded from environment.</p>
+</dd>
+<dt>IBM_QUANTUM_BACKEND_NAME<span class="classifier">str</span></dt><dd><p>Name of the IBM Quantum device to execute circuits on.</p>
+</dd>
+<dt>IBM_QUANTUM_SHOTS<span class="classifier">int</span></dt><dd><p>Number of measurement shots for hardware execution.</p>
+</dd>
+<dt>MIN_CHAIN_LENGTH<span class="classifier">int</span></dt><dd><p>Minimum allowed protein chain length for simulations.</p>
+</dd>
+</dl>
 </section>
 <section id="module-enums">
 <span id="enums"></span><h2>Enums<a class="headerlink" href="#module-enums" title="Link to this heading"></a></h2>
@@ -320,11 +423,18 @@ including errors for conformation encoding, chain length, and amino acid validit
 <dl class="py function">
 <dt class="sig sig-object py" id="main.main">
 <span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.main" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Executes the full quantum protein folding workflow for a sample chain.</p>
+<p>This includes system setup, hamiltonian construction and compression, VQE
+optimization, and result analysis and visualization in 2D and 3D.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The main chain sequence is hardcoded here for demonstration purposes.</p>
+</div>
 </dd></dl>
 
 </section>

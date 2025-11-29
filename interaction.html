@@ -143,21 +143,24 @@ the residue symbol (single character) and a flag (<code class="docutils literal 
 </section>
 <section id="symmetry-energies">
 <h2>Symmetry / Energies<a class="headerlink" href="#symmetry-energies" title="Link to this heading"></a></h2>
-<p>The classical lattice HP model assigns the same energy to any hydrophobic-
-hydrophobic contact independent of residue identities (here set to -1.0).
-All other pairs have energy 0.0.</p>
+<p>The classical lattice HP model assigns the same energy to any hydrophobic-hydrophobic contact
+independent of residue identities (here set to -1.0). All other pairs have energy 0.0.</p>
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="interaction.hp_interaction.HPInteraction">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">interaction.hp_interaction.</span></span><span class="sig-name descname"><span class="pre">HPInteraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/quantum-protein-folding/quantum-protein-folding/src/resources/hp_matrix.txt')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.hp_interaction.HPInteraction" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">interaction.hp_interaction.</span></span><span class="sig-name descname"><span class="pre">HPInteraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">HP_INTERACTION_MATRIX_FILEPATH</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.hp_interaction.HPInteraction" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#interaction.interaction.Interaction" title="interaction.interaction.Interaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interaction</span></code></a></p>
+<p>Interaction model implementing the classical Hydrophobic/Polar (HP) scheme.</p>
+<p>Loads a binary HP matrix, tracks hydrophobic symbols, and provides a
+pairwise energy function where only H-H contacts contribute negatively.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="interaction.hp_interaction.HPInteraction.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/quantum-protein-folding/quantum-protein-folding/src/resources/hp_matrix.txt')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.hp_interaction.HPInteraction.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize the interaction model.</p>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">HP_INTERACTION_MATRIX_FILEPATH</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.hp_interaction.HPInteraction.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the HP interaction model by loading hydrophobic residues from
+the HP matrix file and preparing the supported symbol set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>interaction_matrix_path</strong> (<em>Path</em>) – Path to the file containing the interaction matrix.</p>
+<dd class="field-odd"><p><strong>interaction_matrix_path</strong> (<em>Path</em><em>, </em><em>optional</em>) – Path to the HP interaction matrix file. Defaults to HP_INTERACTION_MATRIX_FILEPATH.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -189,7 +192,7 @@ All other pairs have energy 0.0.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="interaction.hp_interaction.HPInteraction._load_hp_symbols">
-<span class="sig-name descname"><span class="pre">_load_hp_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hp_filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/quantum-protein-folding/quantum-protein-folding/src/resources/hp_matrix.txt')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.hp_interaction.HPInteraction._load_hp_symbols" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_load_hp_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hp_filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">HP_INTERACTION_MATRIX_FILEPATH</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.hp_interaction.HPInteraction._load_hp_symbols" title="Link to this definition"></a></dt>
 <dd><p>Load hydrophobic amino acid symbols from a HP interaction matrix file.</p>
 <p>Parses a small, strict matrix file where each line has the format ‘&lt;SYMBOL&gt; &lt;0|1&gt;’.
 Ignores blank lines and lines starting with ‘#’. Lines with ‘1’ indicate hydrophobic residues.</p>
@@ -243,13 +246,21 @@ otherwise returns the non-hydrophobic contact energy (HP_NON_HH_CONTACT_ENERGY).
 
 </dd></dl>
 
-<dl class="py class" id="module-interaction.interaction">
+<p id="module-interaction.interaction">Interaction models for protein folding.</p>
+<p>Defines the abstract base class <cite>Interaction</cite>, which loads an interaction matrix
+and computes interaction energies used in folding models such as HP or MJ.</p>
+<dl class="py class">
 <dt class="sig sig-object py" id="interaction.interaction.Interaction">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">interaction.interaction.</span></span><span class="sig-name descname"><span class="pre">Interaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.interaction.Interaction" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Abstract base class for interaction models.</p>
 <p>Subclasses must implement <cite>get_energy</cite> to return a numeric energy value and define their own initialization logic.
 Subclasses should also manage to properly set the <cite>valid_symbols</cite> set to determine which amino acid symbols they support.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>valid_symbols</strong> (<em>set</em><em>[</em><em>str</em><em>]</em>) – Set of valid amino acid symbols for the interaction model.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="interaction.interaction.Interaction.__init__">
 <em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.interaction.Interaction.__init__" title="Link to this definition"></a></dt>
@@ -304,17 +315,24 @@ present with the same energy.</p>
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="interaction.mj_interaction.MJInteraction">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">interaction.mj_interaction.</span></span><span class="sig-name descname"><span class="pre">MJInteraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/quantum-protein-folding/quantum-protein-folding/src/resources/mj_matrix.txt')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.mj_interaction.MJInteraction" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">interaction.mj_interaction.</span></span><span class="sig-name descname"><span class="pre">MJInteraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">MJ_INTERACTION_MATRIX_FILEPATH</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.mj_interaction.MJInteraction" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#interaction.interaction.Interaction" title="interaction.interaction.Interaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interaction</span></code></a></p>
+<p>MJ interaction model that loads the MJ matrix and exposes
+pairwise residue contact energies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>valid_symbols</strong> (<em>set</em><em>[</em><em>str</em><em>]</em>) – Set of valid amino acid symbols for the interaction model.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="interaction.mj_interaction.MJInteraction.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/quantum-protein-folding/quantum-protein-folding/src/resources/mj_matrix.txt')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.mj_interaction.MJInteraction.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction_matrix_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">MJ_INTERACTION_MATRIX_FILEPATH</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.mj_interaction.MJInteraction.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initialize MJInteraction instance.</p>
 <p>Loads the MJ interaction matrix from a file and prepares a mapping of
 residue-residue pairs to their contact energies.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>interaction_matrix_path</strong> (<em>Path</em>) – Path to the MJ interaction matrix file.</p>
+<dd class="field-odd"><p><strong>interaction_matrix_path</strong> (<em>Path</em>) – Path to the MJ interaction matrix file. Defaults to MJ_INTERACTION_MATRIX_FILEPATH.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -326,7 +344,7 @@ residue-residue pairs to their contact energies.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="interaction.mj_interaction.MJInteraction._prepare_mj_interaction_matrix">
-<span class="sig-name descname"><span class="pre">_prepare_mj_interaction_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mj_filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/quantum-protein-folding/quantum-protein-folding/src/resources/mj_matrix.txt')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.mj_interaction.MJInteraction._prepare_mj_interaction_matrix" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_prepare_mj_interaction_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mj_filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">MJ_INTERACTION_MATRIX_FILEPATH</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#interaction.mj_interaction.MJInteraction._prepare_mj_interaction_matrix" title="Link to this definition"></a></dt>
 <dd><p>Prepare the MJ interaction matrix.</p>
 <p>Reads the MJ matrix file, records valid residue symbols, and builds a
 dictionary of symmetric residue-residue contact energies.</p>
@@ -335,7 +353,7 @@ dictionary of symmetric residue-residue contact energies.</p>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span></p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>mj_filepath</strong> (<em>Path</em>) – Path to the MJ matrix file.</p>
+<dd class="field-even"><p><strong>mj_filepath</strong> (<em>Path</em>) – Path to the MJ matrix file. Defaults to MJ_INTERACTION_MATRIX_FILEPATH.</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Dictionary mapping residue pair codes to energies.</p>
