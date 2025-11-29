@@ -23,6 +23,7 @@ class Interaction(ABC):
 
     Attributes:
         valid_symbols (set[str]): Set of valid amino acid symbols for the interaction model.
+
     """
 
     @abstractmethod

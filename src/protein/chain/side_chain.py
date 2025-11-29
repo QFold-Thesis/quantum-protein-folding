@@ -10,9 +10,10 @@ logger = get_logger()
 class _SideChain(Chain):
     """
     Represents the side chain of a protein, consisting of amino acids attached to residues of the main chain.
-    
+
     Attributes:
         beads (list[_SideBead | _PlaceholderSideBead]): List of side beads in the protein's side chain.
+
     """
 
     def __init__(self, protein_sequence: str) -> None:

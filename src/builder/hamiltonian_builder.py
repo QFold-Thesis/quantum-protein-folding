@@ -41,12 +41,13 @@ logger = get_logger()
 class HamiltonianBuilder:
     """
     Constructs hamiltonian operators for a given protein, including backbone interactions and backtracking penalties.
-    
+
     Attributes:
         protein (Protein): The Protein object that includes all information about protein.
         interaction (Interaction): Interaction model between beads of the protein.
         distance_map (DistanceMap): Matrix of pairwise distances between residues.
         contact_map (ContactMap): Matrix indicating residue-residue contacts.
+
     """
 
     def __init__(

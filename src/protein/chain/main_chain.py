@@ -8,9 +8,10 @@ logger = get_logger()
 class _MainChain(Chain):
     """
     Represents the main chain of a protein, a linear sequence of amino acids forming its backbone.
-    
+
     Attributes:
         beads (list[_MainBead]): List of main beads in the protein's backbone.
+
     """
 
     def __init__(self, protein_sequence: str) -> None:

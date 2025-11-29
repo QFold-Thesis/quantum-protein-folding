@@ -36,6 +36,7 @@ class ContactMap:
     Attributes:
         main_main_contacts (dict[int, dict[int, SparsePauliOp]]): Contact operators between main chain beads.
         contacts_detected (int): Total number of contacts detected in the map.
+
     """
 
     def __init__(self, protein: Protein):
@@ -76,7 +77,7 @@ class ContactMap:
     def _initialize_contact_map(self):
         """
         Initializes all contact maps to empty dictionaries.
-        
+
         Note:
             The minimum distance between residues for forming a contact is set by the constant
             MIN_DISTANCE_BETWEEN_CONTACTS = 5. This ensures that contacts are only considered

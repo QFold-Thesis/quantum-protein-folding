@@ -36,6 +36,7 @@ class MJInteraction(Interaction):
 
     Attributes:
         valid_symbols (set[str]): Set of valid amino acid symbols for the interaction model.
+
     """
 
     def __init__(

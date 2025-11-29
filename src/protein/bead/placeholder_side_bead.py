@@ -9,11 +9,12 @@ logger = get_logger()
 class _PlaceholderSideBead(Bead):
     """
     Represents a empty side bead - not attached to a protein's main chain, used as a placeholder for storing empty symbols and padding.
-    
+
     Attributes:
         symbol (str): Empty symbol.
         index (int): Position of the bead in the side chain.
         parent_chain_len (int): Total number of beads in the parent chain.
+
     """
 
     def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:

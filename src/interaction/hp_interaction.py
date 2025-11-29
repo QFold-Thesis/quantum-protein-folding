@@ -48,7 +48,7 @@ logger = get_logger()
 class HPInteraction(Interaction):
     """
     Interaction model implementing the classical Hydrophobic/Polar (HP) scheme.
-    
+
     Loads a binary HP matrix, tracks hydrophobic symbols, and provides a
     pairwise energy function where only H-H contacts contribute negatively.
     """
@@ -63,6 +63,7 @@ class HPInteraction(Interaction):
 
         Args:
             interaction_matrix_path (Path, optional): Path to the HP interaction matrix file. Defaults to HP_INTERACTION_MATRIX_FILEPATH.
+
         """
         super().__init__(interaction_matrix_path)
         logger.debug("Initializing HPInteraction...")

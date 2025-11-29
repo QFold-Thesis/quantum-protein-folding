@@ -15,9 +15,10 @@ from protein.bead import Bead
 class Chain(ABC):
     """
     Abstract base class for protein chains, defining shared behavior for all chain types.
-    
+
     Attributes:
         beads (list[Bead]): List of beads comprising the protein chain.
+
     """
 
     @abstractmethod
