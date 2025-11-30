@@ -1,5 +1,4 @@
-"""
-Utilities for visualizing protein folding results.
+"""Utilities for visualizing protein folding results.
 
 This module provides the ResultVisualizer class, which processes
 the interpreted results of protein folding simulations and generates 3D and 2D visualizations of
@@ -39,8 +38,7 @@ logger = get_logger()
 
 
 class ResultVisualizer:
-    """
-    Visualizes and processes interpreted results of quantum protein folding simulations.
+    """Visualizes and processes interpreted results of quantum protein folding simulations.
     """
 
     def __init__(
@@ -50,8 +48,7 @@ class ResultVisualizer:
         coordinates_3d: list[BeadPosition],
         main_main_contacts_detected: dict[int, int],
     ) -> None:
-        """
-        Initialize the ResultVisualizer with contacts data from the main chain, directory path and decoded turn sequence and 3D coordinates.
+        """Initialize the ResultVisualizer with contacts data from the main chain, directory path and decoded turn sequence and 3D coordinates.
 
         Args:
             dirpath (Path): Directory path for saving output files.
@@ -66,8 +63,7 @@ class ResultVisualizer:
         self._main_main_contacts_detected: dict[int, int] = main_main_contacts_detected
 
     def visualize_3d(self, filename: str = HTML_VISUALIZATION_FILENAME) -> None:
-        """
-        Generate interactive 3D visualization of the resulting conformation in the .html file format.
+        """Generate interactive 3D visualization of the resulting conformation in the .html file format.
 
         Args:
             filename (str): The name of the file to save the interactive .html visualization. Defaults to HTML_VISUALIZATION_FILENAME.
@@ -218,8 +214,7 @@ class ResultVisualizer:
 
     @staticmethod
     def _get_text_color(rgb_color: str, brightness_threshhold: float = 0.5) -> str:
-        """
-        Helper function to choose black or white text depending on the brightness of the RGB color (using luminance formula for RGB).
+        """Helper function to choose black or white text depending on the brightness of the RGB color (using luminance formula for RGB).
 
         Args:
             rgb_color (str): The RGB color string in the format "rgb(r, g, b)".
@@ -246,8 +241,7 @@ class ResultVisualizer:
         return "white" if brightness < brightness_threshhold else "black"
 
     def generate_3d_gif(self, filename: str = GIF_VISUALIZATION_FILENAME) -> None:
-        """
-        Generate interactive simplified 3D visualization of the resulting conformation as a rotating plot in the .html file format.
+        """Generate interactive simplified 3D visualization of the resulting conformation as a rotating plot in the .html file format.
 
         Args:
             filename (str): The name of the file to save the rotating .gif plot. Defaults to GIF_VISUALIZATION_FILENAME constant.
@@ -330,8 +324,7 @@ class ResultVisualizer:
         logger.info("3D rotating GIF visualization saved to: %s", gif_path)
 
     def visualize_2d(self, filename: str = FLAT_VISUALIZATION_FILENAME) -> None:
-        """
-        Generate flat, 2D visualization of the resulting conformation in the .png file format.
+        """Generate flat, 2D visualization of the resulting conformation in the .png file format.
         This plot is a 2D projection (top-down view) of the 3D coordinates.
 
         Args:
@@ -466,8 +459,7 @@ class ResultVisualizer:
     def _generate_lattice_points(
         self, coords: NDArray[np.float64], padding: int = TETRAHEDRAL_LATTICE_PADDING
     ) -> NDArray[np.float64]:
-        """
-        Generate tetrahedral lattice points in range that matches the coordinates of the conformation
+        """Generate tetrahedral lattice points in range that matches the coordinates of the conformation
         (by taking the min/max values from the coordinates and padding them accordingly)
 
         Args:

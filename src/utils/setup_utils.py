@@ -1,5 +1,4 @@
-"""
-Module providing setup utilities for protein folding quantum simulation, including
+"""Module providing setup utilities for protein folding quantum simulation, including
 Hamiltonian construction, VQE setup, and result processing.
 """
 
@@ -38,8 +37,7 @@ logger = get_logger()
 def setup_folding_system(
     main_chain: str, side_chain: str
 ) -> tuple[Protein, Interaction, ContactMap, DistanceMap]:
-    """
-    Setup the protein folding system components.
+    """Setup the protein folding system components.
 
     Args:
         main_chain (str): Main chain protein sequence.
@@ -78,8 +76,7 @@ def build_and_compress_hamiltonian(
     contact_map: ContactMap,
     distance_map: DistanceMap,
 ) -> tuple[SparsePauliOp, SparsePauliOp]:
-    """
-    Build and compress the final Hamiltonian for the protein folding system.
+    """Build and compress the final Hamiltonian for the protein folding system.
 
     Args:
         protein (Protein): The protein instance.
@@ -110,8 +107,7 @@ def build_and_compress_hamiltonian(
 def setup_vqe_optimization(
     num_qubits: int,
 ) -> tuple[SamplingVQE, list[int], list[float]]:
-    """
-    Setup the VQE optimization process.
+    """Setup the VQE optimization process.
 
     Args:
         num_qubits (int): Number of qubits for the ansatz.
@@ -157,8 +153,7 @@ def run_vqe_optimization(
     vqe: SamplingVQE,
     hamiltonian: SparsePauliOp,
 ) -> SamplingMinimumEigensolverResult:
-    """
-    Run the VQE optimization process.
+    """Run the VQE optimization process.
 
     Args:
         vqe (SamplingVQE): The VQE instance.
@@ -188,8 +183,7 @@ def setup_result_analysis(
     vqe_iterations: list[int],
     vqe_energies: list[float],
 ) -> tuple[ResultInterpreter, ResultVisualizer]:
-    """
-    Setup the result analysis components.
+    """Setup the result analysis components.
 
     Args:
         raw_results (SamplingMinimumEigensolverResult): The raw results from the VQE optimization.

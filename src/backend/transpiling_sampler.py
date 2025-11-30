@@ -21,8 +21,7 @@ logger = get_logger()
 
 
 class TranspilingSampler(BaseSamplerV2):
-    """
-    Sampler wrapper that transpiles circuits before execution.
+    """Sampler wrapper that transpiles circuits before execution.
 
     This is required for IBM Quantum backends since March 2024, as they
     no longer accept non-ISA circuits. The wrapper intercepts circuit
@@ -32,8 +31,7 @@ class TranspilingSampler(BaseSamplerV2):
     """
 
     def __init__(self, sampler: BaseSamplerV2, backend: BackendV2) -> None:
-        """
-        Initialize the transpiling sampler.
+        """Initialize the transpiling sampler.
 
         Args:
             sampler (BaseSamplerV2): The underlying sampler (e.g., IBM SamplerV2).
@@ -47,8 +45,7 @@ class TranspilingSampler(BaseSamplerV2):
     def run(
         self, pubs: Iterable[SamplerPubLike], *, shots: int | None = None
     ) -> BasePrimitiveJob[PrimitiveResult[SamplerPubResult], Any]:
-        """
-        Run the sampler with automatic transpilation.
+        """Run the sampler with automatic transpilation.
 
         Args:
             pubs (Iterable[SamplerPubLike]): An iterable of pub-like objects containing circuits to execute.

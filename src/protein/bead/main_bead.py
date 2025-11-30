@@ -10,8 +10,7 @@ class _MainBead(Bead):
     """Represents a main bead in the protein's backbone."""
 
     def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:
-        """
-        Initialize the main bead and set up its turn qubits.
+        """Initialize the main bead and set up its turn qubits.
 
         Args:
             symbol (str): Amino acid symbol.
@@ -22,8 +21,7 @@ class _MainBead(Bead):
         super().__init__(symbol=symbol, index=index, parent_chain_len=parent_chain_len)
 
     def turn_0(self) -> SparsePauliOp:
-        """
-        Return the Pauli operator for the turn in direction 0.
+        """Return the Pauli operator for the turn in direction 0.
 
         Returns:
             SparsePauliOp: Pauli operator representing direction 0.
@@ -39,8 +37,7 @@ class _MainBead(Bead):
         raise ConformationEncodingError
 
     def turn_1(self) -> SparsePauliOp:
-        """
-        Return the Pauli operator for the turn in direction 1.
+        """Return the Pauli operator for the turn in direction 1.
 
         Returns:
             SparsePauliOp: Pauli operator representing direction 1.
@@ -56,8 +53,7 @@ class _MainBead(Bead):
         raise ConformationEncodingError
 
     def turn_2(self) -> SparsePauliOp:
-        """
-        Return the Pauli operator for the turn in direction 2.
+        """Return the Pauli operator for the turn in direction 2.
 
         Returns:
             SparsePauliOp: Pauli operator representing direction 2.
@@ -73,8 +69,7 @@ class _MainBead(Bead):
         raise ConformationEncodingError
 
     def turn_3(self) -> SparsePauliOp:
-        """
-        Return the Pauli operator for the turn in direction 3.
+        """Return the Pauli operator for the turn in direction 3.
 
         Returns:
             SparsePauliOp: Pauli operator representing direction 3.
@@ -90,8 +85,7 @@ class _MainBead(Bead):
         raise ConformationEncodingError
 
     def _dense_turn_fun_0(self) -> SparsePauliOp:
-        """
-        Compute the dense encoding operator for direction 0.
+        """Compute the dense encoding operator for direction 0.
 
         Returns:
             SparsePauliOp: Dense-encoded Pauli operator for direction 0.
@@ -103,8 +97,7 @@ class _MainBead(Bead):
         ).simplify()
 
     def _dense_turn_fun_1(self) -> SparsePauliOp:
-        """
-        Compute the dense encoding operator for direction 1.
+        """Compute the dense encoding operator for direction 1.
 
         Returns:
             SparsePauliOp: Dense-encoded Pauli operator for direction 1.
@@ -115,8 +108,7 @@ class _MainBead(Bead):
         ).simplify()
 
     def _dense_turn_fun_2(self) -> SparsePauliOp:
-        """
-        Compute the dense encoding operator for direction 2.
+        """Compute the dense encoding operator for direction 2.
 
         Returns:
             SparsePauliOp: Dense-encoded Pauli operator for direction 2.
@@ -127,8 +119,7 @@ class _MainBead(Bead):
         ).simplify()
 
     def _dense_turn_fun_3(self) -> SparsePauliOp:
-        """
-        Compute the dense encoding operator for direction 3.
+        """Compute the dense encoding operator for direction 3.
 
         Returns:
             SparsePauliOp: Dense-encoded Pauli operator for direction 3.

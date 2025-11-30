@@ -1,5 +1,4 @@
-"""
-Module providing tools to interpret and handle protein folding results, including
+"""Module providing tools to interpret and handle protein folding results, including
 XYZ file creation and JSON sanitization.
 """
 
@@ -25,8 +24,7 @@ logger = get_logger()
 
 
 def create_xyz_file(coords: list[BeadPosition], dirpath: Path) -> Path:
-    """
-    Create an .xyz file from the given bead positions.
+    """Create an .xyz file from the given bead positions.
 
     Note:
         XYZ file format reference: https://en.wikipedia.org/wiki/XYZ_file_format
@@ -63,8 +61,7 @@ def create_xyz_file(coords: list[BeadPosition], dirpath: Path) -> Path:
 
 
 def read_xyz_file(filepath: Path) -> list[BeadPosition]:
-    """
-    Read bead positions from an .xyz file.
+    """Read bead positions from an .xyz file.
 
     Note:
         XYZ file format reference: https://en.wikipedia.org/wiki/XYZ_file_format
@@ -107,8 +104,7 @@ def read_xyz_file(filepath: Path) -> list[BeadPosition]:
 
 
 def sanitize_for_json(obj: Any) -> Any:
-    """
-    Recursively sanitize an object to make it JSON serializable.
+    """Recursively sanitize an object to make it JSON serializable.
 
     Args:
         obj (Any): The object to sanitize.

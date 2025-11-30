@@ -54,7 +54,7 @@ select = [
     "B",    # flake8-bugbear
     "UP",   # pyupgrade
     "SIM",  # flake8-simplify
-    # "D",    # pydocstyle
+    "D",    # pydocstyle
     "RUF",  # ruff-specific rules
     "N",    # PEP8 Naming
     "PL",   # pylint

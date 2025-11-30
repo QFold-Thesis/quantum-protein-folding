@@ -1,5 +1,4 @@
-"""
-Interaction models for protein folding.
+"""Interaction models for protein folding.
 
 Defines the abstract base class `Interaction`, which loads an interaction matrix
 and computes interaction energies used in folding models such as HP or MJ.
@@ -15,8 +14,7 @@ if TYPE_CHECKING:
 
 
 class Interaction(ABC):
-    """
-    Abstract base class for interaction models.
+    """Abstract base class for interaction models.
 
     Subclasses must implement `get_energy` to return a numeric energy value and define their own initialization logic.
     Subclasses should also manage to properly set the `valid_symbols` set to determine which amino acid symbols they support.
@@ -27,8 +25,7 @@ class Interaction(ABC):
     """
 
     def __init__(self, interaction_matrix_path: Path) -> None:
-        """
-        Initialize the interaction model.
+        """Initialize the interaction model.
 
         Args:
             interaction_matrix_path (Path): Path to the file containing the interaction matrix.
@@ -39,8 +36,7 @@ class Interaction(ABC):
 
     @abstractmethod
     def get_energy(self, symbol_i: str, symbol_j: str) -> float:
-        """
-        Compute and return the interaction energy.
+        """Compute and return the interaction energy.
 
         This method must be implemented by all subclasses.
 

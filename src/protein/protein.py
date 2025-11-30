@@ -1,5 +1,4 @@
-"""
-Defines the Protein class, representing proteins with main and side chains,
+"""Defines the Protein class, representing proteins with main and side chains,
 including sequence validation and chain initialization.
 """
 
@@ -12,8 +11,7 @@ logger = get_logger()
 
 
 class Protein:
-    """
-    Represents a protein with main and side chains.
+    """Represents a protein with main and side chains.
 
     The main chain is defined as a sequence of amino acid residues.
     Side chains are optional and can be empty; if present, they follow the same residue types.
@@ -31,8 +29,7 @@ class Protein:
         side_protein_sequence: str,
         valid_symbols: set[str],
     ) -> None:
-        """
-        Initialize a Protein instance with given main and side chain sequences.
+        """Initialize a Protein instance with given main and side chain sequences.
 
         Validates that both sequences have the same length and initializes
         the corresponding chain objects.

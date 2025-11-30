@@ -1,5 +1,4 @@
-"""
-Contact map utilities for protein folding simulations.
+"""Contact map utilities for protein folding simulations.
 
 This module provides the `ContactMap` class that:
 
@@ -26,8 +25,7 @@ logger = get_logger()
 
 
 class ContactMap:
-    """
-    Represents a contact map for a protein's main chain.
+    """Represents a contact map for a protein's main chain.
 
     Stores pairwise contact operators between MainBeads, using Pauli operators
     to encode whether contacts are present, respecting minimum bond distances
@@ -40,8 +38,7 @@ class ContactMap:
     """
 
     def __init__(self, protein: Protein) -> None:
-        """
-        Initializes the contact map for the given protein.
+        """Initializes the contact map for the given protein.
 
         Args:
             protein (Protein): The Protein object that includes all information about protein.
@@ -75,8 +72,7 @@ class ContactMap:
             )
 
     def _initialize_contact_map(self) -> None:
-        """
-        Initializes all contact maps to empty dictionaries.
+        """Initializes all contact maps to empty dictionaries.
 
         Note:
             The minimum distance between residues for forming a contact is set by the constant
@@ -144,8 +140,7 @@ class ContactMap:
     def _create_main_main_contact(
         self, upper_bead: Bead, lower_bead: Bead
     ) -> SparsePauliOp:
-        """
-        Creates a contact operator between two main chain MainBeads.
+        """Creates a contact operator between two main chain MainBeads.
 
         Args:
             lower_bead (Bead): The bead from the main chain at the lower index.

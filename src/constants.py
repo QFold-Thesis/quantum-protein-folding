@@ -1,5 +1,4 @@
-"""
-Definitions of constants used throughout the protein folding simulations.
+"""Definitions of constants used throughout the protein folding simulations.
 
 This module centralizes configuration parameters, file paths, numeric constants,
 energy coefficients, and backend options required by different components of the

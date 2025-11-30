@@ -1,5 +1,4 @@
-"""
-Miyazawa-Jernigan (MJ) pairwise contact potentials.
+"""Miyazawa-Jernigan (MJ) pairwise contact potentials.
 
 This module provides a small utility class, ``MJInteraction``, that:
 
@@ -30,8 +29,7 @@ logger = get_logger()
 
 
 class MJInteraction(Interaction):
-    """
-    MJ interaction model that loads the MJ matrix and exposes
+    """MJ interaction model that loads the MJ matrix and exposes
     pairwise residue contact energies.
 
     Attributes:
@@ -43,8 +41,7 @@ class MJInteraction(Interaction):
         self,
         interaction_matrix_path: Path = MJ_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
-        """
-        Initialize MJInteraction instance.
+        """Initialize MJInteraction instance.
 
         Loads the MJ interaction matrix from a file and prepares a mapping of
         residue-residue pairs to their contact energies.
@@ -70,8 +67,7 @@ class MJInteraction(Interaction):
     def _prepare_mj_interaction_matrix(
         self, mj_filepath: Path = MJ_INTERACTION_MATRIX_FILEPATH
     ) -> dict[str, float]:
-        """
-        Prepare the MJ interaction matrix.
+        """Prepare the MJ interaction matrix.
 
         Reads the MJ matrix file, records valid residue symbols, and builds a
         dictionary of symmetric residue-residue contact energies.
@@ -112,8 +108,7 @@ class MJInteraction(Interaction):
             return energy_pairs
 
     def get_energy(self, symbol_i: str, symbol_j: str) -> float:
-        """
-        Return MJ interaction energy for a pair of residue symbols.
+        """Return MJ interaction energy for a pair of residue symbols.
 
         Args:
             symbol_i (str): One-letter code of the first residue.
