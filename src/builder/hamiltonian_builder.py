@@ -55,8 +55,7 @@ class HamiltonianBuilder:
         distance_map: DistanceMap,
         contact_map: ContactMap,
     ):
-        """Initializes the HamiltonianBuilder with required protein data
-        and interaction maps.
+        """Initializes the HamiltonianBuilder with required protein data and interaction maps.
 
         Args:
             protein (Protein): The Protein object that includes all information about protein.
@@ -123,8 +122,7 @@ class HamiltonianBuilder:
         return total_hamiltonian.simplify()
 
     def _build_backbone_contact_term(self) -> SparsePauliOp:
-        """Builds the hamiltonian term corresponding to backbone_backbone (BB-BB) interactions.
-        Includes both 1st neighbor and 2nd neighbor contributions (with shifts i±1, j±1).
+        """Builds the hamiltonian term corresponding to backbone_backbone (BB-BB) interactions. Includes both 1st neighbor and 2nd neighbor contributions (with shifts i±1, j±1).
 
         Note:
             Only pairs that belong to different sublattices are considered for first-neighbor interactions.
@@ -195,8 +193,7 @@ class HamiltonianBuilder:
         return h_backbone
 
     def _add_backtracking_penalty(self) -> SparsePauliOp:
-        """Adds a penalty term to the hamiltonian to discourage backtracking
-        in the main chain configuration.
+        """Adds a penalty term to the hamiltonian to discourage backtracking in the main chain configuration.
 
         Returns:
             SparsePauliOp: hamiltonian term representing backtracking penalties.
@@ -274,8 +271,7 @@ class HamiltonianBuilder:
         upper_bead_idx: int,
         lambda_1: float,
     ) -> SparsePauliOp:
-        """Computes the hamiltonian contribution for first-neighbor bead pairs,
-        combining distance-based and interaction contact energies.
+        """Computes the hamiltonian contribution for first-neighbor bead pairs, combining distance-based and interaction contact energies.
 
         Note:
              lambda_0 combines the bounding constant, bead separation, and lambda_1
@@ -319,8 +315,7 @@ class HamiltonianBuilder:
         upper_bead_idx: int,
         lambda_1: float,
     ) -> SparsePauliOp:
-        """Computes the hamiltonian contribution for second-neighbor bead pairs,
-        including distance-based and interaction terms.
+        """Computes the hamiltonian contribution for second-neighbor bead pairs, including distance-based and interaction terms.
 
         Args:
             lower_bead_idx (int): Index of the lower bead in the main chain.

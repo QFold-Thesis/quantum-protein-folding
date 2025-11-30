@@ -1,6 +1,4 @@
-"""Defines the Protein class, representing proteins with main and side chains,
-including sequence validation and chain initialization.
-"""
+"""Defines the `Protein` class, representing proteins with main and side chains, including sequence validation and chain initialization."""
 
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER, MIN_CHAIN_LENGTH
 from exceptions import ChainLengthError, UnsupportedAminoAcidSymbolError

@@ -1,3 +1,5 @@
+"""Module defining the `_SideBead` class for protein side bead representation."""
+
 from qiskit.quantum_info import SparsePauliOp
 
 from logger import get_logger

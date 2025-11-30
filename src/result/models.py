@@ -1,5 +1,4 @@
-"""Data models for interpreting and visualizing protein folding results.
-"""
+"""Data models for interpreting and visualizing protein folding results."""
 
 from dataclasses import dataclass
 

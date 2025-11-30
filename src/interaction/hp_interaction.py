@@ -54,8 +54,7 @@ class HPInteraction(Interaction):
         self,
         interaction_matrix_path: Path = HP_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
-        """Initialize the HP interaction model by loading hydrophobic residues from
-        the HP matrix file and preparing the supported symbol set.
+        """Initialize the HP interaction model by loading hydrophobic residues from the HP matrix file and preparing the supported symbol set.
 
         Args:
             interaction_matrix_path (Path, optional): Path to the HP interaction matrix file. Defaults to HP_INTERACTION_MATRIX_FILEPATH.

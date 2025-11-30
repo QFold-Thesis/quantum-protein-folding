@@ -1,6 +1,4 @@
-"""Module providing tools to interpret and handle protein folding results, including
-XYZ file creation and JSON sanitization.
-"""
+"""Module providing tools to interpret and handle protein folding results, including XYZ file creation and JSON sanitization."""
 
 from __future__ import annotations
 

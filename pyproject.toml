@@ -87,6 +87,9 @@ fixable = ["ALL"]
     "ARG",     # Allow unused args in tests
 ]
 
+"__init__.py" = ["D104"] # Allow missing docstrings in __init__.py files
+"src/exceptions.py" = ["D107"] # Allow missing docstrings in custom exceptions' __init__ methods
+
 # We allow non top-level imports in these files since their usage is optional
 "src/result/visualizer/result_visualizer.py" = [
     "PLC0415",

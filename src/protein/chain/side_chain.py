@@ -1,3 +1,5 @@
+"""Defines the `SideChain` class for representing the side chain of a protein."""
+
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from logger import get_logger
 from protein.bead.placeholder_side_bead import _PlaceholderSideBead
