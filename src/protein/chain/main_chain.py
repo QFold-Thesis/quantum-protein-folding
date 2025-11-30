@@ -22,11 +22,19 @@ class _MainChain(Chain):
             protein_sequence (str): Amino acid sequence of the protein backbone.
 
         """
-        super().__init__(protein_sequence=protein_sequence)
         logger.debug(
-            f"Initializing MainChain based from protein sequence: {protein_sequence}..."
+            "Initializing MainChain based from protein sequence: %s...",
+            protein_sequence,
         )
+        super().__init__(protein_sequence=protein_sequence)
 
+    def _initialize_beads(self, protein_sequence: str) -> None:
+        """Initialize main beads (_MainBead) based on the protein sequence.
+
+        Args:
+            protein_sequence (str): The amino acid sequence representing the protein chain.
+
+        """
         self.beads = [
             _MainBead(
                 symbol=bead,
@@ -37,5 +45,7 @@ class _MainChain(Chain):
         ]
 
         logger.info(
-            f"MainChain for {protein_sequence} initialized with {len(self.beads)} MainBeads."
+            "MainChain for %s initialized with %d MainBeads.",
+            protein_sequence,
+            len(self.beads),
         )

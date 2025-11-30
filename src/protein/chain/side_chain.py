@@ -26,16 +26,23 @@ class _SideChain(Chain):
             protein_sequence (str): Amino acid sequence of the protein side chain.
 
         """
-        super().__init__(protein_sequence=protein_sequence)
         logger.debug(
-            f"Initializing SideChain from protein sequence: {protein_sequence}..."
+            "Initializing SideChain from protein sequence: %s...", protein_sequence
         )
+        super().__init__(protein_sequence=protein_sequence)
 
+    def _initialize_beads(self, protein_sequence: str) -> None:
+        """Initialize side beads (_SideBead) and placeholder side beads (_PlaceholderSideBead) based on the protein sequence.
+
+        Args:
+            protein_sequence (str): The amino acid sequence representing the protein chain.
+
+        """
         self.beads = [
             _SideBead(
-                symbol=bead,
-                index=index,
-                parent_chain_len=len(protein_sequence),
+                _symbol=bead,
+                _index=index,
+                _parent_chain_len=len(protein_sequence),
             )
             if bead != EMPTY_SIDECHAIN_PLACEHOLDER
             else _PlaceholderSideBead(
@@ -52,5 +59,8 @@ class _SideChain(Chain):
         placeholder_bead_count: int = len(self.beads) - side_bead_count
 
         logger.info(
-            f"SideChain for {protein_sequence} initialized with {side_bead_count} SideBeads and {placeholder_bead_count} PlaceholderSideBeads."
+            "SideChain for %s initialized with %d SideBeads and %d PlaceholderSideBeads.",
+            protein_sequence,
+            side_bead_count,
+            placeholder_bead_count,
         )

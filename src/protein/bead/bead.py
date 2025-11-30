@@ -62,7 +62,9 @@ class Bead(ABC):
             self._initialize_turn_qubits()
         else:
             logger.info(
-                f"Initialized 0 turn qubits for Bead {self.symbol} (index: {self.index}) [skipped: last bead in chain]"
+                "Initialized 0 turn qubits for Bead %s (index: %d) [skipped: last bead in chain]",
+                self.symbol,
+                self.index,
             )
 
     def _initialize_turn_qubits(self) -> None:
@@ -90,7 +92,10 @@ class Bead(ABC):
             for i in range(QUBITS_PER_TURN)
         )
         logger.info(
-            f"Initialized {len(self.turn_qubits)} turn qubits for Bead {self.symbol} (index: {self.index})"
+            "Initialized %d turn qubits for Bead %s (index: %d)",
+            len(self.turn_qubits),
+            self.symbol,
+            self.index,
         )
 
     def turn_funcs(

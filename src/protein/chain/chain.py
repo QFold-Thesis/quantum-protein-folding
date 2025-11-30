@@ -19,7 +19,6 @@ class Chain(ABC):
 
     """
 
-    @abstractmethod
     def __init__(self, protein_sequence: str) -> None:
         """Initialize the chain with an empty list of beads.
 
@@ -28,6 +27,22 @@ class Chain(ABC):
 
         """
         self.beads: list[Bead] = []
+        self._initialize_beads(protein_sequence)
+        if not self.beads:
+            msg: str = "Bead initialization failed; beads list is empty."
+            raise ValueError(msg)
+
+    @abstractmethod
+    def _initialize_beads(self, protein_sequence: str) -> None:
+        """Abstract method to initialize beads based on the protein sequence.
+
+        This method should be implemented by subclasses to populate the `beads` attribute.
+
+        Args:
+            protein_sequence (str): The amino acid sequence representing the protein chain.
+
+        """
+        pass
 
     def get_symbol_at(self, index: int) -> str:
         """Return the symbol of the bead at the given chain index.

@@ -48,28 +48,28 @@ extend-exclude = [
 
 [tool.ruff.lint]
 select = [
-    # "E",    # pycodestyle errors
-    # "F",    # pyflakes
-    # "I",    # isort
-    # "B",    # flake8-bugbear
-    # "UP",   # pyupgrade
-    # "SIM",  # flake8-simplify
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+    "SIM",  # flake8-simplify
     "D",    # pydocstyle
-    # "RUF",  # ruff-specific rules
-    # "N",    # PEP8 Naming
-    # "PL",   # pylint
-    # "ARG",  # flake8-unused-arguments
-    # "ERA",  # eradicate
-    # "TID",  # tidy imports
-    # "EM",   # error messages
-    # "TRY",  # tryceratops rules
-    # "G",    # flake8-logging-format
-    # "PTH",  # flake8-use-pathlib
-    # "C4",   # flake8-comprehensions
-    # "A",    # flake8-builtins
-    # "DTZ",  # flake8-datetimez
-    # "S",    # flake8-bandit
-    # "ISC",  # flake8-implicit-str-concat
+    "RUF",  # ruff-specific rules
+    "N",    # PEP8 Naming
+    "PL",   # pylint
+    "ARG",  # flake8-unused-arguments
+    "ERA",  # eradicate
+    "TID",  # tidy imports
+    "EM",   # error messages
+    "TRY",  # tryceratops rules
+    "G",    # flake8-logging-format
+    "PTH",  # flake8-use-pathlib
+    "C4",   # flake8-comprehensions
+    "A",    # flake8-builtins
+    "DTZ",  # flake8-datetimez
+    "S",    # flake8-bandit
+    "ISC",  # flake8-implicit-str-concat
 ]
 
 ignore = [
