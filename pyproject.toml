@@ -118,14 +118,29 @@ python-version = "3.12"
 untyped_def_behavior = "check-and-infer-return-any"
 
 [tool.pyrefly.errors]
-implicit-any = true
+# -- The "Strict" enforcing --
+implicit-any = true 
 untyped-import = true
-bad-return = true
+missing-import = true 
+
+# -- Type Consistency --
 bad-assignment = true
+bad-return = true
 bad-argument-type = true
-missing-import = true
+bad-override = true
+
+# -- Function & Class Definition --
 bad-function-definition = true
 bad-class-definition = true
+bad-argument-count = true
+missing-argument = true
+unexpected-keyword = true
+
+# -- Advanced Safety --
+bad-unpacking = true
+bad-index = true
+bad-match = true
+invalid-annotation = true
 
 # ==============================================================================
 # DOCUMENTATION COVERAGE (INTERROGATE)

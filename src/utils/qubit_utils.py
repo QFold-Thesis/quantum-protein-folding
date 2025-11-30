@@ -150,7 +150,7 @@ def fix_qubits(
             table_z, has_side_chain_second_bead=has_side_chain_second_bead
         )
         return SparsePauliOp(
-            [Pauli((table_z, table_x))], [operator.coeffs[0]]
+            data=[Pauli((table_z, table_x))], coeffs=np.array([operator.coeffs[0]])
         ).simplify()
 
     new_paulis: list[Pauli] = []

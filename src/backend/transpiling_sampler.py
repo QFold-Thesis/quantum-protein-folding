@@ -2,18 +2,20 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from qiskit import transpile
-from qiskit.primitives import BaseSamplerV2
+from qiskit.circuit.quantumcircuit import QuantumCircuit
+from qiskit.primitives import BasePrimitiveJob, BaseSamplerV2
+from qiskit.primitives.containers.sampler_pub_result import SamplerPubResult
+from qiskit.providers.backend import BackendV2
 
 from logger import get_logger
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from qiskit.primitives.containers import PrimitiveResult, PubResult, SamplerPubLike
-    from qiskit.providers import Backend
+    from qiskit.primitives.containers import PrimitiveResult, SamplerPubLike
 
 logger = get_logger()
 
@@ -29,7 +31,7 @@ class TranspilingSampler(BaseSamplerV2):
 
     """
 
-    def __init__(self, sampler: BaseSamplerV2, backend: Backend) -> None:
+    def __init__(self, sampler: BaseSamplerV2, backend: BackendV2) -> None:
         """
         Initialize the transpiling sampler.
 
@@ -39,12 +41,12 @@ class TranspilingSampler(BaseSamplerV2):
 
         """
         self._sampler: BaseSamplerV2 = sampler
-        self._backend: Backend = backend
+        self._backend: BackendV2 = backend
         logger.debug("TranspilingSampler initialized for backend: %s", backend.name)
 
     def run(
         self, pubs: Iterable[SamplerPubLike], *, shots: int | None = None
-    ) -> PrimitiveResult[PubResult]:
+    ) -> BasePrimitiveJob[PrimitiveResult[SamplerPubResult], Any]:
         """
         Run the sampler with automatic transpilation.
 
@@ -63,14 +65,14 @@ class TranspilingSampler(BaseSamplerV2):
 
         for pub in pub_list:
             if hasattr(pub, "circuit"):
-                circuit = pub.circuit
+                circuit: Any = pub.circuit
             elif isinstance(pub, tuple) and len(pub) > 0:
-                circuit = pub[0]
+                circuit: Any = pub[0]
             else:
-                circuit = pub
+                circuit: Any = pub
 
             logger.debug("Transpiling circuit with %s qubits", circuit.num_qubits)
-            transpiled_circuit = transpile(
+            transpiled_circuit: QuantumCircuit = transpile(
                 circuit,
                 backend=self._backend,
                 optimization_level=3,

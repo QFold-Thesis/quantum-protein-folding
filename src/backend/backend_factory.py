@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from qiskit.providers.backend import BackendV2
+
 from backend.transpiling_sampler import TranspilingSampler
 from constants import (
     BACKEND_TYPE,
@@ -17,17 +19,16 @@ from logger import get_logger
 
 if TYPE_CHECKING:
     from qiskit.primitives import BaseSamplerV2
-    from qiskit.providers import Backend
 
 logger = get_logger()
 
 
-def get_sampler() -> tuple[BaseSamplerV2, Backend | None]:
+def get_sampler() -> tuple[BaseSamplerV2, BackendV2 | None]:
     """
     Get the appropriate sampler based on the configured backend type.
 
     Returns:
-        tuple[BaseSamplerV2, Backend | None]: Configured sampler instance and backend (None for local statevector).
+        tuple[BaseSamplerV2, BackendV2 | None]: Configured sampler instance and backend (None for local statevector).
 
     Raises:
         InvalidBackendError: If the backend type is not supported or configuration is invalid.
@@ -56,7 +57,7 @@ def _get_local_statevector_sampler() -> BaseSamplerV2:
     return StatevectorSampler()
 
 
-def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, Backend]:
+def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, BackendV2]:
     """
     Get a sampler for IBM Quantum hardware with automatic transpilation.
 
@@ -91,7 +92,7 @@ def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, Backend]:
     logger.info("Connecting to IBM Quantum service...")
     service = QiskitRuntimeService(channel="ibm_quantum_platform", token=token)
 
-    backend = service.backend(backend_name)
+    backend: BackendV2 = service.backend(backend_name)
     logger.info("Using IBM Quantum backend: %s", backend_name)
     logger.info("Backend status: %s", backend.status())
 
