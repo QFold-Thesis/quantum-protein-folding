@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from qiskit import transpile
 from qiskit.circuit.quantumcircuit import QuantumCircuit
@@ -57,6 +57,9 @@ class TranspilingSampler(BaseSamplerV2):
         Returns:
             PrimitiveResult[PubResult]: Results from the underlying sampler with transpiled circuits.
 
+        Raises:
+            TypeError: If an unsupported pub type is encountered.
+
         """
         logger.debug("Running sampler with automatic transpilation of circuits")
 
@@ -68,11 +71,8 @@ class TranspilingSampler(BaseSamplerV2):
                 circuit: QuantumCircuit = pub.circuit
             elif isinstance(pub, tuple) and len(pub) > 0:
                 circuit: QuantumCircuit = pub[0]
-            elif isinstance(pub, QuantumCircuit):
-                circuit: QuantumCircuit = pub
             else:
-                msg: str = f"Unsupported pub type: {type(pub)!r}"
-                raise TypeError(msg)
+                circuit: QuantumCircuit = cast(QuantumCircuit, pub)
 
             logger.debug("Transpiling circuit with %s qubits", circuit.num_qubits)
             transpiled_circuit: QuantumCircuit = transpile(
