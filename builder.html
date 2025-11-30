@@ -112,7 +112,7 @@ penalties, and neighbor-based contact terms, using distance and interaction maps
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>protein</strong> (<a class="reference internal" href="protein.html#protein.protein.Protein" title="protein.protein.Protein"><em>Protein</em></a>) – The Protein object that includes all information about protein.</p></li>
-<li><p><strong>interaction</strong> (<a class="reference internal" href="interaction.html#interaction.interaction.Interaction" title="interaction.interaction.Interaction"><em>Interaction</em></a>) – Interaction model between beads of the protein.</p></li>
+<li><p><strong>interaction</strong> (<em>Interaction</em>) – Interaction model between beads of the protein.</p></li>
 <li><p><strong>distance_map</strong> (<a class="reference internal" href="distance.html#distance.distance_map.DistanceMap" title="distance.distance_map.DistanceMap"><em>DistanceMap</em></a>) – Matrix of pairwise distances between residues.</p></li>
 <li><p><strong>contact_map</strong> (<a class="reference internal" href="contact.html#contact.contact_map.ContactMap" title="contact.contact_map.ContactMap"><em>ContactMap</em></a>) – Matrix indicating residue-residue contacts.</p></li>
 </ul>
@@ -126,7 +126,7 @@ penalties, and neighbor-based contact terms, using distance and interaction maps
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>protein</strong> (<a class="reference internal" href="protein.html#protein.protein.Protein" title="protein.protein.Protein"><em>Protein</em></a>) – The Protein object that includes all information about protein.</p></li>
-<li><p><strong>interaction</strong> (<a class="reference internal" href="interaction.html#interaction.interaction.Interaction" title="interaction.interaction.Interaction"><em>Interaction</em></a>) – Interaction model between beads of the protein.</p></li>
+<li><p><strong>interaction</strong> (<em>Interaction</em>) – Interaction model between beads of the protein.</p></li>
 <li><p><strong>distance_map</strong> (<a class="reference internal" href="distance.html#distance.distance_map.DistanceMap" title="distance.distance_map.DistanceMap"><em>DistanceMap</em></a>) – Matrix of pairwise distances between residues.</p></li>
 <li><p><strong>contact_map</strong> (<a class="reference internal" href="contact.html#contact.contact_map.ContactMap" title="contact.contact_map.ContactMap"><em>ContactMap</em></a>) – Matrix indicating residue-residue contacts.</p></li>
 </ul>
@@ -248,7 +248,7 @@ between two beads based on their turn functions. If either bead lacks
 defined turn functions, an identity operator is returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type">SparsePauliOp</span></p>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">

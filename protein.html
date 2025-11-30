@@ -645,7 +645,7 @@ conversion.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="protein.chain.chain.Chain.__init__">
-<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.chain.Chain.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.chain.Chain.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initialize the chain with an empty list of beads.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -658,6 +658,21 @@ conversion.</p>
 <dt class="sig sig-object py" id="protein.chain.chain.Chain._abc_impl">
 <span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#protein.chain.chain.Chain._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.chain.chain.Chain._initialize_beads">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_initialize_beads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.chain.Chain._initialize_beads" title="Link to this definition"></a></dt>
+<dd><p>Abstract method to initialize beads based on the protein sequence.</p>
+<p>This method should be implemented by subclasses to populate the <cite>beads</cite> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>protein_sequence</strong> (<em>str</em>) – The amino acid sequence representing the protein chain.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="protein.chain.chain.Chain.get_symbol_at">
@@ -708,6 +723,20 @@ conversion.</p>
 <span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#protein.chain.main_chain._MainChain._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.chain.main_chain._MainChain._initialize_beads">
+<span class="sig-name descname"><span class="pre">_initialize_beads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.main_chain._MainChain._initialize_beads" title="Link to this definition"></a></dt>
+<dd><p>Initialize main beads (_MainBead) based on the protein sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>protein_sequence</strong> (<em>str</em>) – The amino acid sequence representing the protein chain.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <p id="module-protein.chain.side_chain">Defines the <cite>SideChain</cite> class for representing the side chain of a protein.</p>
@@ -737,6 +766,20 @@ conversion.</p>
 <dt class="sig sig-object py" id="protein.chain.side_chain._SideChain._abc_impl">
 <span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#protein.chain.side_chain._SideChain._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="protein.chain.side_chain._SideChain._initialize_beads">
+<span class="sig-name descname"><span class="pre">_initialize_beads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#protein.chain.side_chain._SideChain._initialize_beads" title="Link to this definition"></a></dt>
+<dd><p>Initialize side beads (_SideBead) and placeholder side beads (_PlaceholderSideBead) based on the protein sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>protein_sequence</strong> (<em>str</em>) – The amino acid sequence representing the protein chain.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
