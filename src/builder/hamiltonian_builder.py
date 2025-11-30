@@ -169,7 +169,7 @@ class HamiltonianBuilder:
                     h_backbone += self.contact_map.main_main_contacts[i][
                         j
                     ] ^ self.get_first_neighbor_hamiltonian(
-                        i, j, Penalties.OVERLAP_PENALTY
+                        i, j, float(Penalties.OVERLAP_PENALTY)
                     )
 
                 for di, dj in [
@@ -188,7 +188,7 @@ class HamiltonianBuilder:
                         h_backbone += self.contact_map.main_main_contacts[i][
                             j
                         ] ^ self.get_second_neighbor_hamiltonian(
-                            ii, jj, Penalties.OVERLAP_PENALTY
+                            ii, jj, float(Penalties.OVERLAP_PENALTY)
                         )
 
                 h_backbone = fix_qubits(h_backbone)

@@ -42,7 +42,7 @@ def multi_term_op() -> SparsePauliOp:
 def test_build_identity_op_returns_correct_identity():
     op = build_identity_op(3, coeff=2.0)
     assert isinstance(op, SparsePauliOp)
-    assert op.num_qubits == 3  # noqa: PLR2004
+    assert op.num_qubits == 3
     expected = SparsePauliOp.from_list([("III", 2.0)])
     assert op == expected
 
@@ -58,7 +58,7 @@ def test_build_turn_qubit_creates_valid_operator():
     expected = NORM_FACTOR * SparsePauliOp.from_list([("IIII", 1.0), ("IIZI", -1.0)])
 
     assert isinstance(op, SparsePauliOp)
-    assert op.num_qubits == 4  # noqa: PLR2004
+    assert op.num_qubits == 4
     assert op == expected
 
 
@@ -90,7 +90,7 @@ def test_build_pauli_z_operator_empty():
 def test_convert_to_qubits_valid(sample_pauli):
     converted = convert_to_qubits(sample_pauli)
     assert isinstance(converted, SparsePauliOp)
-    assert converted.num_qubits == 2  # noqa: PLR2004
+    assert converted.num_qubits == 2
 
 
 # ---------------------------------------------------------------------------
@@ -102,7 +102,7 @@ def test_pad_to_n_qubits_adds_padding(sample_pauli):
     padded = pad_to_n_qubits(sample_pauli, 4)
     expected = SparsePauliOp.from_list([("IIZI", 1.0)])
     assert isinstance(padded, SparsePauliOp)
-    assert padded.num_qubits == 4  # noqa: PLR2004
+    assert padded.num_qubits == 4
     assert padded == expected
 
 
@@ -120,7 +120,7 @@ def test_pad_to_n_qubits_same_size(sample_pauli):
 def test_fix_qubits_single_term(single_term_op):
     fixed = fix_qubits(single_term_op)
     assert isinstance(fixed, SparsePauliOp)
-    assert fixed.num_qubits == 6  # noqa: PLR2004
+    assert fixed.num_qubits == 6
 
     label, _ = fixed.to_list()[0]
     label_chars = list(label[::-1])
@@ -131,7 +131,7 @@ def test_fix_qubits_single_term(single_term_op):
 def test_fix_qubits_multi_term(multi_term_op):
     fixed = fix_qubits(multi_term_op)
     assert isinstance(fixed, SparsePauliOp)
-    assert fixed.num_qubits == 6  # noqa: PLR2004
+    assert fixed.num_qubits == 6
 
     expected_terms = []
     for label, coeff in multi_term_op.to_list():
