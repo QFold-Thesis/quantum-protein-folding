@@ -34,8 +34,8 @@ class Chain(ABC):
 
     @abstractmethod
     def _initialize_beads(self, protein_sequence: str) -> None:
-        """
-        Abstract method to initialize beads based on the protein sequence.
+        """Abstract method to initialize beads based on the protein sequence.
+
         This method should be implemented by subclasses to populate the `beads` attribute.
 
         Args:

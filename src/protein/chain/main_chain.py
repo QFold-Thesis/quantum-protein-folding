@@ -29,8 +29,7 @@ class _MainChain(Chain):
         super().__init__(protein_sequence=protein_sequence)
 
     def _initialize_beads(self, protein_sequence: str) -> None:
-        """
-        Initialize main beads (_MainBead) based on the protein sequence.
+        """Initialize main beads (_MainBead) based on the protein sequence.
 
         Args:
             protein_sequence (str): The amino acid sequence representing the protein chain.
