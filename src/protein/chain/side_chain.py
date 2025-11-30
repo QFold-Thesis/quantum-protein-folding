@@ -1,3 +1,5 @@
+"""Defines the `SideChain` class for representing the side chain of a protein."""
+
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from logger import get_logger
 from protein.bead.placeholder_side_bead import _PlaceholderSideBead
@@ -8,8 +10,7 @@ logger = get_logger()
 
 
 class _SideChain(Chain):
-    """
-    Represents the side chain of a protein, consisting of amino acids attached to residues of the main chain.
+    """Represents the side chain of a protein, consisting of amino acids attached to residues of the main chain.
 
     Attributes:
         beads (list[_SideBead | _PlaceholderSideBead]): List of side beads in the protein's side chain.
@@ -17,8 +18,7 @@ class _SideChain(Chain):
     """
 
     def __init__(self, protein_sequence: str) -> None:
-        """
-        Initialize the side chain with beads corresponding to the protein sequence.
+        """Initialize the side chain with beads corresponding to the protein sequence.
 
         If a bead symbol matches the EMPTY_SIDECHAIN_PLACEHOLDER, a PlaceholderSideBead is created instead.
 

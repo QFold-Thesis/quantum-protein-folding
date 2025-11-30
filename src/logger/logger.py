@@ -1,5 +1,4 @@
-"""
-Logger utility for the application.
+"""Logger utility for the application.
 
 Provides a simple helper `get_logger` that returns a ready-to-use logger
 configured in a consistent way across the whole program.
@@ -21,8 +20,7 @@ if TYPE_CHECKING:
 
 
 def get_logger(name: str = GLOBAL_LOGGER_NAME) -> logging.Logger:
-    """
-    Creates and configures a logger instance.
+    """Creates and configures a logger instance.
 
     Args:
         name (str): Name of the logger. Defaults to `GLOBAL_LOGGER_NAME`.

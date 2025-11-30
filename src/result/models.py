@@ -1,6 +1,4 @@
-"""
-Data models for interpreting and visualizing protein folding results.
-"""
+"""Data models for interpreting and visualizing protein folding results."""
 
 from dataclasses import dataclass
 
@@ -9,8 +7,7 @@ import numpy as np
 
 @dataclass(frozen=True)
 class SparseVQEOutput:
-    """
-    Data class for storing sparse VQE output results.
+    """Data class for storing sparse VQE output results.
 
     Attributes:
         bitstring (str): The bitstring representation of the quantum state.
@@ -26,8 +23,7 @@ class SparseVQEOutput:
     energy_value: np.complex128
 
     def __repr__(self) -> str:
-        """
-        Returns a string representation of the SparseVQEOutput instance.
+        """Returns a string representation of the SparseVQEOutput instance.
 
         Returns:
             str: Concatenated sequence of bead symbols.
@@ -43,8 +39,7 @@ class SparseVQEOutput:
 
 @dataclass(frozen=True)
 class BeadPosition:
-    """
-    Data class for storing the position of a bead in 3D space.
+    """Data class for storing the position of a bead in 3D space.
 
     Attributes:
         index (int): The index of the bead.
