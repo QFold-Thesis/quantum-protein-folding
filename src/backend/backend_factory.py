@@ -23,8 +23,7 @@ logger = get_logger()
 
 
 def get_sampler() -> tuple[BaseSamplerV2, Backend | None]:
-    """
-    Get the appropriate sampler based on the configured backend type.
+    """Get the appropriate sampler based on the configured backend type.
 
     Returns:
         tuple[BaseSamplerV2, Backend | None]: Configured sampler instance and backend (None for local statevector).
@@ -43,8 +42,7 @@ def get_sampler() -> tuple[BaseSamplerV2, Backend | None]:
 
 
 def _get_local_statevector_sampler() -> BaseSamplerV2:
-    """
-    Get a local statevector sampler for ideal simulation.
+    """Get a local statevector sampler for ideal simulation.
 
     Returns:
         BaseSamplerV2: Local statevector sampler instance.
@@ -57,8 +55,7 @@ def _get_local_statevector_sampler() -> BaseSamplerV2:
 
 
 def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, Backend]:
-    """
-    Get a sampler for IBM Quantum hardware with automatic transpilation.
+    """Get a sampler for IBM Quantum hardware with automatic transpilation.
 
     Requires qiskit-ibm-runtime package and valid IBM Quantum credentials.
 

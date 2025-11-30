@@ -1,5 +1,4 @@
-"""
-Utilities for building the hamiltonian of a protein for quantum simulations.
+"""Utilities for building the hamiltonian of a protein for quantum simulations.
 
 This module provides the HamiltonianBuilder class, which constructs hamiltonian
 operators for a given protein, including backbone interactions, backtracking
@@ -39,8 +38,7 @@ logger = get_logger()
 
 
 class HamiltonianBuilder:
-    """
-    Constructs hamiltonian operators for a given protein, including backbone interactions and backtracking penalties.
+    """Constructs hamiltonian operators for a given protein, including backbone interactions and backtracking penalties.
 
     Attributes:
         protein (Protein): The Protein object that includes all information about protein.
@@ -57,8 +55,7 @@ class HamiltonianBuilder:
         distance_map: DistanceMap,
         contact_map: ContactMap,
     ):
-        """
-        Initializes the HamiltonianBuilder with required protein data
+        """Initializes the HamiltonianBuilder with required protein data
         and interaction maps.
 
         Args:
@@ -74,8 +71,7 @@ class HamiltonianBuilder:
         self.contact_map: ContactMap = contact_map
 
     def sum_hamiltonians(self) -> SparsePauliOp:
-        """
-        Build and sum all hamiltonian components, padding to a common qubit size.
+        """Build and sum all hamiltonian components, padding to a common qubit size.
 
         Constructs the backbone and backtracking terms, checks qubit consistency,
         pads them to the same qubit count, and sums them into a single hamiltonian.
@@ -127,8 +123,7 @@ class HamiltonianBuilder:
         return total_hamiltonian.simplify()
 
     def _build_backbone_contact_term(self) -> SparsePauliOp:
-        """
-        Builds the hamiltonian term corresponding to backbone_backbone (BB-BB) interactions.
+        """Builds the hamiltonian term corresponding to backbone_backbone (BB-BB) interactions.
         Includes both 1st neighbor and 2nd neighbor contributions (with shifts i±1, j±1).
 
         Note:
@@ -200,8 +195,7 @@ class HamiltonianBuilder:
         return h_backbone
 
     def _add_backtracking_penalty(self) -> SparsePauliOp:
-        """
-        Adds a penalty term to the hamiltonian to discourage backtracking
+        """Adds a penalty term to the hamiltonian to discourage backtracking
         in the main chain configuration.
 
         Returns:
@@ -233,8 +227,7 @@ class HamiltonianBuilder:
         return fix_qubits(h_backtrack)
 
     def get_turn_operators(self, lower_bead: Bead, upper_bead: Bead) -> SparsePauliOp:
-        """
-        Builds the combined turn operators for two consecutive beads in the main chain.
+        """Builds the combined turn operators for two consecutive beads in the main chain.
 
         Generates a quantum operator representing allowed directional turns
         between two beads based on their turn functions. If either bead lacks
@@ -281,8 +274,7 @@ class HamiltonianBuilder:
         upper_bead_idx: int,
         lambda_1: float,
     ) -> SparsePauliOp:
-        """
-        Computes the hamiltonian contribution for first-neighbor bead pairs,
+        """Computes the hamiltonian contribution for first-neighbor bead pairs,
         combining distance-based and interaction contact energies.
 
         Note:
@@ -327,8 +319,7 @@ class HamiltonianBuilder:
         upper_bead_idx: int,
         lambda_1: float,
     ) -> SparsePauliOp:
-        """
-        Computes the hamiltonian contribution for second-neighbor bead pairs,
+        """Computes the hamiltonian contribution for second-neighbor bead pairs,
         including distance-based and interaction terms.
 
         Args:
