@@ -193,7 +193,7 @@ After running, check the `output/results/` directory for timestamped folders con
 Additionally, each test run generates timestamped logfiles - check the `output/logs/` directory to inspect them.
 
 > [!TIP]
-> If you wish to see the usage demonstration, please check:
+> If you wish to see the usage demonstration and suggested setup, please check:
 > - :poland: [Demo Jupyter Notebook in Polish](usage-demo-pl.ipynb)
 > - :gb: [Demo Jupyter Notebook in English](usage-demo-en.ipynb)
 
