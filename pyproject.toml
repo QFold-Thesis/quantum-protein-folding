@@ -57,6 +57,12 @@ select = [
     "EM",   # error messages
     "TRY",  # tryceratops rules
     "G",    # flake8-logging-format
+    "PTH",  # flake8-use-pathlib
+    "C4",   # flake8-comprehensions
+    "A",    # flake8-builtins
+    "DTZ",  # flake8-datetimez
+    "S",    # flake8-bandit
+    "ISC",  # flake8-implicit-str-concat
 ]
 
 ignore = [
