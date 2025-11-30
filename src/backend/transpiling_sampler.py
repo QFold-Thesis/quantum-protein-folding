@@ -65,11 +65,14 @@ class TranspilingSampler(BaseSamplerV2):
 
         for pub in pub_list:
             if hasattr(pub, "circuit"):
-                circuit: Any = pub.circuit
+                circuit: QuantumCircuit = pub.circuit
             elif isinstance(pub, tuple) and len(pub) > 0:
-                circuit: Any = pub[0]
+                circuit: QuantumCircuit = pub[0]
+            elif isinstance(pub, QuantumCircuit):
+                circuit: QuantumCircuit = pub
             else:
-                circuit: Any = pub
+                msg: str = f"Unsupported pub type: {type(pub)!r}"
+                raise TypeError(msg)
 
             logger.debug("Transpiling circuit with %s qubits", circuit.num_qubits)
             transpiled_circuit: QuantumCircuit = transpile(
