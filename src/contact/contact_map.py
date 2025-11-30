@@ -39,7 +39,7 @@ class ContactMap:
 
     """
 
-    def __init__(self, protein: Protein):
+    def __init__(self, protein: Protein) -> None:
         """
         Initializes the contact map for the given protein.
 
@@ -74,7 +74,7 @@ class ContactMap:
                 self.contacts_detected,
             )
 
-    def _initialize_contact_map(self):
+    def _initialize_contact_map(self) -> None:
         """
         Initializes all contact maps to empty dictionaries.
 

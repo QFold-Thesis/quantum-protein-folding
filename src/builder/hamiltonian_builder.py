@@ -56,7 +56,7 @@ class HamiltonianBuilder:
         interaction: Interaction,
         distance_map: DistanceMap,
         contact_map: ContactMap,
-    ):
+    ) -> None:
         """
         Initializes the HamiltonianBuilder with required protein data
         and interaction maps.

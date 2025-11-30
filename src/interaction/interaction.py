@@ -26,7 +26,6 @@ class Interaction(ABC):
 
     """
 
-    @abstractmethod
     def __init__(self, interaction_matrix_path: Path) -> None:
         """
         Initialize the interaction model.
@@ -39,7 +38,7 @@ class Interaction(ABC):
         self.valid_symbols: set[str] = set()
 
     @abstractmethod
-    def get_energy(self, *args: Any, **kwargs: Any) -> float:
+    def get_energy(self, symbol_i: str, symbol_j: str) -> float:
         """
         Compute and return the interaction energy.
 
@@ -49,4 +48,4 @@ class Interaction(ABC):
             float: Calculated interaction energy.
 
         """
-        raise NotImplementedError
+        pass

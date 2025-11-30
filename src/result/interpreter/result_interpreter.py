@@ -243,7 +243,12 @@ class ResultInterpreter:
         state: str | None = best_measurement.get("state")
         energy_value: np.complex128 | None = best_measurement.get("value")
 
-        if None in (bitstring, probability, state, energy_value):
+        if (
+            bitstring is None
+            or probability is None
+            or state is None
+            or energy_value is None
+        ):
             msg: str = "Incomplete best measurement data in VQE output."
             raise ValueError(msg)
 
