@@ -68,6 +68,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#utils.result_interpretation_utils.create_xyz_file"><code class="docutils literal notranslate"><span class="pre">create_xyz_file()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#utils.result_interpretation_utils.read_xyz_file"><code class="docutils literal notranslate"><span class="pre">read_xyz_file()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#utils.result_interpretation_utils.sanitize_for_json"><code class="docutils literal notranslate"><span class="pre">sanitize_for_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.setup_utils.build_and_compress_hamiltonian"><code class="docutils literal notranslate"><span class="pre">build_and_compress_hamiltonian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.setup_utils.run_vqe_optimization"><code class="docutils literal notranslate"><span class="pre">run_vqe_optimization()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.setup_utils.setup_folding_system"><code class="docutils literal notranslate"><span class="pre">setup_folding_system()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.setup_utils.setup_result_analysis"><code class="docutils literal notranslate"><span class="pre">setup_result_analysis()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.setup_utils.setup_vqe_optimization"><code class="docutils literal notranslate"><span class="pre">setup_vqe_optimization()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -430,6 +435,127 @@ Since no formal standard exists, this implementation follows the most common con
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p id="module-utils.setup_utils">Module providing setup utilities for protein folding quantum simulation, including Hamiltonian construction, VQE setup, and result processing.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.setup_utils.build_and_compress_hamiltonian">
+<span class="sig-prename descclassname"><span class="pre">utils.setup_utils.</span></span><span class="sig-name descname"><span class="pre">build_and_compress_hamiltonian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.setup_utils.build_and_compress_hamiltonian" title="Link to this definition"></a></dt>
+<dd><p>Build and compress the final Hamiltonian for the protein folding system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code>]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>protein</strong> (<a class="reference internal" href="protein.html#protein.protein.Protein" title="protein.protein.Protein"><em>Protein</em></a>) – The protein instance.</p></li>
+<li><p><strong>interaction</strong> (<a class="reference internal" href="interaction.html#interaction.interaction.Interaction" title="interaction.interaction.Interaction"><em>Interaction</em></a>) – The interaction model.</p></li>
+<li><p><strong>contact_map</strong> (<a class="reference internal" href="contact.html#contact.contact_map.ContactMap" title="contact.contact_map.ContactMap"><em>ContactMap</em></a>) – The contact map.</p></li>
+<li><p><strong>distance_map</strong> (<a class="reference internal" href="distance.html#distance.distance_map.DistanceMap" title="distance.distance_map.DistanceMap"><em>DistanceMap</em></a>) – The distance map.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The original and compressed Hamiltonians</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[SparsePauliOp, SparsePauliOp]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.setup_utils.run_vqe_optimization">
+<span class="sig-prename descclassname"><span class="pre">utils.setup_utils.</span></span><span class="sig-name descname"><span class="pre">run_vqe_optimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vqe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hamiltonian</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.setup_utils.run_vqe_optimization" title="Link to this definition"></a></dt>
+<dd><p>Run the VQE optimization process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SamplingMinimumEigensolverResult</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>vqe</strong> (<em>SamplingVQE</em>) – The VQE instance.</p></li>
+<li><p><strong>hamiltonian</strong> (<em>SparsePauliOp</em>) – The Hamiltonian to optimize.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The raw results from the VQE optimization.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SamplingMinimumEigensolverResult</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.setup_utils.setup_folding_system">
+<span class="sig-prename descclassname"><span class="pre">utils.setup_utils.</span></span><span class="sig-name descname"><span class="pre">setup_folding_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_chain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side_chain</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.setup_utils.setup_folding_system" title="Link to this definition"></a></dt>
+<dd><p>Setup the protein folding system components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="protein.html#protein.protein.Protein" title="protein.protein.Protein"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protein</span></code></a>, <a class="reference internal" href="interaction.html#interaction.interaction.Interaction" title="interaction.interaction.Interaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interaction</span></code></a>, <a class="reference internal" href="contact.html#contact.contact_map.ContactMap" title="contact.contact_map.ContactMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContactMap</span></code></a>, <a class="reference internal" href="distance.html#distance.distance_map.DistanceMap" title="distance.distance_map.DistanceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">DistanceMap</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>main_chain</strong> (<em>str</em>) – Main chain protein sequence.</p></li>
+<li><p><strong>side_chain</strong> (<em>str</em>) – Side chain protein sequence.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The protein, interaction model,
+contact map, and distance map.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[<a class="reference internal" href="protein.html#protein.protein.Protein" title="protein.protein.Protein">Protein</a>, <a class="reference internal" href="interaction.html#interaction.interaction.Interaction" title="interaction.interaction.Interaction">Interaction</a>, <a class="reference internal" href="contact.html#contact.contact_map.ContactMap" title="contact.contact_map.ContactMap">ContactMap</a>, <a class="reference internal" href="distance.html#distance.distance_map.DistanceMap" title="distance.distance_map.DistanceMap">DistanceMap</a>]</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core.html#exceptions.InvalidInteractionTypeError" title="exceptions.InvalidInteractionTypeError"><strong>InvalidInteractionTypeError</strong></a> – If the interaction type is invalid (class not inheriting from Interaction).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.setup_utils.setup_result_analysis">
+<span class="sig-prename descclassname"><span class="pre">utils.setup_utils.</span></span><span class="sig-name descname"><span class="pre">setup_result_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protein</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vqe_iterations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vqe_energies</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.setup_utils.setup_result_analysis" title="Link to this definition"></a></dt>
+<dd><p>Setup the result analysis components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="result.html#result.interpreter.result_interpreter.ResultInterpreter" title="result.interpreter.result_interpreter.ResultInterpreter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResultInterpreter</span></code></a>, <a class="reference internal" href="result.html#result.visualizer.result_visualizer.ResultVisualizer" title="result.visualizer.result_visualizer.ResultVisualizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResultVisualizer</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>raw_results</strong> (<em>SamplingMinimumEigensolverResult</em>) – The raw results from the VQE optimization.</p></li>
+<li><p><strong>protein</strong> (<a class="reference internal" href="protein.html#protein.protein.Protein" title="protein.protein.Protein"><em>Protein</em></a>) – The protein instance.</p></li>
+<li><p><strong>vqe_iterations</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – The VQE evaluation counts (iterations).</p></li>
+<li><p><strong>vqe_energies</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – The VQE energy values.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The result interpreter and visualizer instances.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[<a class="reference internal" href="result.html#result.interpreter.result_interpreter.ResultInterpreter" title="result.interpreter.result_interpreter.ResultInterpreter">ResultInterpreter</a>, <a class="reference internal" href="result.html#result.visualizer.result_visualizer.ResultVisualizer" title="result.visualizer.result_visualizer.ResultVisualizer">ResultVisualizer</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.setup_utils.setup_vqe_optimization">
+<span class="sig-prename descclassname"><span class="pre">utils.setup_utils.</span></span><span class="sig-name descname"><span class="pre">setup_vqe_optimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_qubits</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.setup_utils.setup_vqe_optimization" title="Link to this definition"></a></dt>
+<dd><p>Setup the VQE optimization process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">SamplingVQE</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>num_qubits</strong> (<em>int</em>) – Number of qubits for the ansatz.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The VQE instance, evaluation counts (iterations), and their respective energy values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[SamplingVQE, list[int], list[float]]</p>
 </dd>
 </dl>
 </dd></dl>
