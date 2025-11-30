@@ -182,7 +182,7 @@ Edit `src/constants.py` to adjust:
 
 ### View Results
 
-After running, check the `output/` directory for timestamped folders containing:
+After running, check the `output/results/` directory for timestamped folders containing:
 - `interactive_3d_visualization.html` - Interactive 3D plot (open in browser)
 - `rotating_3d_visualization.gif` - Animated rotation
 - `conformation_2d.png` - 2D projection
@@ -190,7 +190,13 @@ After running, check the `output/` directory for timestamped folders containing:
 - `raw_vqe_results.json` - Detailed VQE output
 - `vqe_iterations.txt` - Iteration-by-iteration energies
 
-Additionally, each test run generates timestamped logfiles - check the `logs/` directory to inspect them.
+Additionally, each test run generates timestamped logfiles - check the `output/logs/` directory to inspect them.
+
+> [!TIP]
+> If you wish to see the usage demonstration, please check:
+> [:pl: Demo Jupyter Notebook in Polish](usage-demo-pl.ipynb)
+> [:gb: Demo Jupyter Notebook in English](usage-demo-en.ipynb)
+
 
 <a name="documentation-sphinx"></a>
 ## 📖 Documentation (Sphinx)
