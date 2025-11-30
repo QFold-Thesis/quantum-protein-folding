@@ -64,10 +64,10 @@ def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, BackendV2]:
     Requires qiskit-ibm-runtime package and valid IBM Quantum credentials.
 
     Returns:
-        tuple[BaseSamplerV2, Backend]: Transpiling sampler wrapping IBM SamplerV2 and the backend object.
+        tuple[BaseSamplerV2, BackendV2]: Transpiling sampler wrapping IBM SamplerV2 and the backend object.
 
     Raises:
-        InvalidBackendError: If IBM runtime package is not installed or credentials are missing.
+        InvalidBackendError: If either IBM runtime package is not installed, credentials are missing or backend is not operational.
 
     """
     from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2
@@ -102,7 +102,7 @@ def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, BackendV2]:
         logger.info("Backend status message: %s", backend_status.status_msg)
         logger.info("Pending jobs on backend: %d", backend_status.pending_jobs)
         if not backend_status.operational:
-            msg: str = f"Selected backend '{backend_name}' is not operational."
+            msg: str = f"Selected backend '{backend_status.backend_name}' is not operational."
             raise InvalidBackendError(msg)
         logger.info("Backend is operational.")
     else:
