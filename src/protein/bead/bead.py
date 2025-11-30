@@ -120,15 +120,19 @@ class Bead(ABC):
     @abstractmethod
     def turn_0(self) -> SparsePauliOp:
         """Return Pauli operator representing turn in direction 0."""
+        pass
 
     @abstractmethod
     def turn_1(self) -> SparsePauliOp:
         """Return Pauli operator representing turn in direction 1."""
+        pass
 
     @abstractmethod
     def turn_2(self) -> SparsePauliOp:
         """Return Pauli operator representing turn in direction 2."""
+        pass
 
     @abstractmethod
     def turn_3(self) -> SparsePauliOp:
         """Return Pauli operator representing turn in direction 3."""
+        pass
