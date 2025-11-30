@@ -1,5 +1,4 @@
-"""
-Distance map calculations for a protein's main chain.
+"""Distance map calculations for a protein's main chain.
 
 This module provides the ``DistanceMap`` class, which:
 
@@ -30,8 +29,7 @@ logger = get_logger()
 
 
 class DistanceMap:
-    """
-    Represents a distance map for a protein's main chain.
+    """Represents a distance map for a protein's main chain.
 
     Computes and stores quantum pairwise distances between beads in the protein's
     main chain, producing axis-wise Pauli operator vectors, applying qubit fixes,
@@ -39,10 +37,7 @@ class DistanceMap:
     """
 
     def __init__(self, protein: Protein):
-        """
-        Initializes the distance map for the given protein's main chain,
-        setting up data structures to store distances along multiple axes
-        and computing initial pairwise distances.
+        """Initializes the distance map for the given protein's main chain, setting up data structures to store distances along multiple axes and computing initial pairwise distances.
 
         Args:
             protein (Protein): The Protein object that includes all information about protein.
@@ -78,8 +73,7 @@ class DistanceMap:
             )
 
     def _calc_distances_main_chain(self) -> None:
-        """
-        Calculates pairwise quantum distances between beads in the main chain.
+        """Calculates pairwise quantum distances between beads in the main chain.
 
         For each bead pair (lower_bead_idx, upper_bead_idx), computes a vector of quantum operators
         representing the squared distance along each axis, using turn functions and sublattice signs.
@@ -138,8 +132,7 @@ class DistanceMap:
                 )
 
     def __getitem__(self, key: int) -> defaultdict[int, SparsePauliOp]:
-        """
-        Get the distance map entry for a given bead index.
+        """Get the distance map entry for a given bead index.
 
         Args:
             key (int): Index of the bead.
@@ -151,8 +144,7 @@ class DistanceMap:
         return self._distance_map[key]
 
     def __setitem__(self, key: int, value: defaultdict[int, SparsePauliOp]) -> None:
-        """
-        Set the distance map entry for a given bead index.
+        """Set the distance map entry for a given bead index.
 
         Args:
             key (int): Index of the bead.
@@ -162,8 +154,7 @@ class DistanceMap:
         self._distance_map[key] = value
 
     def __len__(self) -> int:
-        """
-        Return the number of beads in the distance map.
+        """Return the number of beads in the distance map.
 
         Returns:
             int: Number of beads stored in the distance map.

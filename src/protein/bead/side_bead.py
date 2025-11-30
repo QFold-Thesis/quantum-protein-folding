@@ -1,3 +1,5 @@
+"""Module defining the `_SideBead` class for protein side bead representation."""
+
 from qiskit.quantum_info import SparsePauliOp
 
 from logger import get_logger
@@ -10,8 +12,7 @@ class _SideBead(Bead):
     """Represents a side bead attached to a protein's main chain."""
 
     def __init__(self, _symbol: str, _index: int, _parent_chain_len: int) -> None:
-        """
-        Initialize a side bead with its symbol and position in the chain.
+        """Initialize a side bead with its symbol and position in the chain.
 
         Args:
             symbol (str): Amino acid symbol representing the side bead.
@@ -24,8 +25,7 @@ class _SideBead(Bead):
         raise NotImplementedError(_msg)
 
     def turn_0(self) -> SparsePauliOp:
-        """
-        Return the Pauli operator for a turn in direction 0.
+        """Return the Pauli operator for a turn in direction 0.
 
         Raises:
             NotImplementedError: Always raised since side bead turns are not implemented.
@@ -36,8 +36,7 @@ class _SideBead(Bead):
         raise NotImplementedError(_msg)
 
     def turn_1(self) -> SparsePauliOp:
-        """
-        Return the Pauli operator for a turn in direction 1.
+        """Return the Pauli operator for a turn in direction 1.
 
         Raises:
             NotImplementedError: Always raised since side bead turns are not implemented.
@@ -48,8 +47,7 @@ class _SideBead(Bead):
         raise NotImplementedError(_msg)
 
     def turn_2(self) -> SparsePauliOp:
-        """
-        Return the Pauli operator for a turn in direction 2.
+        """Return the Pauli operator for a turn in direction 2.
 
         Raises:
             NotImplementedError: Always raised since side bead turns are not implemented.
@@ -60,8 +58,7 @@ class _SideBead(Bead):
         raise NotImplementedError(_msg)
 
     def turn_3(self) -> SparsePauliOp:
-        """
-        Return the Pauli operator for a turn in direction 3.
+        """Return the Pauli operator for a turn in direction 3.
 
         Raises:
             NotImplementedError: Always raised since side bead turns are not implemented.

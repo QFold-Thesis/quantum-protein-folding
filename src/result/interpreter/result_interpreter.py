@@ -1,7 +1,6 @@
-"""
-Utilities for interpreting protein folding results.
+"""Utilities for interpreting protein folding results.
 
-This module provides the ResultInterpreter class, which processes
+This module provides the `ResultInterpreter` class, which processes
 the results of quantum simulations for protein folding, including detailed VQE results,
 decoded turn sequences, and 3D coordinate mappings.
 """
@@ -51,8 +50,7 @@ logger = get_logger()
 
 
 class ResultInterpreter:
-    """
-    Interprets and processes the results of quantum protein folding simulations.
+    """Interprets and processes the results of quantum protein folding simulations.
 
     Attributes:
         coordinates_3d (list[BeadPosition]): 3D coordinates of the protein beads.
@@ -68,8 +66,7 @@ class ResultInterpreter:
         vqe_energies: list[float],
         vqe_iterations: list[int],
     ) -> None:
-        """
-        Initialize the ResultInterpreter with protein data and VQE results.
+        """Initialize the ResultInterpreter with protein data and VQE results.
 
         Args:
             protein (Protein): The Protein object containing chain information.
@@ -122,8 +119,8 @@ class ResultInterpreter:
         )
 
     def _find_main_main_contacts(self) -> dict[int, int]:
-        """
-        Finds contacts between main chain beads based on the interaction bits.
+        """Finds contacts between main chain beads based on the interaction bits.
+
         This reads the first part of the raw VQE bitstring, which contains
         the on/off flags for potential interactions.
 
@@ -220,8 +217,7 @@ class ResultInterpreter:
             logger.info(row)
 
     def _interpret_raw_vqe_results(self) -> SparseVQEOutput:
-        """
-        Interprets the raw VQE results into a structured SparseVQEOutput.
+        """Interprets the raw VQE results into a structured SparseVQEOutput.
 
         Returns:
             SparseVQEOutput: The interpreted VQE results.
@@ -260,8 +256,7 @@ class ResultInterpreter:
         )
 
     def _preprocess_bitstring(self, bitstring: str) -> str:
-        """
-        Preprocesses the raw bitstring from VQE results to match the expected format.
+        """Preprocesses the raw bitstring from VQE results to match the expected format.
 
         Note:
             Bitstring preprocessing includes:
@@ -312,8 +307,7 @@ class ResultInterpreter:
         return result_bitstring[::-1]
 
     def _get_target_sequence_length_main_chain(self) -> int:
-        """
-        Calculates the target length (in bits) of the turn sequence for the main chain.
+        """Calculates the target length (in bits) of the turn sequence for the main chain.
 
         Note:
             Each turn is represented by a fixed number of qubits (QUBITS_PER_TURN).
@@ -341,8 +335,7 @@ class ResultInterpreter:
     def _generate_turn_sequence(
         self,
     ) -> list[TurnDirection]:
-        """
-        Generates the turn sequence from the processed bitstring.
+        """Generates the turn sequence from the processed bitstring.
 
         Returns:
             list[TurnDirection]: The decoded sequence of turns.
@@ -372,8 +365,7 @@ class ResultInterpreter:
         return turn_sequence
 
     def _generate_3d_coordinates(self) -> list[BeadPosition]:
-        """
-        Generates the coordinates for the beads in the main chain in 3D tetrahedral lattice.
+        """Generates the coordinates for the beads in the main chain in 3D tetrahedral lattice.
 
         Note:
             The 3D coordinates are generated based on the tetrahedral lattice structure, which is used to represent the spatial arrangement of the beads in the protein.
@@ -435,8 +427,7 @@ class ResultInterpreter:
         self._dump_vqe_iterations_to_file(filename=VQE_ITERATIONS_FILENAME)
 
     def _dump_vqe_iterations_to_file(self, filename: str) -> None:
-        """
-        Dumps the VQE iterations and their corresponding energies to a text file.
+        """Dumps the VQE iterations and their corresponding energies to a text file.
 
         Args:
             filename (str): The name of the file to save the VQE iterations and energies.
@@ -467,8 +458,7 @@ class ResultInterpreter:
         filename: str,
         results_dict: SparseVQEOutput | SamplingMinimumEigensolverResult,
     ) -> None:
-        """
-        Dumps the given results dictionary to a JSON file.
+        """Dumps the given results dictionary to a JSON file.
 
         Args:
             filename (str): The name of the file to save the results.
