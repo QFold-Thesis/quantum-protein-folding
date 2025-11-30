@@ -208,7 +208,7 @@
 <section id="module-result.interpreter.result_interpreter">
 <span id="subpackage-interpreter"></span><h2>Subpackage: interpreter<a class="headerlink" href="#module-result.interpreter.result_interpreter" title="Link to this heading"></a></h2>
 <p>Utilities for interpreting protein folding results.</p>
-<p>This module provides the ResultInterpreter class, which processes
+<p>This module provides the <cite>ResultInterpreter</cite> class, which processes
 the results of quantum simulations for protein folding, including detailed VQE results,
 decoded turn sequences, and 3D coordinate mappings.</p>
 <dl class="py class">
@@ -284,8 +284,8 @@ decoded turn sequences, and 3D coordinate mappings.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="result.interpreter.result_interpreter.ResultInterpreter._find_main_main_contacts">
 <span class="sig-name descname"><span class="pre">_find_main_main_contacts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#result.interpreter.result_interpreter.ResultInterpreter._find_main_main_contacts" title="Link to this definition"></a></dt>
-<dd><p>Finds contacts between main chain beads based on the interaction bits.
-This reads the first part of the raw VQE bitstring, which contains
+<dd><p>Finds contacts between main chain beads based on the interaction bits.</p>
+<p>This reads the first part of the raw VQE bitstring, which contains
 the on/off flags for potential interactions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -501,7 +501,7 @@ However, by the symmetry of tetrahedral lattice we can assume that:</p>
 <section id="module-result.visualizer.result_visualizer">
 <span id="subpackage-visualizer"></span><h2>Subpackage: visualizer<a class="headerlink" href="#module-result.visualizer.result_visualizer" title="Link to this heading"></a></h2>
 <p>Utilities for visualizing protein folding results.</p>
-<p>This module provides the ResultVisualizer class, which processes
+<p>This module provides the <cite>ResultVisualizer</cite> class, which processes
 the interpreted results of protein folding simulations and generates 3D and 2D visualizations of
 the folded protein structure.</p>
 <dl class="py class">
@@ -528,8 +528,7 @@ the folded protein structure.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="result.visualizer.result_visualizer.ResultVisualizer._generate_lattice_points">
 <span class="sig-name descname"><span class="pre">_generate_lattice_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">TETRAHEDRAL_LATTICE_PADDING</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.visualizer.result_visualizer.ResultVisualizer._generate_lattice_points" title="Link to this definition"></a></dt>
-<dd><p>Generate tetrahedral lattice points in range that matches the coordinates of the conformation
-(by taking the min/max values from the coordinates and padding them accordingly)</p>
+<dd><p>Generate tetrahedral lattice points in range that matches the coordinates of the conformation (by taking the min/max values from the coordinates and padding them accordingly).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float64</span></code>]]</span></p>
@@ -577,8 +576,8 @@ the folded protein structure.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="result.visualizer.result_visualizer.ResultVisualizer.visualize_2d">
 <span class="sig-name descname"><span class="pre">visualize_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">FLAT_VISUALIZATION_FILENAME</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#result.visualizer.result_visualizer.ResultVisualizer.visualize_2d" title="Link to this definition"></a></dt>
-<dd><p>Generate flat, 2D visualization of the resulting conformation in the .png file format.
-This plot is a 2D projection (top-down view) of the 3D coordinates.</p>
+<dd><p>Generate flat, 2D visualization of the resulting conformation in the .png file format.</p>
+<p>This plot is a 2D projection (top-down view) of the 3D coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>

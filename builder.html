@@ -121,8 +121,7 @@ penalties, and neighbor-based contact terms, using distance and interaction maps
 <dl class="py method">
 <dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes the HamiltonianBuilder with required protein data
-and interaction maps.</p>
+<dd><p>Initializes the HamiltonianBuilder with required protein data and interaction maps.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -138,8 +137,7 @@ and interaction maps.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder._add_backtracking_penalty">
 <span class="sig-name descname"><span class="pre">_add_backtracking_penalty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder._add_backtracking_penalty" title="Link to this definition"></a></dt>
-<dd><p>Adds a penalty term to the hamiltonian to discourage backtracking
-in the main chain configuration.</p>
+<dd><p>Adds a penalty term to the hamiltonian to discourage backtracking in the main chain configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
@@ -156,8 +154,7 @@ in the main chain configuration.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder._build_backbone_contact_term">
 <span class="sig-name descname"><span class="pre">_build_backbone_contact_term</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder._build_backbone_contact_term" title="Link to this definition"></a></dt>
-<dd><p>Builds the hamiltonian term corresponding to backbone_backbone (BB-BB) interactions.
-Includes both 1st neighbor and 2nd neighbor contributions (with shifts i±1, j±1).</p>
+<dd><p>Builds the hamiltonian term corresponding to backbone_backbone (BB-BB) interactions. Includes both 1st neighbor and 2nd neighbor contributions (with shifts i±1, j±1).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
@@ -183,8 +180,7 @@ to avoid overlaps.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder.get_first_neighbor_hamiltonian">
 <span class="sig-name descname"><span class="pre">get_first_neighbor_hamiltonian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bead_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bead_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder.get_first_neighbor_hamiltonian" title="Link to this definition"></a></dt>
-<dd><p>Computes the hamiltonian contribution for first-neighbor bead pairs,
-combining distance-based and interaction contact energies.</p>
+<dd><p>Computes the hamiltonian contribution for first-neighbor bead pairs, combining distance-based and interaction contact energies.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
@@ -219,8 +215,7 @@ contribution from the Miyazawa-Jernigan interaction energy.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="builder.hamiltonian_builder.HamiltonianBuilder.get_second_neighbor_hamiltonian">
 <span class="sig-name descname"><span class="pre">get_second_neighbor_hamiltonian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bead_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bead_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#builder.hamiltonian_builder.HamiltonianBuilder.get_second_neighbor_hamiltonian" title="Link to this definition"></a></dt>
-<dd><p>Computes the hamiltonian contribution for second-neighbor bead pairs,
-including distance-based and interaction terms.</p>
+<dd><p>Computes the hamiltonian contribution for second-neighbor bead pairs, including distance-based and interaction terms.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePauliOp</span></code></span></p>
