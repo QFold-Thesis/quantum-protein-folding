@@ -233,7 +233,7 @@ SIDE_CHAIN_FIFTH_POSITION_INDEX: int = (
     4  # Index of the 5th bead in zero-indexed beads list
 )
 
-BACKEND_TYPE: BackendType = BackendType.LOCAL_STATEVECTOR
+BACKEND_TYPE: BackendType = BackendType.IBM_QUANTUM
 
 IBM_QUANTUM_TOKEN: str | None = os.environ.get("IBM_QUANTUM_TOKEN")
 

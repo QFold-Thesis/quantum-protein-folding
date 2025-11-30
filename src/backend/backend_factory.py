@@ -71,6 +71,7 @@ def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, BackendV2]:
 
     """
     from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2
+    from qiskit_ibm_runtime.models.backend_status import BackendStatus
 
     token: str | None = IBM_QUANTUM_TOKEN
     backend_name: str | None = IBM_QUANTUM_BACKEND_NAME
@@ -93,8 +94,22 @@ def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, BackendV2]:
     service = QiskitRuntimeService(channel="ibm_quantum_platform", token=token)
 
     backend: BackendV2 = service.backend(backend_name)
-    logger.info("Using IBM Quantum backend: %s", backend_name)
-    logger.info("Backend status: %s", backend.status())
+
+    if hasattr(backend, "status"):
+        backend_status: BackendStatus = backend.status()
+
+        logger.info("Using IBM Quantum backend: %s", backend_status.backend_name)
+        logger.info("Backend status message: %s", backend_status.status_msg)
+        logger.info("Pending jobs on backend: %d", backend_status.pending_jobs)
+        if not backend_status.operational:
+            msg: str = f"Selected backend '{backend_name}' is not operational."
+            raise InvalidBackendError(msg)
+        logger.info("Backend is operational.")
+    else:
+        logger.info("Using IBM Quantum backend: %s", backend_name)
+        logger.warning(
+            "Cannot retrieve backend status. Proceeding without status check."
+        )
 
     ibm_sampler = SamplerV2(mode=backend)
     ibm_sampler.options.default_shots = IBM_QUANTUM_SHOTS
