@@ -339,7 +339,7 @@ Static code analysis is performed by [`Pyrefly`](https://github.com/facebook/pyr
 uv run pyrefly check
 ```
 
-We require at least 80% docstring coverage for the project (excluding tests) using [`Interrogate`](https://github.com/econchick/interrogate):
+We require at least 90% docstring coverage for the project (excluding tests and docs) using [`Interrogate`](https://github.com/econchick/interrogate):
 ```bash
 # Check coverage
 uv run interrogate -v
