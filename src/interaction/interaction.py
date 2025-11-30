@@ -8,7 +8,7 @@ and computes interaction energies used in folding models such as HP or MJ.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pathlib import Path
