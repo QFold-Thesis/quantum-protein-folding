@@ -4,16 +4,43 @@
 [![Issues][issues-shield]][issues-url]
 [![License][license-shield]][license-url]
 
+[![Lint & Format][lint-shield]][lint-url]
+[![Type Check][type-shield]][type-url]
+[![Documentation Coverage][docs-shield]][docs-url]
+
+[![Deploy Docs][deploy-docs-shield]][deploy-docs-url]
+[![GitHub Pages][pages-shield]][pages-url]
+
+
 [contributors-shield]: https://img.shields.io/github/contributors/QFold-Thesis/quantum-protein-folding?style=flat-square
 [contributors-url]: https://github.com/QFold-Thesis/quantum-protein-folding/graphs/contributors
+
 [forks-shield]: https://img.shields.io/github/forks/QFold-Thesis/quantum-protein-folding?style=flat-square
 [forks-url]: https://github.com/QFold-Thesis/quantum-protein-folding/network/members
+
 [stars-shield]: https://img.shields.io/github/stars/QFold-Thesis/quantum-protein-folding?style=flat-square
 [stars-url]: https://github.com/QFold-Thesis/quantum-protein-folding/stargazers
+
 [issues-shield]: https://img.shields.io/github/issues/QFold-Thesis/quantum-protein-folding?style=flat-square
 [issues-url]: https://github.com/QFold-Thesis/quantum-protein-folding/issues
+
 [license-shield]: https://img.shields.io/github/license/QFold-Thesis/quantum-protein-folding?style=flat-square
 [license-url]: https://github.com/QFold-Thesis/quantum-protein-folding/blob/main/LICENSE
+
+[lint-shield]: https://github.com/QFold-Thesis/quantum-protein-folding/actions/workflows/lint.yml/badge.svg
+[lint-url]: https://github.com/QFold-Thesis/quantum-protein-folding/actions/workflows/lint.yml
+
+[type-shield]: https://github.com/QFold-Thesis/quantum-protein-folding/actions/workflows/type-check.yml/badge.svg
+[type-url]: https://github.com/QFold-Thesis/quantum-protein-folding/actions/workflows/type-check.yml
+
+[docs-shield]: https://github.com/QFold-Thesis/quantum-protein-folding/actions/workflows/check-docs.yml/badge.svg
+[docs-url]: https://github.com/QFold-Thesis/quantum-protein-folding/actions/workflows/check-docs.yml
+
+[deploy-docs-shield]: https://github.com/QFold-Thesis/quantum-protein-folding/actions/workflows/deploy-docs.yml/badge.svg
+[deploy-docs-url]: https://github.com/QFold-Thesis/quantum-protein-folding/actions/workflows/deploy-docs.yml
+
+[pages-shield]: https://github.com/QFold-Thesis/quantum-protein-folding/actions/workflows/pages/pages-build-deployment/badge.svg
+[pages-url]: https://github.com/QFold-Thesis/quantum-protein-folding/actions/workflows/pages/pages-build-deployment
 
 # Quantum Protein Folding
 
@@ -312,7 +339,7 @@ Static code analysis is performed by [`Pyrefly`](https://github.com/facebook/pyr
 uv run pyrefly check
 ```
 
-We require at least 80% docstring coverage for the project (excluding tests) using [`Interrogate`](https://github.com/econchick/interrogate):
+We require at least 90% docstring coverage for the project (excluding tests and docs) using [`Interrogate`](https://github.com/econchick/interrogate):
 ```bash
 # Check coverage
 uv run interrogate -v

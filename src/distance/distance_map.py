@@ -36,7 +36,7 @@ class DistanceMap:
     and exposing a ready-to-use distance map for Hamiltonian construction.
     """
 
-    def __init__(self, protein: Protein):
+    def __init__(self, protein: Protein) -> None:
         """Initializes the distance map for the given protein's main chain, setting up data structures to store distances along multiple axes and computing initial pairwise distances.
 
         Args:

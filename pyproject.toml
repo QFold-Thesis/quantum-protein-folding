@@ -115,7 +115,6 @@ known-first-party = ["src"]
 # ==============================================================================
 
 [tool.pyrefly]
-# search-path = ["src", "typings"]
 project-includes = ["src/**/*.py"]
 python-version = "3.12"
 untyped_def_behavior = "check-and-infer-return-any"
@@ -151,6 +150,7 @@ invalid-annotation = true
 
 [tool.interrogate]
 ignore-init-module = true
+
 fail-under = 90
 exclude = [
     "tests",
