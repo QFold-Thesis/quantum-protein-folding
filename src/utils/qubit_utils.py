@@ -1,7 +1,4 @@
-"""Module providing tools to create and manipulate Pauli operators,
-manage main chain bead states, and prepare operators for qubit-based
-protein folding simulations.
-"""
+"""Module providing tools to create and manipulate Pauli operators, manage main chain bead states, and prepare operators for qubit-based protein folding simulations."""
 
 from __future__ import annotations
 

@@ -1,3 +1,5 @@
+"""Defines the `MainChain` class for representing the main chain of a protein."""
+
 from logger import get_logger
 from protein.bead.main_bead import _MainBead
 from protein.chain import Chain

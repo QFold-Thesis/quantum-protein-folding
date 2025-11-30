@@ -1,6 +1,6 @@
 """Utilities for interpreting protein folding results.
 
-This module provides the ResultInterpreter class, which processes
+This module provides the `ResultInterpreter` class, which processes
 the results of quantum simulations for protein folding, including detailed VQE results,
 decoded turn sequences, and 3D coordinate mappings.
 """
@@ -120,6 +120,7 @@ class ResultInterpreter:
 
     def _find_main_main_contacts(self) -> dict[int, int]:
         """Finds contacts between main chain beads based on the interaction bits.
+
         This reads the first part of the raw VQE bitstring, which contains
         the on/off flags for potential interactions.
 

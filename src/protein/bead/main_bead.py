@@ -1,3 +1,5 @@
+"""Module defining the `_MainBead` class for protein backbone representation."""
+
 from qiskit.quantum_info import SparsePauliOp
 
 from constants import CONFORMATION_ENCODING

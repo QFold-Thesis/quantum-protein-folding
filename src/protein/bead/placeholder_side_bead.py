@@ -1,3 +1,5 @@
+"""Module defining the `_PlaceholderSideBead` class for representing empty side beads in protein structures."""
+
 from qiskit.quantum_info import SparsePauliOp
 
 from logger import get_logger

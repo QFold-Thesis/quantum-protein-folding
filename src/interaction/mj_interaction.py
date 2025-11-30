@@ -29,8 +29,7 @@ logger = get_logger()
 
 
 class MJInteraction(Interaction):
-    """MJ interaction model that loads the MJ matrix and exposes
-    pairwise residue contact energies.
+    """MJ interaction model that loads the MJ matrix and exposes pairwise residue contact energies.
 
     Attributes:
         valid_symbols (set[str]): Set of valid amino acid symbols for the interaction model.

@@ -1,6 +1,6 @@
 """Utilities for visualizing protein folding results.
 
-This module provides the ResultVisualizer class, which processes
+This module provides the `ResultVisualizer` class, which processes
 the interpreted results of protein folding simulations and generates 3D and 2D visualizations of
 the folded protein structure.
 """
@@ -38,8 +38,7 @@ logger = get_logger()
 
 
 class ResultVisualizer:
-    """Visualizes and processes interpreted results of quantum protein folding simulations.
-    """
+    """Visualizes and processes interpreted results of quantum protein folding simulations."""
 
     def __init__(
         self,
@@ -307,7 +306,7 @@ class ResultVisualizer:
         ax.legend(loc="upper left", bbox_to_anchor=(1.05, 1))
 
         def __update_animation(angle: float) -> list[Axes3D.scatter]:
-            """Helper function handler for FuncAnimation"""
+            """Helper function handler for FuncAnimation."""
             ax.view_init(elev=30, azim=angle)
             return scatter_handles
 
@@ -325,6 +324,7 @@ class ResultVisualizer:
 
     def visualize_2d(self, filename: str = FLAT_VISUALIZATION_FILENAME) -> None:
         """Generate flat, 2D visualization of the resulting conformation in the .png file format.
+
         This plot is a 2D projection (top-down view) of the 3D coordinates.
 
         Args:
@@ -459,8 +459,7 @@ class ResultVisualizer:
     def _generate_lattice_points(
         self, coords: NDArray[np.float64], padding: int = TETRAHEDRAL_LATTICE_PADDING
     ) -> NDArray[np.float64]:
-        """Generate tetrahedral lattice points in range that matches the coordinates of the conformation
-        (by taking the min/max values from the coordinates and padding them accordingly)
+        """Generate tetrahedral lattice points in range that matches the coordinates of the conformation (by taking the min/max values from the coordinates and padding them accordingly).
 
         Args:
             coords (NDArray[np.float64]): The coordinates of the conformation.

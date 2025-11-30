@@ -1,6 +1,4 @@
-"""Module providing setup utilities for protein folding quantum simulation, including
-Hamiltonian construction, VQE setup, and result processing.
-"""
+"""Module providing setup utilities for protein folding quantum simulation, including Hamiltonian construction, VQE setup, and result processing."""
 
 import time
 from datetime import datetime

@@ -1,3 +1,5 @@
+"""Main execution script for the quantum protein folding workflow."""
+
 from typing import TYPE_CHECKING
 
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
