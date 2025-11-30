@@ -54,6 +54,9 @@ select = [
     "ARG",  # flake8-unused-arguments
     "ERA",  # eradicate
     "TID",  # tidy imports
+    "EM",   # error messages
+    "TRY",  # tryceratops rules
+    "G",    # flake8-logging-format
 ]
 
 ignore = [

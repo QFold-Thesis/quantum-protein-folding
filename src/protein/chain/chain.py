@@ -29,7 +29,11 @@ class Chain(ABC):
             protein_sequence (str): The amino acid sequence representing the protein chain.
 
         """
+        self.beads: list[Bead] = []
         self._initialize_beads(protein_sequence)
+        if not self.beads:
+            msg: str = "Bead initialization failed; beads list is empty."
+            raise ValueError(msg)
 
     @abstractmethod
     def _initialize_beads(self, protein_sequence: str) -> None:

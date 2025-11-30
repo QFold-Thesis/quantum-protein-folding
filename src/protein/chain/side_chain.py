@@ -27,7 +27,7 @@ class _SideChain(Chain):
 
         """
         logger.debug(
-            f"Initializing SideChain from protein sequence: {protein_sequence}..."
+            "Initializing SideChain from protein sequence: %s...", protein_sequence
         )
         super().__init__(protein_sequence=protein_sequence)
 
@@ -60,5 +60,8 @@ class _SideChain(Chain):
         placeholder_bead_count: int = len(self.beads) - side_bead_count
 
         logger.info(
-            f"SideChain for {protein_sequence} initialized with {side_bead_count} SideBeads and {placeholder_bead_count} PlaceholderSideBeads."
+            "SideChain for %s initialized with %d SideBeads and %d PlaceholderSideBeads.",
+            protein_sequence,
+            side_bead_count,
+            placeholder_bead_count,
         )
