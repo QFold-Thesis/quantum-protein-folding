@@ -71,7 +71,7 @@ class ContactMap:
                 self.contacts_detected,
             )
 
-    def _initialize_contact_map(self):
+    def _initialize_contact_map(self) -> None:
         """Initializes all contact maps to empty dictionaries.
 
         Note:
