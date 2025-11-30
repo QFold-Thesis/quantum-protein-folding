@@ -41,6 +41,7 @@ class TurnDirection(IntEnum):
     DIR_3 = 3
 
     def __str__(self) -> str:
+        """Return a string representation of the turn direction."""
         return f"Direction {self.value}"
 
 

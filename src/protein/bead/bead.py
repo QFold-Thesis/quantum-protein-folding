@@ -1,5 +1,4 @@
-"""
-Bead abstraction for quantum protein folding.
+"""Bead abstraction for quantum protein folding.
 
 Defines the base class `Bead`, representing a single amino acid in the peptide
 chain and responsible for constructing turn-related quantum operators used in
@@ -26,8 +25,7 @@ logger = get_logger()
 
 
 class Bead(ABC):
-    """
-    An abstract class defining a bead of a peptide.
+    """An abstract class defining a bead of a peptide.
 
     Attributes:
         symbol (str): One-letter amino acid symbol.
@@ -38,8 +36,7 @@ class Bead(ABC):
     """
 
     def __init__(self, symbol: str, index: int, parent_chain_len: int) -> None:
-        """
-        Initialize a bead instance.
+        """Initialize a bead instance.
 
         Sets symbol, index, sublattice type, and initializes turn qubits if applicable.
 
@@ -65,12 +62,13 @@ class Bead(ABC):
             self._initialize_turn_qubits()
         else:
             logger.info(
-                f"Initialized 0 turn qubits for Bead {self.symbol} (index: {self.index}) [skipped: last bead in chain]"
+                "Initialized 0 turn qubits for Bead %s (index: %d) [skipped: last bead in chain]",
+                self.symbol,
+                self.index,
             )
 
     def _initialize_turn_qubits(self) -> None:
-        """
-        Initializes the quantum turn qubits associated with this bead based on the selected conformation encoding.
+        """Initializes the quantum turn qubits associated with this bead based on the selected conformation encoding.
 
         For each bead (except the last in the chain), the function builds a set of Pauli operators representing
         directional turns in the protein structure. The number of initialized qubits depends on whether the
@@ -94,14 +92,16 @@ class Bead(ABC):
             for i in range(QUBITS_PER_TURN)
         )
         logger.info(
-            f"Initialized {len(self.turn_qubits)} turn qubits for Bead {self.symbol} (index: {self.index})"
+            "Initialized %d turn qubits for Bead %s (index: %d)",
+            len(self.turn_qubits),
+            self.symbol,
+            self.index,
         )
 
     def turn_funcs(
         self,
     ) -> None | tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp]:
-        """
-        Return Pauli operators representing directional turns.
+        """Return Pauli operators representing directional turns.
 
         Returns:
             tuple[SparsePauliOp, SparsePauliOp, SparsePauliOp, SparsePauliOp] | None:
@@ -115,15 +115,19 @@ class Bead(ABC):
     @abstractmethod
     def turn_0(self) -> SparsePauliOp:
         """Return Pauli operator representing turn in direction 0."""
+        pass
 
     @abstractmethod
     def turn_1(self) -> SparsePauliOp:
         """Return Pauli operator representing turn in direction 1."""
+        pass
 
     @abstractmethod
     def turn_2(self) -> SparsePauliOp:
         """Return Pauli operator representing turn in direction 2."""
+        pass
 
     @abstractmethod
     def turn_3(self) -> SparsePauliOp:
         """Return Pauli operator representing turn in direction 3."""
+        pass

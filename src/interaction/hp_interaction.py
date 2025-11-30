@@ -1,5 +1,4 @@
-"""
-Hydrophobic / Polar (HP) interaction model.
+"""Hydrophobic / Polar (HP) interaction model.
 
 This module provides ``HPInteraction`` which:
 
@@ -45,8 +44,7 @@ logger = get_logger()
 
 
 class HPInteraction(Interaction):
-    """
-    Interaction model implementing the classical Hydrophobic/Polar (HP) scheme.
+    """Interaction model implementing the classical Hydrophobic/Polar (HP) scheme.
 
     Loads a binary HP matrix, tracks hydrophobic symbols, and provides a
     pairwise energy function where only H-H contacts contribute negatively.
@@ -56,9 +54,7 @@ class HPInteraction(Interaction):
         self,
         interaction_matrix_path: Path = HP_INTERACTION_MATRIX_FILEPATH,
     ) -> None:
-        """
-        Initialize the HP interaction model by loading hydrophobic residues from
-        the HP matrix file and preparing the supported symbol set.
+        """Initialize the HP interaction model by loading hydrophobic residues from the HP matrix file and preparing the supported symbol set.
 
         Args:
             interaction_matrix_path (Path, optional): Path to the HP interaction matrix file. Defaults to HP_INTERACTION_MATRIX_FILEPATH.
@@ -79,8 +75,7 @@ class HPInteraction(Interaction):
     def _load_hp_symbols(
         self, hp_filepath: Path = HP_INTERACTION_MATRIX_FILEPATH
     ) -> tuple[list[str], list[str]]:
-        """
-        Load hydrophobic amino acid symbols from a HP interaction matrix file.
+        """Load hydrophobic amino acid symbols from a HP interaction matrix file.
 
         Parses a small, strict matrix file where each line has the format '<SYMBOL> <0|1>'.
         Ignores blank lines and lines starting with '#'. Lines with '1' indicate hydrophobic residues.
@@ -119,8 +114,7 @@ class HPInteraction(Interaction):
             return hydrophobic, polar
 
     def _is_hydrophobic(self, symbol: str) -> bool:
-        """
-        Check if an amino acid symbol is hydrophobic.
+        """Check if an amino acid symbol is hydrophobic.
 
         Args:
             symbol (str): Single-letter amino acid symbol.
@@ -132,8 +126,7 @@ class HPInteraction(Interaction):
         return symbol in self._hydrophobic_symbols
 
     def get_energy(self, symbol_i: str, symbol_j: str) -> float:
-        """
-        Return the HP model pair energy.
+        """Return the HP model pair energy.
 
         Returns the hydrophobic-hydrophobic contact energy (HP_HH_CONTACT_ENERGY) if both residues are hydrophobic,
         otherwise returns the non-hydrophobic contact energy (HP_NON_HH_CONTACT_ENERGY).

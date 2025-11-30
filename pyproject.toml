@@ -1,6 +1,10 @@
+# ==============================================================================
+# PROJECT METADATA
+# ==============================================================================
+
 [project]
 name = "quantum-protein-folding"
-version = "0.1.0"
+version = "1.0.0"
 description = "Quantum approach to a protein folding problem"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -20,7 +24,138 @@ dev = [
     "sphinx>=8.2.3",
     "sphinx-autodoc-typehints>=3.5.2",
     "jupyter>=1.1.1",
+    "interrogate>=1.7.0",
+    "pyrefly>=0.43.1",
+    "ruff>=0.14.7",
 ]
+
+# ==============================================================================
+# TESTING (PYTEST)
+# ==============================================================================
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
+
+# ==============================================================================
+# LINTING (RUFF)
+# ==============================================================================
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+extend-exclude = [
+    "docs",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+    "SIM",  # flake8-simplify
+    "D",    # pydocstyle
+    "RUF",  # ruff-specific rules
+    "N",    # PEP8 Naming
+    "PL",   # pylint
+    "ARG",  # flake8-unused-arguments
+    "ERA",  # eradicate
+    "TID",  # tidy imports
+    "EM",   # error messages
+    "TRY",  # tryceratops rules
+    "G",    # flake8-logging-format
+    "PTH",  # flake8-use-pathlib
+    "C4",   # flake8-comprehensions
+    "A",    # flake8-builtins
+    "DTZ",  # flake8-datetimez
+    "S",    # flake8-bandit
+    "ISC",  # flake8-implicit-str-concat
+]
+
+ignore = [
+    "E501", # Line length (handled by formatter)
+    "PLR0913", # Too many arguments in function definition
+]
+
+fixable = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "D",       # No docstrings in tests
+    "S101",    # Allow 'assert' in tests
+    "PLR2004", # Allow magic values in tests
+    "ARG",     # Allow unused args in tests
+]
+
+"__init__.py" = ["D104"] # Allow missing docstrings in __init__.py files
+"src/exceptions.py" = ["D107"] # Allow missing docstrings in custom exceptions' __init__ methods
+
+# We allow non top-level imports in these files since their usage is optional
+"src/result/visualizer/result_visualizer.py" = [
+    "PLC0415",
+]
+"src/backend/backend_factory.py" = [
+    "PLC0415",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+
+# ==============================================================================
+# TYPE CHECKING (PYREFLY)
+# ==============================================================================
+
+[tool.pyrefly]
+project-includes = ["src/**/*.py"]
+python-version = "3.12"
+untyped_def_behavior = "check-and-infer-return-any"
+
+[tool.pyrefly.errors]
+# -- The "Strict" enforcing --
+implicit-any = true 
+untyped-import = true
+missing-import = true 
+
+# -- Type Consistency --
+bad-assignment = true
+bad-return = true
+bad-argument-type = true
+bad-override = true
+
+# -- Function & Class Definition --
+bad-function-definition = true
+bad-class-definition = true
+bad-argument-count = true
+missing-argument = true
+unexpected-keyword = true
+
+# -- Advanced Safety --
+bad-unpacking = true
+bad-index = true
+bad-match = true
+invalid-annotation = true
+
+# ==============================================================================
+# DOCUMENTATION COVERAGE (INTERROGATE)
+# ==============================================================================
+
+[tool.interrogate]
+ignore-init-module = true
+
+fail-under = 90
+exclude = [
+    "tests",
+    "docs",
+]
+verbose = 2
+color = true

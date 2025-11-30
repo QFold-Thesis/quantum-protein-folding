@@ -1,8 +1,4 @@
-"""
-Module providing tools to create and manipulate Pauli operators,
-manage main chain bead states, and prepare operators for qubit-based
-protein folding simulations.
-"""
+"""Module providing tools to create and manipulate Pauli operators, manage main chain bead states, and prepare operators for qubit-based protein folding simulations."""
 
 from __future__ import annotations
 
@@ -34,8 +30,7 @@ if TYPE_CHECKING:
 def build_identity_op(
     num_qubits: int, coeff: float = IDENTITY_OP_COEFF
 ) -> SparsePauliOp:
-    """
-    Builds a full identity Pauli operator for a given number of qubits.
+    """Builds a full identity Pauli operator for a given number of qubits.
 
     Args:
         num_qubits (int): Number of qubits in the operator.
@@ -50,8 +45,7 @@ def build_identity_op(
 
 
 def build_turn_qubit(z_index: int, num_qubits: int) -> SparsePauliOp:
-    """
-    Builds a turn qubit Pauli operator with Z at the specified index.
+    """Builds a turn qubit Pauli operator with Z at the specified index.
 
     Args:
         z_index (int): Index of the qubit to place a Z operator.
@@ -71,8 +65,7 @@ def build_turn_qubit(z_index: int, num_qubits: int) -> SparsePauliOp:
 
 
 def build_pauli_z_operator(num_qubits: int, pauli_z_indices: set[int]) -> SparsePauliOp:
-    """
-    Build a Pauli operator with Z operators at specified positions and I elsewhere.
+    """Build a Pauli operator with Z operators at specified positions and I elsewhere.
 
     Args:
         num_qubits (int): Total number of qubits.
@@ -95,8 +88,7 @@ def build_pauli_z_operator(num_qubits: int, pauli_z_indices: set[int]) -> Sparse
 
 
 def convert_to_qubits(pauli_op: SparsePauliOp) -> SparsePauliOp:
-    """
-    Convert a Pauli operator to a qubit operator using the identity and normalization factor.
+    """Convert a Pauli operator to a qubit operator using the identity and normalization factor.
 
     Args:
         pauli_op (SparsePauliOp): Pauli operator to convert.
@@ -123,8 +115,7 @@ def fix_qubits(
     *,
     has_side_chain_second_bead: bool = False,
 ) -> SparsePauliOp:
-    """
-    Fixes specific qubits in a SparsePauliOp to predefined values for main chain turns.
+    """Fixes specific qubits in a SparsePauliOp to predefined values for main chain turns.
 
     Qubits at positions 0, 1, 2, 3, and 5 correspond to fixed turn positions in the main chain
     and are not subject to optimization.
@@ -150,7 +141,7 @@ def fix_qubits(
             table_z, has_side_chain_second_bead=has_side_chain_second_bead
         )
         return SparsePauliOp(
-            [Pauli((table_z, table_x))], [operator.coeffs[0]]
+            data=[Pauli((table_z, table_x))], coeffs=np.array([operator.coeffs[0]])
         ).simplify()
 
     new_paulis: list[Pauli] = []
@@ -178,8 +169,7 @@ def fix_qubits(
 def _calc_updated_coeffs(
     table_z: NDArray[np.bool], coeff: float, *, has_side_chain_second_bead: bool
 ) -> float:
-    """
-    Update coefficients based on fixed qubit positions.
+    """Update coefficients based on fixed qubit positions.
 
     Args:
         table_z (NDArray[np.bool]): Z values for each qubit.
@@ -208,8 +198,7 @@ def _calc_updated_coeffs(
 def _preset_binary_vals(
     table_z: NDArray[np.bool], *, has_side_chain_second_bead: bool
 ) -> None:
-    """
-    Set False for main bead indices in the Z table.
+    """Set False for main bead indices in the Z table.
 
     Args:
         table_z (NDArray[np.bool]): Z values for each qubit.
@@ -226,8 +215,7 @@ def _preset_binary_vals(
 
 
 def _preset_single_binary_val(table_z: NDArray[np.bool], index: int) -> None:
-    """
-    Set a single qubit value to False.
+    """Set a single qubit value to False.
 
     Args:
         table_z (NDArray[np.bool]): Z values for each qubit.
@@ -239,8 +227,7 @@ def _preset_single_binary_val(table_z: NDArray[np.bool], index: int) -> None:
 
 
 def pad_to_n_qubits(op: SparsePauliOp, target: int) -> SparsePauliOp:
-    """
-    Extends a Pauli operator with identity qubits to reach the target size.
+    """Extends a Pauli operator with identity qubits to reach the target size.
 
     Args:
         op (SparsePauliOp): Operator to pad.
@@ -266,8 +253,7 @@ def pad_to_n_qubits(op: SparsePauliOp, target: int) -> SparsePauliOp:
 
 
 def find_unused_qubits(op: SparsePauliOp) -> list[int]:
-    """
-    Return indices of qubits that are identity (I) in every term of the operator.
+    """Return indices of qubits that are identity (I) in every term of the operator.
 
     Args:
         op (SparsePauliOp): Operator to check.
@@ -292,8 +278,7 @@ def find_unused_qubits(op: SparsePauliOp) -> list[int]:
 def remove_unused_qubits(
     op: SparsePauliOp,
 ) -> SparsePauliOp:
-    """
-    Remove qubits that are identity in all terms.
+    """Remove qubits that are identity in all terms.
 
     Args:
         op (SparsePauliOp): Operator to remove unused qubits from.

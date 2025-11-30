@@ -1,3 +1,5 @@
+"""Main execution script for the quantum protein folding workflow."""
+
 from typing import TYPE_CHECKING
 
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
@@ -17,8 +19,7 @@ logger = get_logger()
 
 
 def main() -> None:
-    """
-    Executes the full quantum protein folding workflow for a sample chain.
+    """Executes the full quantum protein folding workflow for a sample chain.
 
     This includes system setup, hamiltonian construction and compression, VQE
     optimization, and result analysis and visualization in 2D and 3D.
