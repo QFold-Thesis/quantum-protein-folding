@@ -102,7 +102,9 @@ def _get_ibm_quantum_sampler() -> tuple[BaseSamplerV2, BackendV2]:
         logger.info("Backend status message: %s", backend_status.status_msg)
         logger.info("Pending jobs on backend: %d", backend_status.pending_jobs)
         if not backend_status.operational:
-            msg: str = f"Selected backend '{backend_status.backend_name}' is not operational."
+            msg: str = (
+                f"Selected backend '{backend_status.backend_name}' is not operational."
+            )
             raise InvalidBackendError(msg)
         logger.info("Backend is operational.")
     else:
