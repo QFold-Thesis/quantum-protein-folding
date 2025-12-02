@@ -236,7 +236,8 @@ Additionally, each test run generates timestamped logfiles - check the `output/l
 
 The documentation for this repository is automatically built and deployed to GitHub Pages. You can view the latest published docs at:
 
-https://qfold-thesis.github.io/quantum-protein-folding
+[`qfold-thesis.github.io/quantum-protein-folding`](https://qfold-thesis.github.io/quantum-protein-folding)
+
 
 You can also build the documentation locally with Sphinx. If you use `uv` as the project environment manager, the following command will run the Sphinx builder inside the project's environment:
 
