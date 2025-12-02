@@ -223,6 +223,12 @@ Additionally, each test run generates timestamped logfiles - check the `output/l
 > If you wish to see the usage demonstration and suggested setup, please check:
 > - :poland: [Demo Jupyter Notebook in Polish](usage-demo-pl.ipynb)
 > - :gb: [Demo Jupyter Notebook in English](usage-demo-en.ipynb)
+>
+> To run them directly:
+> ```bash
+> uv run jupyter lab docs/usage-demo-en.ipynb # In english
+> uv run jupyter lab docs/usage-demo-pl.ipynb # In polish
+> ```
 
 
 <a name="documentation-sphinx"></a>
