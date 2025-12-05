@@ -21,7 +21,7 @@ Expected file (e.g. ``hp_matrix.txt``) structure:
 Columns are separated by arbitrary whitespace. Only the first two tokens on a line are considered:
 the residue symbol (single character) and a flag (``0`` or ``1``).
 
-Symmetry / Energies
+HP Symmetry / Energies
 -------------------
 The classical lattice HP model assigns the same energy to any hydrophobic-hydrophobic contact
 independent of residue identities (here set to -1.0). All other pairs have energy 0.0.

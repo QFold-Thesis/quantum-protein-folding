@@ -209,7 +209,7 @@ Edit `src/constants.py` to adjust:
 
 ### View Results
 
-After running, check the `output/` directory for timestamped folders containing:
+After running, check the `output/results/` directory for timestamped folders containing:
 - `interactive_3d_visualization.html` - Interactive 3D plot (open in browser)
 - `rotating_3d_visualization.gif` - Animated rotation
 - `conformation_2d.png` - 2D projection
@@ -217,14 +217,27 @@ After running, check the `output/` directory for timestamped folders containing:
 - `raw_vqe_results.json` - Detailed VQE output
 - `vqe_iterations.txt` - Iteration-by-iteration energies
 
-Additionally, each test run generates timestamped logfiles - check the `logs/` directory to inspect them.
+Additionally, each test run generates timestamped logfiles - check the `output/logs/` directory to inspect them.
+
+> [!TIP]
+> If you wish to see the usage demonstration and suggested setup, please check:
+> - :poland: [Demo Jupyter Notebook in Polish](usage-demo-pl.ipynb)
+> - :gb: [Demo Jupyter Notebook in English](usage-demo-en.ipynb)
+>
+> To run them directly:
+> ```bash
+> uv run jupyter lab docs/usage-demo-en.ipynb # In english
+> uv run jupyter lab docs/usage-demo-pl.ipynb # In polish
+> ```
+
 
 <a name="documentation-sphinx"></a>
 ## 📖 Documentation (Sphinx)
 
 The documentation for this repository is automatically built and deployed to GitHub Pages. You can view the latest published docs at:
 
-https://qfold-thesis.github.io/quantum-protein-folding
+[`qfold-thesis.github.io/quantum-protein-folding`](https://qfold-thesis.github.io/quantum-protein-folding)
+
 
 You can also build the documentation locally with Sphinx. If you use `uv` as the project environment manager, the following command will run the Sphinx builder inside the project's environment:
 
