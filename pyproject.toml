@@ -42,13 +42,12 @@ pythonpath = ["src"]
 # ==============================================================================
 
 [tool.ruff]
+extend-exclude = ["docs/"]
 line-length = 88
 target-version = "py312"
-extend-exclude = [
-    "docs",
-]
 
 [tool.ruff.lint]
+exclude = ["*.ipynb"]
 select = [
     "E",    # pycodestyle errors
     "F",    # pyflakes
@@ -101,6 +100,7 @@ fixable = ["ALL"]
 ]
 
 [tool.ruff.format]
+exclude = ["*.ipynb"]
 quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false

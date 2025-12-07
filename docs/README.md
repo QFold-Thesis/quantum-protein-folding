@@ -238,9 +238,10 @@ Additionally, each test run generates timestamped logfiles - check the `output/l
 > 
 > 2. Run the demo notebook
 > ```bash
-> uv run jupyter lab docs/usage-demo-en.ipynb # In english
-> uv run jupyter lab docs/usage-demo-pl.ipynb # In polish
-> ```
+> uv run --with jupyter jupyter lab docs/usage-demo-en.ipynb # In english
+> uv run --with jupyter jupyter lab docs/usage-demo-pl.ipynb # In polish
+> ``` 
+> 3. Notebook should be automatically launched - if not, check [`localhost:8888/lab/`](http://localhost:8888/lab). Also remember about choosing proper kernel (`quantum_protein_folding`).
 
 
 <a name="documentation-sphinx"></a>
