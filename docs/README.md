@@ -224,7 +224,19 @@ Additionally, each test run generates timestamped logfiles - check the `output/l
 > - :poland: [Demo Jupyter Notebook in Polish](usage-demo-pl.ipynb)
 > - :gb: [Demo Jupyter Notebook in English](usage-demo-en.ipynb)
 >
-> To run them directly:
+> 1. Register jupyter kernel with .venv
+>
+>**Linux/macOS:**
+>```bash
+>uv run ipython kernel install --user --env VIRTUAL_ENV "$(pwd)/.venv" --name=quantum_protein_folding
+>```
+>
+>**Windows (PowerShell):**
+>```powershell
+>uv run ipython kernel install --user --env VIRTUAL_ENV "$($PWD)\.venv" --name=quantum_protein_folding
+>```
+> 
+> 2. Run the demo notebook
 > ```bash
 > uv run jupyter lab docs/usage-demo-en.ipynb # In english
 > uv run jupyter lab docs/usage-demo-pl.ipynb # In polish
