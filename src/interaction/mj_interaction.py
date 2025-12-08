@@ -7,7 +7,7 @@ This module provides a small utility class, ``MJInteraction``, that:
 - builds a dictionary that maps residue-residue pairs (e.g., "AL", "LA")
   to their contact energies.
 
-Matrix format assumptions
+MJ matrix format assumptions
 -------------------------
 The file is expected to contain a header row with one-letter residue symbols.
 Starting from the second row, each row begins with a residue symbol and the
