@@ -52,7 +52,7 @@
 <li class="toctree-l2"><a class="reference internal" href="distance.html">Distance</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Interaction</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#hp-matrix-file-format">HP matrix file format</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#symmetry-energies">Symmetry / Energies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hp-symmetry-energies">HP Symmetry / Energies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#interaction.hp_interaction.HPInteraction"><code class="docutils literal notranslate"><span class="pre">HPInteraction</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#interaction.hp_interaction.HPInteraction.__init__"><code class="docutils literal notranslate"><span class="pre">HPInteraction.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#interaction.hp_interaction.HPInteraction._abc_impl"><code class="docutils literal notranslate"><span class="pre">HPInteraction._abc_impl</span></code></a></li>
@@ -67,7 +67,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#interaction.interaction.Interaction.get_energy"><code class="docutils literal notranslate"><span class="pre">Interaction.get_energy()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#matrix-format-assumptions">Matrix format assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mj-matrix-format-assumptions">MJ matrix format assumptions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#interaction.mj_interaction.MJInteraction"><code class="docutils literal notranslate"><span class="pre">MJInteraction</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#interaction.mj_interaction.MJInteraction.__init__"><code class="docutils literal notranslate"><span class="pre">MJInteraction.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#interaction.mj_interaction.MJInteraction._abc_impl"><code class="docutils literal notranslate"><span class="pre">MJInteraction._abc_impl</span></code></a></li>
@@ -141,8 +141,8 @@ N 0
 <p>Columns are separated by arbitrary whitespace. Only the first two tokens on a line are considered:
 the residue symbol (single character) and a flag (<code class="docutils literal notranslate"><span class="pre">0</span></code> or <code class="docutils literal notranslate"><span class="pre">1</span></code>).</p>
 </section>
-<section id="symmetry-energies">
-<h2>Symmetry / Energies<a class="headerlink" href="#symmetry-energies" title="Link to this heading"></a></h2>
+<section id="hp-symmetry-energies">
+<h2>HP Symmetry / Energies<a class="headerlink" href="#hp-symmetry-energies" title="Link to this heading"></a></h2>
 <p>The classical lattice HP model assigns the same energy to any hydrophobic-hydrophobic contact
 independent of residue identities (here set to -1.0). All other pairs have energy 0.0.</p>
 </section>
@@ -304,8 +304,8 @@ Subclasses should also manage to properly set the <cite>valid_symbols</cite> set
 <li><p>builds a dictionary that maps residue-residue pairs (e.g., “AL”, “LA”)
 to their contact energies.</p></li>
 </ul>
-<section id="matrix-format-assumptions">
-<h2>Matrix format assumptions<a class="headerlink" href="#matrix-format-assumptions" title="Link to this heading"></a></h2>
+<section id="mj-matrix-format-assumptions">
+<h2>MJ matrix format assumptions<a class="headerlink" href="#mj-matrix-format-assumptions" title="Link to this heading"></a></h2>
 <p>The file is expected to contain a header row with one-letter residue symbols.
 Starting from the second row, each row begins with a residue symbol and the
 upper triangle (including the diagonal) of energies is provided. The loader
