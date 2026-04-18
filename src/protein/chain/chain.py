@@ -94,3 +94,12 @@ class Chain(ABC):
 
         """
         return "".join(bead.symbol for bead in self.beads)
+
+    def get_sequence(self) -> str:
+        """Get the amino acid sequence as a string.
+
+        Returns:
+            str: Concatenated sequence of bead symbols.
+
+        """
+        return str(self)
