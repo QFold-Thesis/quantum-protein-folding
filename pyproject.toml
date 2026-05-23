@@ -36,6 +36,9 @@ dev = [
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
+markers = [
+    "slow: marks tests as slow (VQE end-to-end); deselect with '-m \"not slow\"'",
+]
 
 # ==============================================================================
 # LINTING (RUFF)

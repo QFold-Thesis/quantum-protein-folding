@@ -2,7 +2,19 @@
 
 This module provides the HamiltonianBuilder class, which constructs hamiltonian
 operators for a given protein, including backbone interactions, backtracking
-penalties, and neighbor-based contact terms, using distance and interaction maps.
+penalties, neighbor-based contact terms, and an optional external-field bias term.
+
+The external-field term (Variant A) models a position-dependent energy landscape
+by mapping each bead's sequential index ``i`` to a coordinate key ``(i,)`` and
+looking up the corresponding energy from an :class:`~particle.ExternalField`
+instance.  The resulting contribution is a scalar multiple of the identity:
+
+    H_field = Σ_i  E_field((i,)) · I
+
+This shifts the global energy proportionally to the sum of field energies over
+the chain, differentiating between conformations only when combined with other
+terms that break the chain's symmetry.  Full spatial coupling δ(r_i, r_field)
+that depends on the actual lattice position of each bead belongs to Variant B.
 """
 
 from __future__ import annotations
@@ -30,6 +42,7 @@ if TYPE_CHECKING:
     from contact.contact_map import ContactMap
     from distance.distance_map import DistanceMap
     from interaction.interaction import Interaction
+    from particle.external_field import ExternalField
     from protein import Protein
     from protein.bead import Bead
     from protein.chain import _MainChain
@@ -40,11 +53,17 @@ logger = get_logger()
 class HamiltonianBuilder:
     """Constructs hamiltonian operators for a given protein, including backbone interactions and backtracking penalties.
 
+    Optionally accepts an :class:`~particle.ExternalField` to include an
+    external-field bias term ``H_field`` in the total Hamiltonian.  When
+    *external_field* is ``None`` the builder behaves exactly as before and
+    produces identical results to the field-free case.
+
     Attributes:
         protein (Protein): The Protein object that includes all information about protein.
         interaction (Interaction): Interaction model between beads of the protein.
         distance_map (DistanceMap): Matrix of pairwise distances between residues.
         contact_map (ContactMap): Matrix indicating residue-residue contacts.
+        external_field (ExternalField | None): Optional external interaction field.
 
     """
 
@@ -54,6 +73,7 @@ class HamiltonianBuilder:
         interaction: Interaction,
         distance_map: DistanceMap,
         contact_map: ContactMap,
+        external_field: ExternalField | None = None,
     ) -> None:
         """Initializes the HamiltonianBuilder with required protein data and interaction maps.
 
@@ -62,24 +82,32 @@ class HamiltonianBuilder:
             interaction (Interaction): Interaction model between beads of the protein.
             distance_map (DistanceMap): Matrix of pairwise distances between residues.
             contact_map (ContactMap): Matrix indicating residue-residue contacts.
+            external_field (ExternalField | None, optional): External interaction field that
+                contributes a per-bead energy bias to the Hamiltonian.  Pass ``None`` (the
+                default) to omit the field term entirely, preserving backward compatibility.
 
         """
         self.protein: Protein = protein
         self.interaction: Interaction = interaction
         self.distance_map: DistanceMap = distance_map
         self.contact_map: ContactMap = contact_map
+        self.external_field: ExternalField | None = external_field
 
     def sum_hamiltonians(self) -> SparsePauliOp:
         """Build and sum all hamiltonian components, padding to a common qubit size.
 
-        Constructs the backbone and backtracking terms, checks qubit consistency,
-        pads them to the same qubit count, and sums them into a single hamiltonian.
+        Constructs the backbone, backtracking, and (optionally) external-field
+        terms, checks qubit consistency, pads them to the same qubit count, and
+        sums them into a single hamiltonian.
 
         Note:
             The padding step ensures that all SparsePauliOp operators have the same
             number of qubits, which is required for valid operator addition.
             The total hamiltonian is initialized with an identity operator and then
             each padded component is added sequentially.
+
+            When :attr:`external_field` is ``None`` the result is identical to the
+            field-free case; ``H_field`` contributes a zero operator in that case.
 
         Returns:
             SparsePauliOp: The total hamiltonian operator, simplified and ready for use.
@@ -91,8 +119,9 @@ class HamiltonianBuilder:
         logger.debug("Started process of building total hamiltonian...")
         h_backbone: SparsePauliOp = self._build_backbone_contact_term()
         h_backtrack: SparsePauliOp = self._add_backtracking_penalty()
+        h_field: SparsePauliOp = self._build_external_field_term()
 
-        part_hamiltonians: list[SparsePauliOp] = [h_backbone, h_backtrack]
+        part_hamiltonians: list[SparsePauliOp] = [h_backbone, h_backtrack, h_field]
 
         for idx, hamiltonian in enumerate(part_hamiltonians):
             if hamiltonian.num_qubits is None:
@@ -191,6 +220,68 @@ class HamiltonianBuilder:
             h_backbone.num_qubits,
         )
         return h_backbone
+
+    def _build_external_field_term(self) -> SparsePauliOp:
+        """Builds the Hamiltonian bias term from the external field (Variant A).
+
+        When :attr:`external_field` is ``None`` this method returns a zero identity
+        operator matching the turn-qubit register size and the builder behaves
+        identically to the field-free case.
+
+        Otherwise, the method iterates over all beads in the main chain and sums
+        per-bead energy contributions::
+
+            H_field = Σ_i  E_field((i,)) · I
+
+        Each bead's sequential index ``i`` is used as its lattice coordinate key
+        ``(i,)``.  This means a non-uniform :class:`~particle.ExternalField` can
+        assign different energies to different positions along the sequence (e.g.
+        a stronger field at the active site residues), while a uniform field
+        simply shifts the total energy by a constant.
+
+        Note:
+            This implementation corresponds to Variant A of the external-field
+            extension.  Variant B will encode the actual spatial position of each
+            bead as a quantum degree of freedom, enabling a true
+            δ(r_i, r_field) contact term.
+
+        Returns:
+            SparsePauliOp: Hamiltonian bias term H_field, or a zero identity
+            operator when no field is present.
+
+        """
+        n_turn_qubits: int = (len(self.protein.main_chain) - 1) * QUBITS_PER_TURN
+
+        if self.external_field is None:
+            logger.debug(
+                "No external field provided – H_field set to zero identity (%d qubits).",
+                n_turn_qubits,
+            )
+            return build_identity_op(n_turn_qubits, EMPTY_OP_COEFF)
+
+        logger.debug("Building external field Hamiltonian term (Variant A)...")
+
+        h_field: SparsePauliOp = build_identity_op(n_turn_qubits, EMPTY_OP_COEFF)
+        total_field_energy: float = 0.0
+
+        for bead in self.protein.main_chain:
+            bead_coord: tuple[int] = (bead.index,)
+            energy: float = self.external_field.get_energy(bead_coord)
+            h_field = h_field + energy * build_identity_op(n_turn_qubits)
+            total_field_energy += energy
+            logger.debug(
+                "Bead %s (index=%d): field energy = %s",
+                bead.symbol,
+                bead.index,
+                energy,
+            )
+
+        logger.info(
+            "Finished building H_field: total field energy = %s over %d beads.",
+            total_field_energy,
+            len(self.protein.main_chain),
+        )
+        return h_field.simplify()
 
     def _add_backtracking_penalty(self) -> SparsePauliOp:
         """Adds a penalty term to the hamiltonian to discourage backtracking in the main chain configuration.
