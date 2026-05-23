@@ -260,7 +260,7 @@ class ExternalField:
         # fall back to default_energy (which equals the uniform strength).
         energy: float = self._energy_map.get(lattice_coords, self.default_energy)
         logger.debug(
-            "ExternalField.get_energy(%s) → %s", lattice_coords, energy
+            "ExternalField.get_energy(%s) -> %s", lattice_coords, energy
         )
         return energy
 
@@ -296,7 +296,7 @@ class ExternalField:
             raise ValueError(msg)
 
         self._energy_map[lattice_coords] = energy
-        logger.debug("ExternalField: set energy at %s → %s", lattice_coords, energy)
+        logger.debug("ExternalField: set energy at %s -> %s", lattice_coords, energy)
 
     def nodes(self) -> dict[LatticeCoords, float]:
         """Return a *copy* of the explicit coordinate → energy map.

@@ -37,7 +37,7 @@ from qiskit_algorithms.optimizers import COBYLA
 
 from backend import get_sampler
 from builder import HamiltonianBuilder
-from constants import EMPTY_SIDECHAIN_PLACEHOLDER, MJ_ENERGY_MULTIPLIER
+from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from contact import ContactMap
 from distance import DistanceMap
 from enums import InteractionType
@@ -383,14 +383,19 @@ class FieldInfluenceAnalysis:
         minimum_energy: float = float(np.real(best.get("value", float("nan"))))
         best_bitstring: str = best.get("bitstring", "")
 
-        # Build probability distribution from quasi-distribution
+        # Build probability distribution from quasi-distribution.
+        # qiskit-algorithms may return keys as int (older) or str (newer).
         state_probs: dict[str, float] = {}
         if raw.eigenstate is not None:
             quasi_dist = raw.eigenstate
             n_bits = int(compressed_h.num_qubits)
-            for int_state, prob in quasi_dist.items():
+            for key, prob in quasi_dist.items():
                 if prob > 0:
-                    bs = format(int_state, f"0{n_bits}b")
+                    if isinstance(key, int):
+                        bs = format(key, f"0{n_bits}b")
+                    else:
+                        # Already a bitstring; normalise to n_bits width
+                        bs = str(key).zfill(n_bits)
                     state_probs[bs] = float(prob)
 
         logger.info(
