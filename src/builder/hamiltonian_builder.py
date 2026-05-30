@@ -254,7 +254,7 @@ class HamiltonianBuilder:
 
         if self.external_field is None:
             logger.debug(
-                "No external field provided – H_field set to zero identity (%d qubits).",
+                "No external field provided - H_field set to zero identity (%d qubits).",
                 n_turn_qubits,
             )
             return build_identity_op(n_turn_qubits, EMPTY_OP_COEFF)

@@ -19,6 +19,7 @@ import pytest
 from qiskit.quantum_info import SparsePauliOp
 
 from src.builder.hamiltonian_builder import HamiltonianBuilder
+from src.constants import QUBITS_PER_TURN
 from src.contact.contact_map import ContactMap
 from src.distance.distance_map import DistanceMap
 from src.interaction.hp_interaction import HPInteraction
@@ -29,7 +30,7 @@ from src.protein.protein import Protein
 # Shared fixtures
 # ---------------------------------------------------------------------------
 
-MAIN_CHAIN = "HPPHH"   # length 5 – minimum to allow any backbone contacts
+MAIN_CHAIN = "HPPHH"   # length 5 - minimum to allow any backbone contacts
 SIDE_CHAIN = "_____"
 
 
@@ -119,7 +120,7 @@ class TestNoneFieldBackwardCompatibility:
 
 
 # ---------------------------------------------------------------------------
-# _build_external_field_term – unit-level checks
+# _build_external_field_term - unit-level checks
 # ---------------------------------------------------------------------------
 
 
@@ -190,8 +191,6 @@ class TestBuildExternalFieldTerm:
         self, protein, hp_interaction, distance_map, contact_map
     ):
         """H_field must span the turn-qubit register (n-1)*QUBITS_PER_TURN."""
-        from src.constants import QUBITS_PER_TURN
-
         expected_qubits = (len(protein.main_chain) - 1) * QUBITS_PER_TURN
         field = ExternalField.uniform(strength=1.0)
 
@@ -215,7 +214,7 @@ class TestBuildExternalFieldTerm:
 
 
 # ---------------------------------------------------------------------------
-# sum_hamiltonians – integration checks with a real field
+# sum_hamiltonians - integration checks with a real field
 # ---------------------------------------------------------------------------
 
 

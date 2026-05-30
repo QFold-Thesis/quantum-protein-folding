@@ -5,9 +5,9 @@ Strategy
 Full VQE runs are slow (seconds each) and non-deterministic.  The tests here
 use two approaches:
 
-1. **Unit tests** – test each internal helper in isolation using mocking or
+1. **Unit tests** - test each internal helper in isolation using mocking or
    small, purely-classical computations (no VQE).
-2. **Smoke / integration test** – one short end-to-end run with a tiny chain
+2. **Smoke / integration test** - one short end-to-end run with a tiny chain
    and very few VQE iterations to verify the full pipeline glues together.
 
 The smoke test is marked ``@pytest.mark.slow`` so it can be excluded from fast
@@ -19,9 +19,9 @@ CI runs::
 
 from __future__ import annotations
 
+import dataclasses
 import math
 import os
-from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
@@ -34,20 +34,18 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 # NOTE: Use non-src-prefixed imports (matching pytest pythonpath = ["src"]).
 # Mixing src.* and bare imports produces two separate class objects in Python's
 # module cache, which breaks isinstance() checks.
-from analysis.field_influence_analysis import (  # noqa: E402
+from analysis.field_influence_analysis import (
     FieldInfluenceAnalysis,
     ScenarioResult,
-    _save_or_show,
-    _style_axes,
 )
-from enums import InteractionType  # noqa: E402
-from particle.external_field import ExternalField  # noqa: E402
+from enums import InteractionType
+from particle.external_field import ExternalField
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
-_SHORT_CHAIN = "HPPHH"   # length-5 HP chain – minimum for backbone contacts
+_SHORT_CHAIN = "HPPHH"   # length-5 HP chain - minimum for backbone contacts
 _SIDE_CHAIN = "_____"
 
 
@@ -77,7 +75,7 @@ def _fake_scenario_result(label: str, energy: float = -1.0) -> ScenarioResult:
 
 
 # ===========================================================================
-# __init__ – construction
+# __init__ - construction
 # ===========================================================================
 
 
@@ -172,14 +170,14 @@ class TestBuildNonUniformField:
 
 
 # ===========================================================================
-# summary()
+# summary()  # noqa: ERA001
 # ===========================================================================
 
 
 class TestSummary:
     def test_summary_raises_before_run(self):
         a = _make_analysis()
-        with pytest.raises(RuntimeError, match="run()"):
+        with pytest.raises(RuntimeError, match=r"run\(\)"):
             a.summary()
 
     def test_summary_contains_all_labels(self):
@@ -202,19 +200,19 @@ class TestSummary:
 
 
 # ===========================================================================
-# plot() – guard against calling before run()
+# plot() - guard against calling before run()
 # ===========================================================================
 
 
 class TestPlotGuard:
     def test_plot_raises_before_run(self):
         a = _make_analysis()
-        with pytest.raises(RuntimeError, match="run()"):
+        with pytest.raises(RuntimeError, match=r"run\(\)"):
             a.plot()
 
 
 # ===========================================================================
-# plot() – output saved to disk when output_dir is provided
+# plot() - output saved to disk when output_dir is provided
 # ===========================================================================
 
 
@@ -273,7 +271,6 @@ class TestPlotOutput:
 
 class TestScenarioResult:
     def test_is_dataclass(self):
-        import dataclasses
         assert dataclasses.is_dataclass(ScenarioResult)
 
     def test_fields_accessible(self):
@@ -304,7 +301,7 @@ class TestScenarioResult:
 
 
 # ===========================================================================
-# run() – mocked VQE to verify orchestration logic
+# run() - mocked VQE to verify orchestration logic
 # ===========================================================================
 
 
@@ -343,7 +340,7 @@ class TestRunOrchestration:
         with patch.object(a, "_run_scenario", side_effect=self._mock_scenario_result):
             a.run()
         # results[1] and results[2] should be the uniform scenarios
-        for r, lam in zip(a.results[1:-1], lambdas):
+        for r, lam in zip(a.results[1:-1], lambdas, strict=False):
             assert str(lam) in r.label
 
     def test_run_clears_previous_results(self):
@@ -402,7 +399,7 @@ class TestRunOrchestration:
 
 
 # ===========================================================================
-# Smoke / integration test (slow – real VQE, few iterations)
+# Smoke / integration test (slow - real VQE, few iterations)
 # ===========================================================================
 
 

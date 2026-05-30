@@ -136,7 +136,7 @@ class TestNonUniformFactory:
 
 
 # ===========================================================================
-# ExternalField.get_energy – input validation
+# ExternalField.get_energy - input validation
 # ===========================================================================
 
 
