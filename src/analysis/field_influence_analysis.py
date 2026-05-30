@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import dataclasses
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from qiskit.circuit.library import real_amplitudes
@@ -365,7 +365,7 @@ class FieldInfluenceAnalysis:
             eval_count: int,
             _params: np.ndarray,
             mean: float,
-            _std: dict,
+            _std: dict[str, Any],
         ) -> None:
             iterations.append(eval_count)
             energies.append(mean)
@@ -427,8 +427,8 @@ class FieldInfluenceAnalysis:
 
     def _plot_energy_vs_lambda(
         self,
-        plt: object,
-        ticker: object,
+        plt: Any,
+        ticker: Any,
         palette: list[str],
         output_dir: Path | None,
     ) -> None:
@@ -512,7 +512,7 @@ class FieldInfluenceAnalysis:
 
     def _plot_energy_bar(
         self,
-        plt: object,
+        plt: Any,
         palette: list[str],
         output_dir: Path | None,
     ) -> None:
@@ -528,7 +528,7 @@ class FieldInfluenceAnalysis:
         energies = [r.minimum_energy for r in self.results]
         colours = [palette[i % len(palette)] for i in range(len(self.results))]
 
-        fig, ax = plt.subplots(figsize=(max(8, len(labels) * 1.4), 5))
+        fig, ax = plt.subplots(figsize=(max(8.0, len(labels) * 1.4), 5))
         fig.patch.set_facecolor("#0f1117")
         ax.set_facecolor("#1a1d27")
 
@@ -574,7 +574,7 @@ class FieldInfluenceAnalysis:
 
     def _plot_probability_distributions(
         self,
-        plt: object,
+        plt: Any,
         palette: list[str],
         output_dir: Path | None,
         top_k: int = 8,
@@ -702,7 +702,7 @@ class FieldInfluenceAnalysis:
 # ---------------------------------------------------------------------------
 
 
-def _style_axes(ax: object, ticker: object) -> None:
+def _style_axes(ax: Any, ticker: Any) -> None:
     """Apply dark-theme styling to a matplotlib Axes object.
 
     Args:
@@ -719,8 +719,8 @@ def _style_axes(ax: object, ticker: object) -> None:
 
 
 def _save_or_show(
-    fig: object,
-    plt: object,
+    fig: Any,
+    plt: Any,
     output_dir: Path | None,
     filename: str,
 ) -> None:
