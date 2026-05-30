@@ -30,7 +30,7 @@ from src.protein.protein import Protein
 # Shared fixtures
 # ---------------------------------------------------------------------------
 
-MAIN_CHAIN = "HPPHH"   # length 5 - minimum to allow any backbone contacts
+MAIN_CHAIN = "HPPHH"  # length 5 - minimum to allow any backbone contacts
 SIDE_CHAIN = "_____"
 
 
@@ -286,9 +286,7 @@ class TestSumHamiltonians:
         chain_len = len(protein.main_chain)
         energy_map = {(0,): -3.0, (2,): 2.5}
         # Beads not in map default to 0.0; compute expected shift manually.
-        expected_shift = sum(
-            energy_map.get((i,), 0.0) for i in range(chain_len)
-        )
+        expected_shift = sum(energy_map.get((i,), 0.0) for i in range(chain_len))
 
         h_base = _make_builder(
             protein, hp_interaction, distance_map, contact_map
@@ -321,4 +319,3 @@ class TestSumHamiltonians:
             protein, hp_interaction, distance_map, contact_map, external_field=field
         )
         assert builder.external_field is field
-

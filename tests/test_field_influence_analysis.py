@@ -45,7 +45,7 @@ from particle.external_field import ExternalField
 # Helpers
 # ---------------------------------------------------------------------------
 
-_SHORT_CHAIN = "HPPHH"   # length-5 HP chain - minimum for backbone contacts
+_SHORT_CHAIN = "HPPHH"  # length-5 HP chain - minimum for backbone contacts
 _SIDE_CHAIN = "_____"
 
 
@@ -165,8 +165,12 @@ class TestBuildNonUniformField:
         e_mid = field.get_energy((mid,))
         e_term_left = field.get_energy((0,))
         e_term_right = field.get_energy((n - 1,))
-        assert e_term_left > e_mid, "Left terminus should be weaker (less negative) than centre"
-        assert e_term_right > e_mid, "Right terminus should be weaker (less negative) than centre"
+        assert e_term_left > e_mid, (
+            "Left terminus should be weaker (less negative) than centre"
+        )
+        assert e_term_right > e_mid, (
+            "Right terminus should be weaker (less negative) than centre"
+        )
 
 
 # ===========================================================================

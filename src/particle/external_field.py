@@ -259,9 +259,7 @@ class ExternalField:
         # the uniform default.  If the node has not been explicitly set we
         # fall back to default_energy (which equals the uniform strength).
         energy: float = self._energy_map.get(lattice_coords, self.default_energy)
-        logger.debug(
-            "ExternalField.get_energy(%s) -> %s", lattice_coords, energy
-        )
+        logger.debug("ExternalField.get_energy(%s) -> %s", lattice_coords, energy)
         return energy
 
     # ------------------------------------------------------------------

@@ -254,8 +254,14 @@ class FieldInfluenceAnalysis:
 
         # Consistent colour palette
         _palette = [
-            "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728",
-            "#9467bd", "#8c564b", "#e377c2", "#7f7f7f",
+            "#1f77b4",
+            "#ff7f0e",
+            "#2ca02c",
+            "#d62728",
+            "#9467bd",
+            "#8c564b",
+            "#e377c2",
+            "#7f7f7f",
         ]
 
         # ---- Figure 1: energy vs lambda ----------------------------------
@@ -436,18 +442,16 @@ class FieldInfluenceAnalysis:
 
         """
         # Collect uniform-sweep results (skip baseline and non-uniform)
-        uniform_results = [
-            r for r in self.results if r.label.startswith("lambda=")
-        ]
+        uniform_results = [r for r in self.results if r.label.startswith("lambda=")]
         baseline = next(
             (r for r in self.results if r.label.startswith("baseline")), None
         )
-        nu_result = next(
-            (r for r in self.results if "non-uniform" in r.label), None
-        )
+        nu_result = next((r for r in self.results if "non-uniform" in r.label), None)
 
         if not uniform_results:
-            logger.warning("No uniform-sweep results found; skipping energy-vs-lambda plot.")
+            logger.warning(
+                "No uniform-sweep results found; skipping energy-vs-lambda plot."
+            )
             return
 
         lambdas = [float(r.label.split("=")[1].split(" ")[0]) for r in uniform_results]
@@ -500,7 +504,9 @@ class FieldInfluenceAnalysis:
             color="#ffffff",
             pad=12,
         )
-        ax.legend(fontsize=10, facecolor="#1a1d27", edgecolor="#444", labelcolor="#e0e0e0")
+        ax.legend(
+            fontsize=10, facecolor="#1a1d27", edgecolor="#444", labelcolor="#e0e0e0"
+        )
 
         _save_or_show(fig, plt, output_dir, "energy_vs_lambda.png")
 
@@ -589,22 +595,31 @@ class FieldInfluenceAnalysis:
         )
         fig.patch.set_facecolor("#0f1117")
 
-        for ax_row, result, colour in zip(axes, self.results, palette * (n // len(palette) + 1), strict=False):
+        for ax_row, result, colour in zip(
+            axes, self.results, palette * (n // len(palette) + 1), strict=False
+        ):
             ax = ax_row[0]
             ax.set_facecolor("#1a1d27")
 
             probs = result.state_probabilities
             if not probs:
                 ax.text(
-                    0.5, 0.5, "No distribution data",
-                    ha="center", va="center", color="#888", fontsize=11,
+                    0.5,
+                    0.5,
+                    "No distribution data",
+                    ha="center",
+                    va="center",
+                    color="#888",
+                    fontsize=11,
                     transform=ax.transAxes,
                 )
                 ax.set_title(result.label, color="#ffffff", fontsize=11)
                 continue
 
             # Sort by probability descending and keep top-k
-            sorted_states = sorted(probs.items(), key=lambda x: x[1], reverse=True)[:top_k]
+            sorted_states = sorted(probs.items(), key=lambda x: x[1], reverse=True)[
+                :top_k
+            ]
             states, probs_vals = zip(*sorted_states, strict=False)
 
             bars = ax.bar(
@@ -626,7 +641,10 @@ class FieldInfluenceAnalysis:
             ax.set_xticks(range(len(states)))
             ax.set_xticklabels(
                 [f"|{s}⟩" for s in states],
-                rotation=45, ha="right", fontsize=8, color="#c0c0c0",
+                rotation=45,
+                ha="right",
+                fontsize=8,
+                color="#c0c0c0",
             )
             ax.yaxis.set_tick_params(labelcolor="#c0c0c0")
             ax.set_ylabel("Probability", fontsize=10, color="#e0e0e0")
@@ -669,9 +687,7 @@ class FieldInfluenceAnalysis:
             raise RuntimeError(msg)
 
         col_label = max(len(r.label) for r in self.results) + 2
-        header = (
-            f"{'Scenario':<{col_label}}  {'E_min':>12}  {'Best bitstring'}"
-        )
+        header = f"{'Scenario':<{col_label}}  {'E_min':>12}  {'Best bitstring'}"
         separator = "-" * (col_label + 30)
         rows = [header, separator]
         for r in self.results:
@@ -719,7 +735,9 @@ def _save_or_show(
     """
     if output_dir is not None:
         filepath = output_dir / filename
-        fig.savefig(filepath, dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor())
+        fig.savefig(
+            filepath, dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor()
+        )
         logger.info("Saved plot: %s", filepath)
         plt.close(fig)
     else:
