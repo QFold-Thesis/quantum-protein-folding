@@ -7,10 +7,10 @@ peptide chain on the lattice.
 The field assigns an energy value to every lattice node and supports two
 initialisation modes:
 
-* **Uniform** – every node shares the same constant energy value.  Useful
+* **Uniform** - every node shares the same constant energy value.  Useful
   for testing whether a homogeneous background field shifts or stabilises
   particular conformations.
-* **Non-uniform** – the caller supplies an explicit ``{coords: energy}``
+* **Non-uniform** - the caller supplies an explicit ``{coords: energy}``
   mapping.  Nodes absent from the mapping fall back to a configurable
   default energy (typically 0.0), so the dict only needs to list *special*
   positions.

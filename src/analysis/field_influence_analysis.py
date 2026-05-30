@@ -95,9 +95,9 @@ class FieldInfluenceAnalysis:
 
     Runs VQE for each of the following field configurations and collects results:
 
-    1. **Baseline** – no external field (``external_field=None``).
-    2. **Uniform sweep** – uniform field at each λ in *uniform_lambdas*.
-    3. **Non-uniform** – stronger field at the central bead(s) of the chain,
+    1. **Baseline** - no external field (``external_field=None``).
+    2. **Uniform sweep** - uniform field at each lambda in *uniform_lambdas*.
+    3. **Non-uniform** - stronger field at the central bead(s) of the chain,
        falling off toward the termini.
 
     After calling :meth:`run`, the collected results can be visualised with
@@ -200,7 +200,7 @@ class FieldInfluenceAnalysis:
 
         # 2. Uniform sweep
         for lam in self.uniform_lambdas:
-            label = f"λ={lam} (uniform)"
+            label = f"lambda={lam} (uniform)"
             logger.info("--- Scenario: %s ---", label)
             field = ExternalField.uniform(strength=lam)
             self.results.append(self._run_scenario(label=label, field=field))
@@ -221,11 +221,11 @@ class FieldInfluenceAnalysis:
 
         Produces three figures:
 
-        1. **Energy vs λ** – minimum VQE energy on the y-axis, uniform-field λ
+        1. **Energy vs lambda** - minimum VQE energy on the y-axis, uniform-field lambda
            on the x-axis.  The baseline and non-uniform scenarios are drawn as
            horizontal reference lines.
-        2. **Energy comparison bar chart** – one bar per scenario.
-        3. **Probability distributions** – stacked subplots, one per scenario,
+        2. **Energy comparison bar chart** - one bar per scenario.
+        3. **Probability distributions** - stacked subplots, one per scenario,
            showing the top-k bitstring probabilities.
 
         Args:
@@ -242,8 +242,8 @@ class FieldInfluenceAnalysis:
             raise RuntimeError(msg)
 
         try:
-            import matplotlib.pyplot as plt
-            import matplotlib.ticker as ticker
+            import matplotlib.pyplot as plt  # noqa: PLC0415
+            from matplotlib import ticker  # noqa: PLC0415
         except ImportError as e:
             msg = "matplotlib is required for plotting. Install it with: pip install matplotlib"
             raise ImportError(msg) from e
@@ -253,19 +253,19 @@ class FieldInfluenceAnalysis:
             output_dir.mkdir(parents=True, exist_ok=True)
 
         # Consistent colour palette
-        _PALETTE = [
+        _palette = [
             "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728",
             "#9467bd", "#8c564b", "#e377c2", "#7f7f7f",
         ]
 
-        # ---- Figure 1: energy vs λ ---------------------------------------
-        self._plot_energy_vs_lambda(plt, ticker, _PALETTE, output_dir)
+        # ---- Figure 1: energy vs lambda ----------------------------------
+        self._plot_energy_vs_lambda(plt, ticker, _palette, output_dir)
 
         # ---- Figure 2: bar chart of all scenarios ------------------------
-        self._plot_energy_bar(plt, _PALETTE, output_dir)
+        self._plot_energy_bar(plt, _palette, output_dir)
 
         # ---- Figure 3: probability distributions -------------------------
-        self._plot_probability_distributions(plt, _PALETTE, output_dir)
+        self._plot_probability_distributions(plt, _palette, output_dir)
 
         if output_dir is None:
             plt.show()
@@ -273,7 +273,7 @@ class FieldInfluenceAnalysis:
             logger.info("All plots saved to %s", output_dir)
 
     # ------------------------------------------------------------------
-    # Internal helpers – scenario execution
+    # Internal helpers - scenario execution
     # ------------------------------------------------------------------
 
     def _build_interaction(self) -> HPInteraction | MJInteraction:
@@ -290,9 +290,9 @@ class FieldInfluenceAnalysis:
 
         The field energy at bead ``i`` is:
 
-            E_field((i,)) = λ_max * exp(-((i - mid) / σ)²)
+            E_field((i,)) = lambda_max * exp(-((i - mid) / sigma)^2)
 
-        where ``mid`` is the fractional midpoint of the chain and σ = N/4.
+        where ``mid`` is the fractional midpoint of the chain and sigma = N/4.
         This produces a smooth peak at the centre that falls to ~2 % of the
         maximum at the termini for a typical chain length.
 
@@ -310,7 +310,7 @@ class FieldInfluenceAnalysis:
             for i in range(chain_len)
         }
         logger.debug(
-            "Non-uniform field profile (Gaussian, λ_max=%s, σ=%.2f): %s",
+            "Non-uniform field profile (Gaussian, lambda_max=%s, sigma=%.2f): %s",
             lambda_max,
             sigma,
             {k: round(v, 4) for k, v in energy_map.items()},
@@ -416,7 +416,7 @@ class FieldInfluenceAnalysis:
         )
 
     # ------------------------------------------------------------------
-    # Internal helpers – plotting
+    # Internal helpers - plotting
     # ------------------------------------------------------------------
 
     def _plot_energy_vs_lambda(
@@ -437,7 +437,7 @@ class FieldInfluenceAnalysis:
         """
         # Collect uniform-sweep results (skip baseline and non-uniform)
         uniform_results = [
-            r for r in self.results if r.label.startswith("λ=")
+            r for r in self.results if r.label.startswith("lambda=")
         ]
         baseline = next(
             (r for r in self.results if r.label.startswith("baseline")), None
@@ -447,7 +447,7 @@ class FieldInfluenceAnalysis:
         )
 
         if not uniform_results:
-            logger.warning("No uniform-sweep results found; skipping energy-vs-λ plot.")
+            logger.warning("No uniform-sweep results found; skipping energy-vs-lambda plot.")
             return
 
         lambdas = [float(r.label.split("=")[1].split(" ")[0]) for r in uniform_results]
@@ -537,7 +537,7 @@ class FieldInfluenceAnalysis:
         )
 
         # Annotate bars with value
-        for bar, e in zip(bars, energies):
+        for bar, e in zip(bars, energies, strict=False):
             ax.text(
                 bar.get_x() + bar.get_width() / 2,
                 bar.get_height() + (max(energies) - min(energies)) * 0.01,
@@ -589,7 +589,7 @@ class FieldInfluenceAnalysis:
         )
         fig.patch.set_facecolor("#0f1117")
 
-        for ax_row, result, colour in zip(axes, self.results, palette * (n // len(palette) + 1)):
+        for ax_row, result, colour in zip(axes, self.results, palette * (n // len(palette) + 1), strict=False):
             ax = ax_row[0]
             ax.set_facecolor("#1a1d27")
 
@@ -605,7 +605,7 @@ class FieldInfluenceAnalysis:
 
             # Sort by probability descending and keep top-k
             sorted_states = sorted(probs.items(), key=lambda x: x[1], reverse=True)[:top_k]
-            states, probs_vals = zip(*sorted_states)
+            states, probs_vals = zip(*sorted_states, strict=False)
 
             bars = ax.bar(
                 range(len(states)),

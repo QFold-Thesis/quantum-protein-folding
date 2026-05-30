@@ -98,6 +98,11 @@ fixable = ["ALL"]
 "src/result/visualizer/result_visualizer.py" = [
     "PLC0415",
 ]
+
+# LaTeX backslashes in docstrings are intentional (Sphinx math mode)
+"src/builder/hamiltonian_builder.py" = [
+    "D301",
+]
 "src/backend/backend_factory.py" = [
     "PLC0415",
 ]
