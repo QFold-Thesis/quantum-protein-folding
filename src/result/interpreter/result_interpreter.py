@@ -492,6 +492,11 @@ class ResultInterpreter:
             logger.info("JSON results saved to %s", results_filepath)
 
     @property
+    def best_energy(self) -> float:
+        """float: The lowest energy value found in the simulation."""
+        return float(self._vqe_output.energy_value.real)
+
+    @property
     def coordinates_3d(self) -> list[BeadPosition]:
         """list[BeadPosition]: 3D coordinates of the protein beads."""
         return self._coordinates_3d
