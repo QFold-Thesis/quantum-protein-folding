@@ -40,8 +40,9 @@ def main() -> None:
 
     # Create a non-uniform external field for visualization demo.
     # Gaussian-like attractive field centered at the 4th bead (index 3).
-    energy_map = {
-        (i,): -1.5 * float(np.exp(-((i - 3) ** 2) / 2.0)) for i in range(len(main_chain))
+    energy_map: dict[tuple[int, ...], float] = {
+        (i,): -1.5 * float(np.exp(-((i - 3) ** 2) / 2.0))
+        for i in range(len(main_chain))
     }
     external_field = ExternalField.non_uniform(energy_map, default_energy=0.0)
     logger.info("Using non-uniform external field: %s", external_field)

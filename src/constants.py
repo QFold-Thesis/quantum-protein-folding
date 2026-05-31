@@ -102,6 +102,8 @@ IBM_QUANTUM_SHOTS : int
     Number of measurement shots for hardware execution.
 MIN_CHAIN_LENGTH : int
     Minimum allowed protein chain length for simulations.
+SPATIAL_DIMENSIONS : int
+    Number of spatial dimensions considered in the model (3 for 3D simulations).
 """
 
 from __future__ import annotations
@@ -241,3 +243,5 @@ IBM_QUANTUM_BACKEND_NAME: str | None = "ibm_marrakesh"
 IBM_QUANTUM_SHOTS: int = 1024
 
 MIN_CHAIN_LENGTH: int = 5  # Minimum length of the protein chain to be analyzed
+
+SPATIAL_DIMENSIONS: int = 3  # Number of dimensions for spatial coordinates (x, y, z)

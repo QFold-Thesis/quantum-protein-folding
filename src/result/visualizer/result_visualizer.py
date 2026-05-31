@@ -19,6 +19,7 @@ from constants import (
     HTML_VISUALIZATION_FILENAME,
     INTERACTION_TYPE,
     QUBITS_PER_TURN,
+    SPATIAL_DIMENSIONS,
     TETRAHEDRAL_LATTICE_PADDING,
 )
 from logger.logger import get_logger
@@ -243,7 +244,9 @@ class ResultVisualizer:
         # Add explicit spatial field nodes if any (Variant B style)
         if self._external_field is not None:
             spatial_nodes = {
-                k: v for k, v in self._external_field.nodes().items() if len(k) == 3
+                k: v
+                for k, v in self._external_field.nodes().items()
+                if len(k) == SPATIAL_DIMENSIONS
             }
             if spatial_nodes:
                 sn_coords = np.array(list(spatial_nodes.keys()))

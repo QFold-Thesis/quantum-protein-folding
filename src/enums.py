@@ -1,6 +1,6 @@
 """Defines key enumerations for modeling protein folding constraints and encodings."""
 
-from enum import Enum, IntEnum
+from enum import Enum, IntEnum, auto
 
 
 class ConformationEncoding(IntEnum):
@@ -13,8 +13,8 @@ class ConformationEncoding(IntEnum):
 class SubLattice(IntEnum):
     """Enum representing the sublattices in the protein chain."""
 
-    A = 0
-    B = 1
+    A = auto()
+    B = auto()
 
 
 class Penalties(IntEnum):
@@ -28,8 +28,8 @@ class Penalties(IntEnum):
 class InteractionType(IntEnum):
     """Enum representing interaction types."""
 
-    MJ = 0
-    HP = 1
+    MJ = auto()
+    HP = auto()
 
 
 class TurnDirection(IntEnum):
@@ -50,3 +50,10 @@ class BackendType(Enum):
 
     LOCAL_STATEVECTOR = "local_statevector"
     IBM_QUANTUM = "ibm_quantum"
+
+
+class FieldMode(IntEnum):
+    """Enumeration of supported external-field initialisation modes."""
+
+    UNIFORM = auto()
+    NON_UNIFORM = auto()

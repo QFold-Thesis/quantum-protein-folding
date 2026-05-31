@@ -39,22 +39,15 @@ Example usage::
 from __future__ import annotations
 
 import math
-from enum import Enum, auto
 from typing import TYPE_CHECKING
 
+from enums import FieldMode
 from logger import get_logger
 
 if TYPE_CHECKING:
     pass
 
 logger = get_logger()
-
-
-class FieldMode(Enum):
-    """Enumeration of supported external-field initialisation modes."""
-
-    UNIFORM = auto()
-    NON_UNIFORM = auto()
 
 
 # Type alias used throughout the module.
@@ -77,10 +70,6 @@ class ExternalField:
             equals the uniform strength.
 
     """
-
-    # ------------------------------------------------------------------
-    # Construction
-    # ------------------------------------------------------------------
 
     def __init__(
         self,
@@ -125,10 +114,6 @@ class ExternalField:
             len(self._energy_map),
             default_energy,
         )
-
-    # ------------------------------------------------------------------
-    # Factory methods
-    # ------------------------------------------------------------------
 
     @classmethod
     def uniform(cls, strength: float) -> ExternalField:
@@ -220,10 +205,6 @@ class ExternalField:
             default_energy=default_energy,
         )
 
-    # ------------------------------------------------------------------
-    # Core query
-    # ------------------------------------------------------------------
-
     def get_energy(self, lattice_coords: LatticeCoords) -> float:
         """Return the field energy at *lattice_coords*.
 
@@ -259,14 +240,8 @@ class ExternalField:
         # the uniform default.  If the node has not been explicitly set we
         # fall back to default_energy (which equals the uniform strength).
         energy: float = self._energy_map.get(lattice_coords, self.default_energy)
-        logger.debug(
-            "ExternalField.get_energy(%s) -> %s", lattice_coords, energy
-        )
+        logger.debug("ExternalField.get_energy(%s) -> %s", lattice_coords, energy)
         return energy
-
-    # ------------------------------------------------------------------
-    # Convenience helpers
-    # ------------------------------------------------------------------
 
     def set_energy(self, lattice_coords: LatticeCoords, energy: float) -> None:
         """Explicitly set (or overwrite) the energy at *lattice_coords*.
