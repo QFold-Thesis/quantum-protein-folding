@@ -54,11 +54,6 @@ if TYPE_CHECKING:
 logger = get_logger()
 
 
-# ---------------------------------------------------------------------------
-# Data containers
-# ---------------------------------------------------------------------------
-
-
 @dataclasses.dataclass
 class ScenarioResult:
     """Stores the result of a single VQE run for one field scenario.
@@ -83,11 +78,6 @@ class ScenarioResult:
     state_probabilities: dict[str, float]
     vqe_iterations: list[int]
     vqe_energies: list[float]
-
-
-# ---------------------------------------------------------------------------
-# Main analysis class
-# ---------------------------------------------------------------------------
 
 
 class FieldInfluenceAnalysis:
@@ -175,10 +165,6 @@ class FieldInfluenceAnalysis:
             chain_len,
             self.interaction_type.name,
         )
-
-    # ------------------------------------------------------------------
-    # Public interface
-    # ------------------------------------------------------------------
 
     def run(self) -> None:
         """Execute all field scenarios and populate :attr:`results`.
@@ -277,10 +263,6 @@ class FieldInfluenceAnalysis:
             plt.show()
         else:
             logger.info("All plots saved to %s", output_dir)
-
-    # ------------------------------------------------------------------
-    # Internal helpers - scenario execution
-    # ------------------------------------------------------------------
 
     def _build_interaction(self) -> HPInteraction | MJInteraction:
         """Build the interaction model matching :attr:`interaction_type`."""
@@ -420,10 +402,6 @@ class FieldInfluenceAnalysis:
             vqe_iterations=iterations,
             vqe_energies=energies,
         )
-
-    # ------------------------------------------------------------------
-    # Internal helpers - plotting
-    # ------------------------------------------------------------------
 
     def _plot_energy_vs_lambda(
         self,
@@ -695,11 +673,6 @@ class FieldInfluenceAnalysis:
                 f"{r.label:<{col_label}}  {r.minimum_energy:>12.6f}  {r.best_bitstring}"
             )
         return "\n".join(rows)
-
-
-# ---------------------------------------------------------------------------
-# Private plot helpers
-# ---------------------------------------------------------------------------
 
 
 def _style_axes(ax: Any, ticker: Any) -> None:
