@@ -32,8 +32,8 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
     from enums import TurnDirection
-    from result.models import BeadPosition
     from particle.external_field import ExternalField
+    from result.models import BeadPosition
 
 logger = get_logger()
 

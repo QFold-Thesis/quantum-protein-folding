@@ -4,7 +4,7 @@ This module provides the :class:`FieldInfluenceAnalysis` class, which orchestrat
 comparative VQE runs with different external-field configurations and produces
 publication-ready plots of:
 
-* Minimum energy vs. field strength lambda (uniform field sweep)
+* Minimum energy vs. field strength λ (uniform field sweep)
 * Per-bitstring probability distributions for each field variant
 * Energy comparison bar chart across all field scenarios
 
@@ -64,7 +64,7 @@ class ScenarioResult:
     """Stores the result of a single VQE run for one field scenario.
 
     Attributes:
-        label (str): Human-readable scenario label (e.g. ``"lambda=0.5 (uniform)"``).
+        label (str): Human-readable scenario label (e.g. ``"λ=0.5 (uniform)"``).
         field (ExternalField | None): The external field used, or ``None`` for
             the baseline (field-free) run.
         minimum_energy (float): Lowest energy found by the VQE.
@@ -95,9 +95,9 @@ class FieldInfluenceAnalysis:
 
     Runs VQE for each of the following field configurations and collects results:
 
-    1. **Baseline** – no external field (``external_field=None``).
-    2. **Uniform sweep** – uniform field at each lambda in *uniform_lambdas*.
-    3. **Non-uniform** – stronger field at the central bead(s) of the chain,
+    1. **Baseline** - no external field (``external_field=None``).
+    2. **Uniform sweep** - uniform field at each lambda in *uniform_lambdas*.
+    3. **Non-uniform** - stronger field at the central bead(s) of the chain,
        falling off toward the termini.
 
     After calling :meth:`run`, the collected results can be visualised with
@@ -185,7 +185,7 @@ class FieldInfluenceAnalysis:
 
         Runs VQE for:
         - baseline (no field)
-        - one uniform run per lambda in :attr:`uniform_lambdas`
+        - one uniform run per λ in :attr:`uniform_lambdas`
         - one non-uniform run (Gaussian-like profile centred on the chain)
 
         All results are appended to :attr:`results` in order.
@@ -221,7 +221,7 @@ class FieldInfluenceAnalysis:
 
         Produces three figures:
 
-        1. **Energy vs lambda** – minimum VQE energy on the y-axis, uniform-field lambda
+        1. **Energy vs lambda** - minimum VQE energy on the y-axis, uniform-field lambda
            on the x-axis.  The baseline and non-uniform scenarios are drawn as
            horizontal reference lines.
         2. **Energy comparison bar chart** - one bar per scenario.
@@ -264,8 +264,8 @@ class FieldInfluenceAnalysis:
             "#7f7f7f",
         ]
 
-        # ---- Figure 1: energy vs lambda ---------------------------------------
-        self._plot_energy_vs_lambda(plt, ticker, _PALETTE, output_dir)
+        # ---- Figure 1: energy vs lambda ----------------------------------
+        self._plot_energy_vs_lambda(plt, ticker, _palette, output_dir)
 
         # ---- Figure 2: bar chart of all scenarios ------------------------
         self._plot_energy_bar(plt, _palette, output_dir)
@@ -296,7 +296,7 @@ class FieldInfluenceAnalysis:
 
         The field energy at bead ``i`` is:
 
-            E_field((i,)) = lambda_max * exp(-((i - mid) / σ)²)
+            E_field((i,)) = lambda_max * exp(-((i - mid) / sigma)^2)
 
         where ``mid`` is the fractional midpoint of the chain and sigma = N/4.
         This produces a smooth peak at the centre that falls to ~2 % of the
@@ -316,7 +316,7 @@ class FieldInfluenceAnalysis:
             for i in range(chain_len)
         }
         logger.debug(
-            "Non-uniform field profile (Gaussian, lambda_max=%s, σ=%.2f): %s",
+            "Non-uniform field profile (Gaussian, lambda_max=%s, sigma=%.2f): %s",
             lambda_max,
             sigma,
             {k: round(v, 4) for k, v in energy_map.items()},
@@ -393,10 +393,15 @@ class FieldInfluenceAnalysis:
         # qiskit-algorithms may return keys as int (older) or str (newer).
         state_probs: dict[str, float] = {}
         if raw.eigenstate is not None:
-            # SamplingVQE.compute_minimum_eigenvalue returns eigenstate as a dict[str, float]
-            # where keys are already bitstrings.
-            for bs, prob in raw.eigenstate.items():
+            quasi_dist = raw.eigenstate
+            n_bits = int(compressed_h.num_qubits)
+            for key, prob in quasi_dist.items():
                 if prob > 0:
+                    if isinstance(key, int):
+                        bs = format(key, f"0{n_bits}b")
+                    else:
+                        # Already a bitstring; normalise to n_bits width
+                        bs = str(key).zfill(n_bits)
                     state_probs[bs] = float(prob)
 
         logger.info(
@@ -427,7 +432,7 @@ class FieldInfluenceAnalysis:
         palette: list[str],
         output_dir: Path | None,
     ) -> None:
-        """Plot minimum VQE energy vs. uniform-field strength lambda.
+        """Plot minimum VQE energy vs. uniform-field strength λ.
 
         Args:
             plt: matplotlib.pyplot module.
@@ -437,16 +442,16 @@ class FieldInfluenceAnalysis:
 
         """
         # Collect uniform-sweep results (skip baseline and non-uniform)
-        uniform_results = [
-            r for r in self.results if r.label.startswith("lambda=")
-        ]
+        uniform_results = [r for r in self.results if r.label.startswith("lambda=")]
         baseline = next(
             (r for r in self.results if r.label.startswith("baseline")), None
         )
         nu_result = next((r for r in self.results if "non-uniform" in r.label), None)
 
         if not uniform_results:
-            logger.warning("No uniform-sweep results found; skipping energy-vs-lambda plot.")
+            logger.warning(
+                "No uniform-sweep results found; skipping energy-vs-lambda plot."
+            )
             return
 
         lambdas = [float(r.label.split("=")[1].split(" ")[0]) for r in uniform_results]
@@ -490,7 +495,7 @@ class FieldInfluenceAnalysis:
 
         # Styling
         _style_axes(ax, ticker)
-        ax.set_xlabel("Field strength lambda", fontsize=13, color="#e0e0e0")
+        ax.set_xlabel("Field strength λ", fontsize=13, color="#e0e0e0")
         ax.set_ylabel("Minimum VQE energy", fontsize=13, color="#e0e0e0")
         ax.set_title(
             f"Energy vs. uniform field strength — {self.main_chain} "

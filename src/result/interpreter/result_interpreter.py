@@ -44,8 +44,8 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
     from qiskit_algorithms import SamplingMinimumEigensolverResult
 
-    from protein import Protein
     from particle.external_field import ExternalField
+    from protein import Protein
 
 logger = get_logger()
 
