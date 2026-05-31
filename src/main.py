@@ -2,8 +2,11 @@
 
 from typing import TYPE_CHECKING
 
+import numpy as np
+
 from constants import EMPTY_SIDECHAIN_PLACEHOLDER
 from logger import get_logger
+from particle.external_field import ExternalField
 from utils.setup_utils import (
     build_and_compress_hamiltonian,
     run_vqe_optimization,
@@ -35,11 +38,20 @@ def main() -> None:
         main_chain=main_chain, side_chain=side_chain
     )
 
+    # Create a non-uniform external field for visualization demo.
+    # Gaussian-like attractive field centered at the 4th bead (index 3).
+    energy_map = {
+        (i,): -1.5 * float(np.exp(-((i - 3) ** 2) / 2.0)) for i in range(len(main_chain))
+    }
+    external_field = ExternalField.non_uniform(energy_map, default_energy=0.0)
+    logger.info("Using non-uniform external field: %s", external_field)
+
     _, compressed_h = build_and_compress_hamiltonian(
         protein=protein,
         interaction=interaction,
         contact_map=contact_map,
         distance_map=distance_map,
+        external_field=external_field,
     )
 
     vqe, counts, values = setup_vqe_optimization(num_qubits=compressed_h.num_qubits)
@@ -53,6 +65,7 @@ def main() -> None:
         protein=protein,
         vqe_iterations=counts,
         vqe_energies=values,
+        external_field=external_field,
     )
 
     result_interpreter.dump_results_to_files()

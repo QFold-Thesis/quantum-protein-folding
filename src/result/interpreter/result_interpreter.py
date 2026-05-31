@@ -45,6 +45,7 @@ if TYPE_CHECKING:
     from qiskit_algorithms import SamplingMinimumEigensolverResult
 
     from protein import Protein
+    from particle.external_field import ExternalField
 
 logger = get_logger()
 
@@ -55,6 +56,7 @@ class ResultInterpreter:
     Attributes:
         coordinates_3d (list[BeadPosition]): 3D coordinates of the protein beads.
         turn_sequence (list[TurnDirection]): Decoded sequence of turns for the protein chain.
+        external_field (ExternalField | None): The external interaction field used in the simulation.
 
     """
 
@@ -65,6 +67,7 @@ class ResultInterpreter:
         raw_vqe_results: SamplingMinimumEigensolverResult,
         vqe_energies: list[float],
         vqe_iterations: list[int],
+        external_field: ExternalField | None = None,
     ) -> None:
         """Initialize the ResultInterpreter with protein data and VQE results.
 
@@ -74,6 +77,8 @@ class ResultInterpreter:
             raw_vqe_results (SamplingMinimumEigensolverResult): Raw VQE results from quantum simulation.
             vqe_energies (list[float]): List of VQE energy values per iteration.
             vqe_iterations (list[int]): List of VQE iteration numbers.
+            external_field (ExternalField | None, optional): External interaction field used.
+                Defaults to None.
 
         Raises:
             ConformationEncodingError: If the conformation encoding is not recognized.
@@ -85,6 +90,7 @@ class ResultInterpreter:
         self._vqe_energies: list[float] = vqe_energies
         self._vqe_iterations: list[int] = vqe_iterations
 
+        self.external_field: ExternalField | None = external_field
         self._protein: Protein = protein
         self._fifth_bead_has_no_sidechain: bool = (
             len(self._protein.side_chain) >= SIDE_CHAIN_FIFTH_POSITION_INDEX + 1

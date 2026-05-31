@@ -33,6 +33,7 @@ if TYPE_CHECKING:
 
     from enums import TurnDirection
     from result.models import BeadPosition
+    from particle.external_field import ExternalField
 
 logger = get_logger()
 
@@ -46,6 +47,7 @@ class ResultVisualizer:
         turn_sequence: list[TurnDirection],
         coordinates_3d: list[BeadPosition],
         main_main_contacts_detected: dict[int, int],
+        external_field: ExternalField | None = None,
     ) -> None:
         """Initialize the ResultVisualizer with contacts data from the main chain, directory path and decoded turn sequence and 3D coordinates.
 
@@ -54,12 +56,15 @@ class ResultVisualizer:
             turn_sequence (list[TurnDirection]): Decoded turn sequence.
             coordinates_3d (list[BeadPosition]): 3D coordinates of the protein structure.
             main_main_contacts_detected (dict[int, int]): Detected contacts between main chain beads.
+            external_field (ExternalField | None, optional): External interaction field used.
+                Defaults to None.
 
         """
         self._dirpath: Path = dirpath
         self._turn_sequence: list[TurnDirection] = turn_sequence
         self._coordinates_3d: list[BeadPosition] = coordinates_3d
         self._main_main_contacts_detected: dict[int, int] = main_main_contacts_detected
+        self._external_field: ExternalField | None = external_field
 
     def visualize_3d(self, filename: str = HTML_VISUALIZATION_FILENAME) -> None:
         """Generate interactive 3D visualization of the resulting conformation in the .html file format.
@@ -79,6 +84,14 @@ class ResultVisualizer:
             [(b.x, b.y, b.z) for b in self._coordinates_3d]
         )
         symbols: list[str] = [b.symbol for b in self._coordinates_3d]
+
+        # Calculate field energies for each bead if field is present
+        field_energies: list[float] | None = None
+        if self._external_field is not None:
+            field_energies = [
+                self._external_field.get_energy((b.index,))
+                for b in self._coordinates_3d
+            ]
 
         cmap: Colormap = cm.get_cmap("hsv", len(coords))
         colors: list[str] = [
@@ -163,11 +176,48 @@ class ResultVisualizer:
                 )
             )
 
+        # Add Field Influence Visualization (Halos) - Added BEFORE beads to improve hover layering
+        if field_energies is not None:
+            # Add a single trace for all halos to keep legend clean
+            fig.add_trace(
+                go.Scatter3d(
+                    x=coords[:, 0],
+                    y=coords[:, 1],
+                    z=coords[:, 2],
+                    mode="markers",
+                    marker={
+                        "size": 45,
+                        "color": field_energies,
+                        "colorscale": "RdBu_r",  # Red for positive (repulsive), Blue for negative (attractive)
+                        "opacity": 0.25,
+                        "showscale": True,
+                        "colorbar": {
+                            "title": "Field Energy",
+                            "thickness": 15,
+                            "orientation": "h",
+                            "y": -0.15,
+                            "x": 0.5,
+                            "xanchor": "center",
+                        },
+                    },
+                    name="Field Influence (Halo)",
+                    hoverinfo="text",
+                    hovertext=[
+                        f"<b>Field Influence at index {i}</b><br>Potential: {e:.4f}"
+                        for i, e in enumerate(field_energies)
+                    ],
+                )
+            )
+
         # Add protein beads
         for i, (sym, (x, y, z), color) in enumerate(
             zip(symbols, coords, colors, strict=True)
         ):
             text_color: str = self._get_text_color(color)
+            hover_text = f"<b>Bead {sym} (Index: {i})</b><br>Position: ({x:.2f}, {y:.2f}, {z:.2f})"
+            if field_energies is not None:
+                hover_text += f"<br>Field Energy: {field_energies[i]:.4f}"
+
             fig.add_trace(
                 go.Scatter3d(
                     x=[x],
@@ -186,13 +236,46 @@ class ResultVisualizer:
                     legendgroup=f"{sym}_{i}",
                     showlegend=True,
                     hoverinfo="text",
-                    hovertext=f"<b>Bead {sym} (Index: {i})</b><br>Position: ({x:.2f}, {y:.2f}, {z:.2f})",
+                    hovertext=hover_text,
                 )
             )
 
+        # Add explicit spatial field nodes if any (Variant B style)
+        if self._external_field is not None:
+            spatial_nodes = {
+                k: v for k, v in self._external_field.nodes().items() if len(k) == 3
+            }
+            if spatial_nodes:
+                sn_coords = np.array(list(spatial_nodes.keys()))
+                sn_energies = list(spatial_nodes.values())
+                fig.add_trace(
+                    go.Scatter3d(
+                        x=sn_coords[:, 0],
+                        y=sn_coords[:, 1],
+                        z=sn_coords[:, 2],
+                        mode="markers",
+                        marker={
+                            "size": 10,
+                            "symbol": "diamond",
+                            "color": sn_energies,
+                            "colorscale": "Viridis",
+                            "opacity": 0.6,
+                            "line": {"width": 1, "color": "white"},
+                        },
+                        name="Environmental Potential (3D nodes)",
+                        hoverinfo="text",
+                        hovertext=[f"Potential: {e:.4f}" for e in sn_energies],
+                    )
+                )
+
+        # Update title if field is present
+        title_text = f"3D Protein Folding Visualization for main chain sequence: {''.join(symbols)}<br><br>Encoding: {CONFORMATION_ENCODING.name} (Qubits per turn: {QUBITS_PER_TURN})<br>Interaction model: {INTERACTION_TYPE.name}"
+        if self._external_field is not None:
+            title_text += f"<br>External Field: {self._external_field.mode.name} (default energy: {self._external_field.default_energy})"
+
         # Add overlay features
         fig.update_layout(
-            title=f"3D Protein Folding Visualization for main chain sequence: {''.join(symbols)}<br><br>Encoding: {CONFORMATION_ENCODING.name} (Qubits per turn: {QUBITS_PER_TURN})<br>Interaction model: {INTERACTION_TYPE.name}",
+            title=title_text,
             scene={
                 "xaxis_title": "X",
                 "yaxis_title": "Y",
@@ -350,16 +433,28 @@ class ResultVisualizer:
         fig: Figure = plt.figure(figsize=(10, 8))
         ax: Axes3D = fig.add_subplot(111, projection="3d")
 
-        node_color: str = "tab:blue"
+        # Handle field influence coloring
+        field_energies: list[float] | None = None
+        node_color = "tab:blue"
+        cmap = None
+        if self._external_field is not None:
+            field_energies = [
+                self._external_field.get_energy((b.index,))
+                for b in self._coordinates_3d
+            ]
+            node_color = field_energies
+            cmap = plt.get_cmap("RdBu_r")
+
         node_size: int = 1000
 
         ax.plot(
             x_coords,
             y_coords,
             z_coords,
-            color=node_color,
+            color="gray",
             lw=2.5,
             zorder=1,
+            alpha=0.6,
         )
 
         for i, j in contacts.items():
@@ -377,24 +472,33 @@ class ResultVisualizer:
                 zorder=1,
             )
 
-        ax.scatter(
+        scatter = ax.scatter(
             x_coords,
             y_coords,
             z_coords,
             s=node_size,
-            color=node_color,
+            c=node_color,
+            cmap=cmap,
             edgecolors="black",
             linewidth=0.5,
             zorder=2,
         )
 
+        # Add colorbar if field is present
+        if field_energies is not None:
+            cbar = plt.colorbar(scatter, ax=ax, shrink=0.5, aspect=10, pad=0.1)
+            cbar.set_label("Field Energy", fontsize=12)
+
         for i, (x, y, z) in enumerate(coords_3d):
+            # Choose text color based on background brightness if possible,
+            # but for simplicity in 2D Matplotlib, white or black works.
+            # Here we use a simple heuristic or just white.
             ax.text(
                 x,
                 y,
                 z,
                 symbols[i],
-                color="white",
+                color="white" if field_energies is None else "black",
                 ha="center",
                 va="center",
                 fontsize=10,
@@ -416,7 +520,7 @@ class ResultVisualizer:
                 [0],
                 marker="o",
                 color="w",
-                markerfacecolor=node_color,
+                markerfacecolor="tab:blue" if field_energies is None else "gray",
                 markeredgecolor="black",
                 markersize=12,
                 label="Beads",

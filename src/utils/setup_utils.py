@@ -19,6 +19,7 @@ from enums import InteractionType
 from exceptions import InvalidInteractionTypeError
 from interaction import HPInteraction, Interaction, MJInteraction
 from logger import get_logger
+from particle.external_field import ExternalField
 from protein import Protein
 from result.interpreter import ResultInterpreter
 from result.visualizer import ResultVisualizer
@@ -73,6 +74,7 @@ def build_and_compress_hamiltonian(
     interaction: Interaction,
     contact_map: ContactMap,
     distance_map: DistanceMap,
+    external_field: ExternalField | None = None,
 ) -> tuple[SparsePauliOp, SparsePauliOp]:
     """Build and compress the final Hamiltonian for the protein folding system.
 
@@ -81,6 +83,8 @@ def build_and_compress_hamiltonian(
         interaction (Interaction): The interaction model.
         contact_map (ContactMap): The contact map.
         distance_map (DistanceMap): The distance map.
+        external_field (ExternalField | None, optional): External interaction field.
+            Defaults to None.
 
     Returns:
         tuple[SparsePauliOp, SparsePauliOp]: The original and compressed Hamiltonians
@@ -91,6 +95,7 @@ def build_and_compress_hamiltonian(
         interaction=interaction,
         distance_map=distance_map,
         contact_map=contact_map,
+        external_field=external_field,
     )
 
     hamiltonian = h_builder.sum_hamiltonians()
@@ -180,6 +185,7 @@ def setup_result_analysis(
     protein: Protein,
     vqe_iterations: list[int],
     vqe_energies: list[float],
+    external_field: ExternalField | None = None,
 ) -> tuple[ResultInterpreter, ResultVisualizer]:
     """Setup the result analysis components.
 
@@ -188,6 +194,8 @@ def setup_result_analysis(
         protein (Protein): The protein instance.
         vqe_iterations (list[int]): The VQE evaluation counts (iterations).
         vqe_energies (list[float]): The VQE energy values.
+        external_field (ExternalField | None, optional): External interaction field.
+            Defaults to None.
 
     Returns:
         tuple[ResultInterpreter, ResultVisualizer]: The result interpreter and visualizer instances.
@@ -208,6 +216,7 @@ def setup_result_analysis(
         protein=protein,
         vqe_iterations=vqe_iterations,
         vqe_energies=vqe_energies,
+        external_field=external_field,
     )
 
     result_visualizer: ResultVisualizer = ResultVisualizer(
@@ -215,6 +224,7 @@ def setup_result_analysis(
         turn_sequence=result_interpreter.turn_sequence,
         coordinates_3d=result_interpreter.coordinates_3d,
         main_main_contacts_detected=result_interpreter.main_main_contacts_detected,
+        external_field=external_field,
     )
 
     return result_interpreter, result_visualizer
