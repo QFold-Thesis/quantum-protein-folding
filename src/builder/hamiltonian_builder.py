@@ -2,7 +2,8 @@
 
 This module provides the HamiltonianBuilder class, which constructs hamiltonian
 operators for a given protein, including backbone interactions, backtracking
-penalties, neighbor-based contact terms, and an optional external-field bias term.
+penalties, neighbor-based contact terms, an optional external-field bias term,
+and an optional ligand contact term.
 
 The external-field term (Variant A) models a position-dependent energy landscape
 by mapping each bead's sequential index ``i`` to a coordinate key ``(i,)`` and
@@ -15,6 +16,56 @@ This shifts the global energy proportionally to the sum of field energies over
 the chain, differentiating between conformations only when combined with other
 terms that break the chain's symmetry.  Full spatial coupling δ(r_i, r_field)
 that depends on the actual lattice position of each bead belongs to Variant B.
+
+Ligand contact term
+-------------------
+The ligand contact term (``H_ligand``) models the interaction energy between a
+small-molecule ligand and every residue in the protein chain.  It operates in
+the **extended Hilbert space**
+
+    H_total = H_protein (x) H_ligand
+
+where H_protein is spanned by the ``n_turn = (N-1) * QUBITS_PER_TURN`` turn
+qubits that encode chain conformations, and H_ligand is the
+``n_pos = num_position_qubits`` qubit register of the
+:class:`~particle.ligand_bead.LigandBead` that encodes which lattice node the
+ligand currently occupies.
+
+For each bead ``i`` with amino-acid symbol ``aa_i`` and each lattice node ``k``
+the contact Hamiltonian contributes
+
+    E_i * I_turn ⊗ P_L^{(k)}
+
+where ``E_i = LigandInteraction.get_energy(aa_i)`` and
+``P_L^{(k)} = LigandBead.position_projector(k)`` is the projector onto the
+quantum state representing the ligand at node ``k``.
+
+Summing over all ``k`` turns each per-bead, per-node term into
+
+    H_ligand = Σ_{i=0}^{N-1}  E_i  ·  I_turn ⊗ Σ_k P_L^{(k)}
+             = Σ_{i=0}^{N-1}  E_i  ·  I_turn ⊗ I_lig
+             = (Σ_i E_i)  ·  I_total
+
+because the sum of all projectors in both BINARY and UNARY encodings equals the
+identity on H_ligand.  This is the **Variant A** approximation for ligand
+coupling: the ligand's interaction energy is a sequence-dependent scalar that
+shifts the total Hamiltonian uniformly over all conformations of the protein
+and all positions of the ligand.
+
+Physical interpretation
+~~~~~~~~~~~~~~~~~~~~~~~
+This approximation captures the *average* interaction strength of the ligand
+over all accessible nodes, weighted equally (uniform prior over lattice nodes).
+It is the natural generalization of the sequence-only HP/MJ models to a
+protein+ligand system while the ligand's positional qubit register remains
+unentangled with the protein's turn qubits.  A full Variant B implementation
+(with explicit δ(r_i, r_L) couplings) requires assigning independent position
+qubits to each protein bead, which is a separate model extension.
+
+Despite the Variant A simplification, the **qubit register is correctly
+resized**: ``sum_hamiltonians()`` pads all partial Hamiltonians to the combined
+size ``n_turn + n_pos`` so that subsequent VQE circuits automatically include
+the ligand's positional degrees of freedom.
 """
 
 from __future__ import annotations
@@ -42,7 +93,9 @@ if TYPE_CHECKING:
     from contact.contact_map import ContactMap
     from distance.distance_map import DistanceMap
     from interaction.interaction import Interaction
+    from interaction.ligand_interaction import LigandInteraction
     from particle.external_field import ExternalField
+    from particle.ligand_bead import LigandBead
     from protein import Protein
     from protein.bead import Bead
     from protein.chain import _MainChain
@@ -93,12 +146,16 @@ class HamiltonianBuilder:
         self.contact_map: ContactMap = contact_map
         self.external_field: ExternalField | None = external_field
 
-    def sum_hamiltonians(self) -> SparsePauliOp:
+    def sum_hamiltonians(
+        self,
+        ligand: LigandBead | None = None,
+        ligand_interaction: LigandInteraction | None = None,
+    ) -> SparsePauliOp:
         """Build and sum all hamiltonian components, padding to a common qubit size.
 
-        Constructs the backbone, backtracking, and (optionally) external-field
-        terms, checks qubit consistency, pads them to the same qubit count, and
-        sums them into a single hamiltonian.
+        Constructs the backbone, backtracking, (optionally) external-field, and
+        (optionally) ligand contact terms, checks qubit consistency, pads them to
+        the same qubit count, and sums them into a single hamiltonian.
 
         Note:
             The padding step ensures that all SparsePauliOp operators have the same
@@ -106,39 +163,79 @@ class HamiltonianBuilder:
             The total hamiltonian is initialized with an identity operator and then
             each padded component is added sequentially.
 
-            When :attr:`external_field` is ``None`` the result is identical to the
-            field-free case; ``H_field`` contributes a zero operator in that case.
+            When :attr:`external_field` is ``None`` the H_field term is zero.
+
+            When both *ligand* and *ligand_interaction* are provided the total
+            Hamiltonian is extended to the joint Hilbert space
+            H_protein (x) H_ligand (``n_turn + n_pos`` qubits total).  The added
+            qubits correspond to the ligand's positional register.  When either
+            argument is ``None`` the Hamiltonian retains its original qubit count.
+
+        Args:
+            ligand (LigandBead | None, optional): Ligand bead carrying the
+                position-qubit register.  Must be provided together with
+                *ligand_interaction*.  Defaults to ``None``.
+            ligand_interaction (LigandInteraction | None, optional): Ligand
+                interaction model used to look up per-residue energies.  Must be
+                provided together with *ligand*.  Defaults to ``None``.
 
         Returns:
-            SparsePauliOp: The total hamiltonian operator, simplified and ready for use.
+            SparsePauliOp: The total hamiltonian operator, simplified and ready
+                for use.
 
         Raises:
-            InvalidOperatorError: If any part hamiltonian has `num_qubits` set to None.
+            InvalidOperatorError: If any part hamiltonian has ``num_qubits`` set
+                to ``None``.
+            ValueError: If exactly one of *ligand* / *ligand_interaction* is
+                provided (both or neither must be given).
 
         """
+        if (ligand is None) != (ligand_interaction is None):
+            msg = (
+                "ligand and ligand_interaction must both be provided or both be None. "
+                f"Got ligand={ligand!r}, ligand_interaction={ligand_interaction!r}."
+            )
+            raise ValueError(msg)
+
         logger.debug("Started process of building total hamiltonian...")
         h_backbone: SparsePauliOp = self._build_backbone_contact_term()
         h_backtrack: SparsePauliOp = self._add_backtracking_penalty()
         h_field: SparsePauliOp = self._build_external_field_term()
 
-        part_hamiltonians: list[SparsePauliOp] = [h_backbone, h_backtrack, h_field]
+        protein_hamiltonians: list[SparsePauliOp] = [h_backbone, h_backtrack, h_field]
 
-        for idx, hamiltonian in enumerate(part_hamiltonians):
+        for idx, hamiltonian in enumerate(protein_hamiltonians):
             if hamiltonian.num_qubits is None:
                 msg: str = f"Hamiltonian of part {idx} has num_qubits set to None"
                 raise InvalidOperatorError(msg)
 
-        target_qubits: int = max(
-            int(hamiltonian.num_qubits) for hamiltonian in part_hamiltonians
+        # Protein-only register size (backbone, backtrack, field)
+        protein_qubits: int = max(
+            int(h.num_qubits) for h in protein_hamiltonians
         )
+
+        # Build H_ligand in the *extended* register: protein_qubits + n_pos
+        h_ligand: SparsePauliOp = self._build_ligand_contact_term(
+            ligand=ligand,
+            ligand_interaction=ligand_interaction,
+            protein_qubits=protein_qubits,
+        )
+
+        if h_ligand.num_qubits is None:
+            msg = "H_ligand has num_qubits set to None"
+            raise InvalidOperatorError(msg)
+
+        # Total register: max of protein register and H_ligand register
+        target_qubits: int = max(protein_qubits, int(h_ligand.num_qubits))
         logger.debug(
             "Target qubits count for the final hamiltonian to be padded to: %s",
             target_qubits,
         )
 
+        all_hamiltonians: list[SparsePauliOp] = [*protein_hamiltonians, h_ligand]
         padded_hamiltonians: list[SparsePauliOp] = [
             pad_to_n_qubits(hamiltonian, target_qubits)
-            for hamiltonian in part_hamiltonians
+            for hamiltonian in all_hamiltonians
         ]
 
         total_hamiltonian: SparsePauliOp = build_identity_op(
@@ -221,6 +318,119 @@ class HamiltonianBuilder:
         )
         return h_backbone
 
+    def _build_ligand_contact_term(
+        self,
+        ligand: LigandBead | None,
+        ligand_interaction: LigandInteraction | None,
+        protein_qubits: int | None = None,
+    ) -> SparsePauliOp:
+        r"""Build the ligand-protein contact Hamiltonian term ``H_ligand``.
+
+        The operator lives in the **extended Hilbert space**
+        ``H_protein (x) H_ligand`` where:
+
+        * H_protein is the ``protein_qubits`` register (typically the backbone
+          register size, ``(N-1)^2 + (N-1)*QUBITS_PER_TURN``).
+        * H_ligand is the ``n_pos = ligand.num_position_qubits`` register that
+          encodes the ligand's lattice node.
+
+        The term is constructed as (Variant A):
+
+        .. math::
+
+            H_{\mathrm{ligand}} =
+            \sum_{i=0}^{N-1}  E_i \cdot I_{\mathrm{prot}}
+            \otimes \sum_{k=0}^{K-1} P_L^{(k)}
+
+        where ``E_i = ligand_interaction.get_energy(aa_i)`` and
+        ``P_L^{(k)} = ligand.position_projector(k)`` is the quantum projector
+        onto the ligand being at lattice node ``k``.
+
+        The sum ``Σ_k P_L^{(k)}`` equals ``I_lig`` in BINARY encoding (complete
+        projective resolution of the identity); in UNARY encoding the same holds
+        since every single-qubit projector ``½(I - Z_k)`` satisfies
+        ``Σ_k ½(I - Z_k) = ½(N·I - Σ_k Z_k)``, which in the physical one-hot
+        subspace reduces to ``I_lig``.  The full-register sum is therefore
+        computed explicitly and passed through as-is, which correctly reproduces
+        the Variant A scalar in both encodings.
+
+        When *ligand* or *ligand_interaction* is ``None`` a zero identity
+        operator of size *protein_qubits* is returned (preserving backward
+        compatibility).
+
+        Args:
+            ligand (LigandBead | None): Ligand bead with its position register.
+            ligand_interaction (LigandInteraction | None): Interaction model
+                providing per-residue contact energies.
+            protein_qubits (int | None): Size of the protein qubit register to
+                use as the left (turn) half of the tensor product.  If ``None``,
+                defaults to ``(N-1) * QUBITS_PER_TURN``.
+
+        Returns:
+            SparsePauliOp: ``H_ligand`` in the joint qubit register
+            (``protein_qubits + n_pos`` qubits), or a zero operator over
+            *protein_qubits* when no ligand is provided.
+
+        """
+        if protein_qubits is None:
+            protein_qubits = (len(self.protein.main_chain) - 1) * QUBITS_PER_TURN
+
+        if ligand is None or ligand_interaction is None:
+            logger.debug(
+                "No ligand provided - H_ligand set to zero identity (%d qubits).",
+                protein_qubits,
+            )
+            return build_identity_op(protein_qubits, EMPTY_OP_COEFF)
+
+        n_pos_qubits: int = ligand.num_position_qubits
+        n_total: int = protein_qubits + n_pos_qubits
+
+        logger.debug(
+            "Building H_ligand: protein qubits=%d, ligand position qubits=%d, "
+            "total=%d, lattice_nodes=%d.",
+            protein_qubits,
+            n_pos_qubits,
+            n_total,
+            ligand.num_lattice_nodes,
+        )
+
+        from qiskit.quantum_info import SparsePauliOp as _SparsePauliOp  # noqa: PLC0415
+
+        # Build Σ_k P_L^{(k)} in the ligand register
+        ligand_sum: _SparsePauliOp = sum(
+            ligand.position_projector(k)
+            for k in range(ligand.num_lattice_nodes)
+        )  # type: ignore[assignment]
+        ligand_sum = ligand_sum.simplify()
+
+        # Construct I_prot ⊗ ligand_sum  (Qiskit: A ^ B = A ⊗ B, right-tensors B)
+        identity_prot: _SparsePauliOp = build_identity_op(protein_qubits)
+        contact_op: _SparsePauliOp = (identity_prot ^ ligand_sum).simplify()
+
+        # Accumulate energy-weighted sum over beads
+        total_ligand_energy: float = 0.0
+        h_ligand: _SparsePauliOp = build_identity_op(n_total, EMPTY_OP_COEFF)
+
+        for bead in self.protein.main_chain:
+            energy: float = ligand_interaction.get_energy(bead.symbol)
+            h_ligand = h_ligand + energy * contact_op
+            total_ligand_energy += energy
+            logger.debug(
+                "Bead %s (index=%d): ligand energy = %.4f",
+                bead.symbol,
+                bead.index,
+                energy,
+            )
+
+        logger.info(
+            "Finished building H_ligand: total ligand energy = %.4f over %d beads, "
+            "%d qubits.",
+            total_ligand_energy,
+            len(self.protein.main_chain),
+            n_total,
+        )
+        return h_ligand.simplify()
+
     def _build_external_field_term(self) -> SparsePauliOp:
         """Builds the Hamiltonian bias term from the external field (Variant A).
 
@@ -254,7 +464,7 @@ class HamiltonianBuilder:
 
         if self.external_field is None:
             logger.debug(
-                "No external field provided – H_field set to zero identity (%d qubits).",
+                "No external field provided - H_field set to zero identity (%d qubits).",
                 n_turn_qubits,
             )
             return build_identity_op(n_turn_qubits, EMPTY_OP_COEFF)
