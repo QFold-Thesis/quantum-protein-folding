@@ -50,3 +50,31 @@ class BackendType(Enum):
 
     LOCAL_STATEVECTOR = "local_statevector"
     IBM_QUANTUM = "ibm_quantum"
+
+
+class FieldMode(Enum):
+    """Enum representing how an external field couples to the peptide chain.
+
+    UNIFORM assigns the same energy to every bead regardless of where it sits,
+    which makes the term a multiple of the identity: it shifts every
+    conformation equally and therefore cannot change the ground state. It is
+    kept as an explicit baseline to contrast against GRADIENT.
+
+    GRADIENT couples to the actual lattice position of each bead, so different
+    conformations feel different energies and the optimum does move with the
+    field strength.
+    """
+
+    UNIFORM = "uniform"
+    GRADIENT = "gradient"
+
+
+class LigandInteractionMode(Enum):
+    """Enum representing how ligand-residue contact energies are defined.
+
+    HP_LIKE reuses the hydrophobic/polar matrix by treating the ligand itself as
+    either an H or a P residue. CUSTOM takes an explicit per-residue energy map.
+    """
+
+    HP_LIKE = "hp_like"
+    CUSTOM = "custom"

@@ -3,6 +3,55 @@
 This module provides the HamiltonianBuilder class, which constructs hamiltonian
 operators for a given protein, including backbone interactions, backtracking
 penalties, and neighbor-based contact terms, using distance and interaction maps.
+
+Two optional terms extend the folding Hamiltonian:
+
+    H_total = H_backbone + H_backtrack + H_field + H_ligand
+
+``H_field`` couples an :class:`~particle.external_field.ExternalField` to the
+lattice positions of the residues, and ``H_ligand`` couples a free
+:class:`~particle.ligand.Ligand` to the residues it sits next to. Both are
+*spatial*: they read the conformation rather than adding a constant, so they
+reorder the spectrum and genuinely move the optimal fold. Omitting both
+reproduces the plain folding Hamiltonian bit for bit.
+
+Register layout
+---------------
+Optional registers are appended above the existing ones, which leaves the
+backbone operators untouched and keeps results backward compatible::
+
+    [ protein turns | backbone contacts | ligand walk | ligand contacts ]
+      (N-1)*Q         (N-1)^2             steps*Q       eligible residues
+
+Ligand coupling
+---------------
+For each residue the ligand may bind, a boolean contact qubit ``c_i`` states
+whether the ligand claims to touch residue ``i``. The claim is scored against
+the geometry actually encoded in the turn qubits::
+
+    H_ligand = sum_i c_i * [ E(L, aa_i) + lambda_c * (d2(i, L) - 1)^2 ]
+             + lambda_u * (sum_i c_i - 1)^2
+
+The squared deviation is zero exactly when the ligand is a lattice nearest
+neighbour of residue ``i`` and positive otherwise, so a false claim is penalised
+rather than rewarded - unlike a linear ``(d2 - 1)`` penalty, which pays out when
+the two particles overlap. The uniqueness term pins the ligand to exactly one
+binding partner, removing the degenerate "ligand drifts away at zero energy"
+states.
+
+Excluded volume needs a separate term. Contact qubits only exist for residues on
+the *opposite* sublattice, because those are the only ones the ligand can be a
+nearest neighbour of; residues on its *own* sublattice are exactly the ones it
+can sit on top of, and nothing above forbids that. Their squared distance to the
+ligand is an even number, so the Lagrange polynomial through the reachable
+shells isolates the overlapping one::
+
+    H_exclusion = lambda_x * sum_j prod_{s in {2, 4}} (d2(j, L) - s) / (0 - s)
+
+This evaluates to 1 when the ligand occupies residue ``j``'s site and to 0 on the
+two nearest allowed shells. Beyond those shells it grows again, which acts as a
+weak confinement keeping the ligand in the neighbourhood of the chain - harmless
+here, since a ligand encoded with a handful of steps cannot travel far anyway.
 """
 
 from __future__ import annotations
@@ -12,14 +61,22 @@ from typing import TYPE_CHECKING
 from constants import (
     BOUNDING_CONSTANT,
     EMPTY_OP_COEFF,
+    LATTICE_CONTACT_DISTANCE,
+    LIGAND_CONTACT_PENALTY,
+    LIGAND_ENERGY_MULTIPLIER,
+    LIGAND_EXCLUSION_PENALTY,
+    LIGAND_UNIQUENESS_PENALTY,
     MJ_ENERGY_MULTIPLIER,
     QUBITS_PER_TURN,
+    SAME_SUBLATTICE_SHELLS,
 )
 from enums import Penalties
 from exceptions import InvalidOperatorError
 from logger import get_logger
+from utils.lattice_utils import build_chain_position, build_squared_distance
 from utils.qubit_utils import (
     build_identity_op,
+    build_turn_qubit,
     fix_qubits,
     pad_to_n_qubits,
 )
@@ -30,6 +87,9 @@ if TYPE_CHECKING:
     from contact.contact_map import ContactMap
     from distance.distance_map import DistanceMap
     from interaction.interaction import Interaction
+    from interaction.ligand_interaction import LigandInteraction
+    from particle.external_field import ExternalField
+    from particle.ligand import Ligand
     from protein import Protein
     from protein.bead import Bead
     from protein.chain import _MainChain
@@ -40,11 +100,18 @@ logger = get_logger()
 class HamiltonianBuilder:
     """Constructs hamiltonian operators for a given protein, including backbone interactions and backtracking penalties.
 
+    Optionally couples an external field and a free ligand to the chain. Both are
+    off by default, in which case the builder reproduces the plain folding
+    Hamiltonian exactly.
+
     Attributes:
         protein (Protein): The Protein object that includes all information about protein.
         interaction (Interaction): Interaction model between beads of the protein.
         distance_map (DistanceMap): Matrix of pairwise distances between residues.
         contact_map (ContactMap): Matrix indicating residue-residue contacts.
+        external_field (ExternalField | None): Field acting on residue positions.
+        ligand (Ligand | None): Free particle sharing the lattice with the chain.
+        ligand_interaction (LigandInteraction | None): Ligand-residue energies.
 
     """
 
@@ -54,6 +121,9 @@ class HamiltonianBuilder:
         interaction: Interaction,
         distance_map: DistanceMap,
         contact_map: ContactMap,
+        external_field: ExternalField | None = None,
+        ligand: Ligand | None = None,
+        ligand_interaction: LigandInteraction | None = None,
     ) -> None:
         """Initializes the HamiltonianBuilder with required protein data and interaction maps.
 
@@ -62,24 +132,74 @@ class HamiltonianBuilder:
             interaction (Interaction): Interaction model between beads of the protein.
             distance_map (DistanceMap): Matrix of pairwise distances between residues.
             contact_map (ContactMap): Matrix indicating residue-residue contacts.
+            external_field (ExternalField | None, optional): Field acting on the
+                residues' lattice positions. Defaults to None.
+            ligand (Ligand | None, optional): Free particle to place on the
+                lattice alongside the chain. Defaults to None.
+            ligand_interaction (LigandInteraction | None, optional): Energies
+                between the ligand and each residue. Required when *ligand* is
+                given. Defaults to None.
+
+        Raises:
+            ValueError: If a ligand is supplied without its interaction model.
 
         """
+        if ligand is not None and ligand_interaction is None:
+            msg: str = "ligand_interaction is required when a ligand is supplied"
+            raise ValueError(msg)
+
         self.protein: Protein = protein
         self.interaction: Interaction = interaction
         self.distance_map: DistanceMap = distance_map
         self.contact_map: ContactMap = contact_map
+        self.external_field: ExternalField | None = external_field
+        self.ligand: Ligand | None = ligand
+        self.ligand_interaction: LigandInteraction | None = ligand_interaction
+
+    @property
+    def num_protein_qubits(self) -> int:
+        """int: Width of the register used by the protein-only terms."""
+        chain_len: int = len(self.protein.main_chain)
+        return pow(chain_len - 1, 2) + (chain_len - 1) * QUBITS_PER_TURN
+
+    @property
+    def ligand_walk_offset(self) -> int:
+        """int: Index of the first qubit encoding the ligand's lattice position."""
+        return self.num_protein_qubits
+
+    @property
+    def ligand_contact_offset(self) -> int:
+        """int: Index of the first qubit flagging a claimed ligand contact."""
+        if self.ligand is None:
+            return self.num_protein_qubits
+        return self.num_protein_qubits + self.ligand.num_walk_qubits
+
+    @property
+    def num_qubits(self) -> int:
+        """int: Total register width, including any ligand registers."""
+        if self.ligand is None:
+            return self.num_protein_qubits
+
+        eligible: list[int] = self.ligand.eligible_bead_indices(
+            len(self.protein.main_chain)
+        )
+        return self.ligand_contact_offset + len(eligible)
 
     def sum_hamiltonians(self) -> SparsePauliOp:
         """Build and sum all hamiltonian components, padding to a common qubit size.
 
-        Constructs the backbone and backtracking terms, checks qubit consistency,
-        pads them to the same qubit count, and sums them into a single hamiltonian.
+        Constructs the backbone and backtracking terms plus any optional field and
+        ligand terms, checks qubit consistency, pads them to the same qubit count,
+        and sums them into a single hamiltonian.
 
         Note:
             The padding step ensures that all SparsePauliOp operators have the same
             number of qubits, which is required for valid operator addition.
             The total hamiltonian is initialized with an identity operator and then
             each padded component is added sequentially.
+
+            Optional registers sit above the protein's own qubits, so padding the
+            protein-only terms with identities keeps them exactly as they were.
 
         Returns:
             SparsePauliOp: The total hamiltonian operator, simplified and ready for use.
@@ -100,7 +220,8 @@ class HamiltonianBuilder:
                 raise InvalidOperatorError(msg)
 
         target_qubits: int = max(
-            int(hamiltonian.num_qubits) for hamiltonian in part_hamiltonians
+            *(int(hamiltonian.num_qubits) for hamiltonian in part_hamiltonians),
+            self.num_qubits,
         )
         logger.debug(
             "Target qubits count for the final hamiltonian to be padded to: %s",
@@ -112,6 +233,9 @@ class HamiltonianBuilder:
             for hamiltonian in part_hamiltonians
         ]
 
+        padded_hamiltonians.append(self._build_external_field_term(target_qubits))
+        padded_hamiltonians.append(self._build_ligand_term(target_qubits))
+
         total_hamiltonian: SparsePauliOp = build_identity_op(
             target_qubits, EMPTY_OP_COEFF
         )
@@ -120,6 +244,167 @@ class HamiltonianBuilder:
 
         logger.info("Finished building total hamiltonian.")
         return total_hamiltonian.simplify()
+
+    def _build_external_field_term(self, num_qubits: int) -> SparsePauliOp:
+        """Builds the external field contribution to the hamiltonian.
+
+        Args:
+            num_qubits (int): Width of the register the operator must span.
+
+        Returns:
+            SparsePauliOp: The field term, or a zero operator when no field is
+            configured.
+
+        """
+        if self.external_field is None:
+            logger.debug("No external field configured - H_field omitted.")
+            return build_identity_op(num_qubits, EMPTY_OP_COEFF)
+
+        field_term: SparsePauliOp = self.external_field.build_hamiltonian(
+            chain_length=len(self.protein.main_chain), num_qubits=num_qubits
+        )
+
+        return fix_qubits(field_term)
+
+    def _build_ligand_term(self, num_qubits: int) -> SparsePauliOp:
+        """Builds the ligand contribution to the hamiltonian.
+
+        Couples the ligand's lattice position to the residues it claims to touch,
+        scoring each claim against the geometry encoded in the turn qubits. See
+        the module docstring for the exact form.
+
+        Args:
+            num_qubits (int): Width of the register the operator must span.
+
+        Returns:
+            SparsePauliOp: The ligand term, or a zero operator when no ligand is
+            configured.
+
+        """
+        if self.ligand is None or self.ligand_interaction is None:
+            logger.debug("No ligand configured - H_ligand omitted.")
+            return build_identity_op(num_qubits, EMPTY_OP_COEFF)
+
+        logger.debug("Creating hamiltonian term of ligand-residue contacts...")
+
+        chain_len: int = len(self.protein.main_chain)
+        eligible: list[int] = self.ligand.eligible_bead_indices(chain_len)
+
+        ligand_position: list[SparsePauliOp] = self.ligand.position_operators(
+            num_qubits=num_qubits, walk_qubit_offset=self.ligand_walk_offset
+        )
+
+        identity: SparsePauliOp = build_identity_op(num_qubits)
+        contact_distance: SparsePauliOp = LATTICE_CONTACT_DISTANCE * identity
+
+        ligand_term: SparsePauliOp = build_identity_op(num_qubits, EMPTY_OP_COEFF)
+        contact_count: SparsePauliOp = build_identity_op(num_qubits, EMPTY_OP_COEFF)
+
+        for slot, bead_index in enumerate(eligible):
+            contact_qubit: SparsePauliOp = build_turn_qubit(
+                z_index=self.ligand_contact_offset + slot, num_qubits=num_qubits
+            )
+            contact_count = contact_count + contact_qubit
+
+            residue_position: list[SparsePauliOp] = build_chain_position(
+                bead_index=bead_index, num_qubits=num_qubits
+            )
+            squared_distance: SparsePauliOp = build_squared_distance(
+                residue_position, ligand_position
+            )
+
+            symbol: str = self.protein.main_chain.get_symbol_at(bead_index)
+            energy: float = self.ligand_interaction.get_energy(symbol)
+
+            deviation: SparsePauliOp = squared_distance - contact_distance
+            claim_penalty: SparsePauliOp = LIGAND_CONTACT_PENALTY * (
+                deviation @ deviation
+            )
+
+            ligand_term = ligand_term + (
+                contact_qubit
+                @ ((LIGAND_ENERGY_MULTIPLIER * energy * identity) + claim_penalty)
+            )
+
+            logger.debug(
+                "Ligand %s may bind residue %s (index %s) with energy %s",
+                self.ligand.symbol,
+                symbol,
+                bead_index,
+                energy,
+            )
+
+        uniqueness_deviation: SparsePauliOp = contact_count - identity
+        ligand_term = ligand_term + LIGAND_UNIQUENESS_PENALTY * (
+            uniqueness_deviation @ uniqueness_deviation
+        )
+
+        ligand_term = ligand_term + self._build_exclusion_term(
+            num_qubits=num_qubits, ligand_position=ligand_position
+        )
+
+        logger.info(
+            "Finished creating H_ligand for %s over %d candidate residues on %s qubits.",
+            self.ligand.symbol,
+            len(eligible),
+            num_qubits,
+        )
+        return fix_qubits(ligand_term.simplify())
+
+    def _build_exclusion_term(
+        self, num_qubits: int, ligand_position: list[SparsePauliOp]
+    ) -> SparsePauliOp:
+        """Builds the penalty keeping the ligand off the residues' lattice sites.
+
+        Only residues sharing the ligand's sublattice can coincide with it, and
+        those are precisely the residues that have no contact qubit to constrain
+        them. See the module docstring for the polynomial used.
+
+        Args:
+            num_qubits (int): Width of the register the operator must span.
+            ligand_position (list[SparsePauliOp]): Axis-coefficient operators of
+                the ligand's position.
+
+        Returns:
+            SparsePauliOp: The excluded-volume penalty term.
+
+        """
+        if self.ligand is None:
+            return build_identity_op(num_qubits, EMPTY_OP_COEFF)
+
+        chain_len: int = len(self.protein.main_chain)
+        identity: SparsePauliOp = build_identity_op(num_qubits)
+        exclusion_term: SparsePauliOp = build_identity_op(num_qubits, EMPTY_OP_COEFF)
+
+        overlapping_residues: list[int] = [
+            index
+            for index in range(chain_len)
+            if index % 2 == self.ligand.sublattice_parity
+        ]
+
+        for bead_index in overlapping_residues:
+            residue_position: list[SparsePauliOp] = build_chain_position(
+                bead_index=bead_index, num_qubits=num_qubits
+            )
+            squared_distance: SparsePauliOp = build_squared_distance(
+                residue_position, ligand_position
+            )
+
+            overlap_indicator: SparsePauliOp = identity
+            for shell in SAME_SUBLATTICE_SHELLS[1:]:
+                overlap_indicator = overlap_indicator @ (
+                    (squared_distance - shell * identity) * (1.0 / -shell)
+                )
+
+            exclusion_term = exclusion_term + (
+                LIGAND_EXCLUSION_PENALTY * overlap_indicator
+            )
+
+        logger.debug(
+            "Built ligand excluded-volume penalty over residues %s.",
+            overlapping_residues,
+        )
+        return exclusion_term.simplify()
 
     def _build_backbone_contact_term(self) -> SparsePauliOp:
         """Builds the hamiltonian term corresponding to backbone_backbone (BB-BB) interactions. Includes both 1st neighbor and 2nd neighbor contributions (with shifts i±1, j±1).

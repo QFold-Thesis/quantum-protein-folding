@@ -1,4 +1,6 @@
 # Quantum protein folding project - specific ignores
+CLAUDE.md
+
 .idea/
 plots/
 test.py
@@ -10,6 +12,8 @@ src/.env
 
 output/logs/*
 output/results/*
+output/experiments/*
+docs/etap2-podsumowanie.md
 
 !output/*/.gitkeep
 

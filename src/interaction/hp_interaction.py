@@ -125,6 +125,32 @@ class HPInteraction(Interaction):
         """
         return symbol in self._hydrophobic_symbols
 
+    def is_hydrophobic(self, symbol: str) -> bool:
+        """Check whether a residue is hydrophobic under the loaded HP matrix.
+
+        Note:
+            The one-letter residue codes do not line up with the HP model's own
+            H/P labels: histidine ("H") is polar here while proline ("P") is
+            hydrophobic. Callers wanting to classify an *HP-model* particle must
+            not pass "H" or "P" to this method expecting the HP meaning.
+
+        Args:
+            symbol (str): Single-letter amino acid symbol.
+
+        Returns:
+            bool: True if the residue is hydrophobic, False otherwise.
+
+        Raises:
+            UnsupportedAminoAcidSymbolError: If the residue is not in the matrix.
+
+        """
+        if symbol not in self.valid_symbols:
+            msg: str = f"Amino acid symbol {symbol} not supported in loaded HP interaction model"
+            logger.error(msg)
+            raise UnsupportedAminoAcidSymbolError(msg)
+
+        return self._is_hydrophobic(symbol)
+
     def get_energy(self, symbol_i: str, symbol_j: str) -> float:
         """Return the HP model pair energy.
 

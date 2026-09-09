@@ -2,5 +2,6 @@
 from .interaction import Interaction  # noqa: I001
 from .hp_interaction import HPInteraction
 from .mj_interaction import MJInteraction
+from .ligand_interaction import LigandInteraction
 
-__all__ = ["HPInteraction", "Interaction", "MJInteraction"]
+__all__ = ["HPInteraction", "Interaction", "LigandInteraction", "MJInteraction"]
