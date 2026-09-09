@@ -102,6 +102,26 @@ IBM_QUANTUM_SHOTS : int
     Number of measurement shots for hardware execution.
 MIN_CHAIN_LENGTH : int
     Minimum allowed protein chain length for simulations.
+LATTICE_CONTACT_DISTANCE : float
+    Squared lattice distance separating two nearest-neighbour sites.
+DEFAULT_LIGAND_SYMBOL : str
+    Symbol used for the ligand particle in outputs and visualisations.
+DEFAULT_LIGAND_STEPS : int
+    Number of lattice steps encoding the ligand's position.
+LIGAND_CONTACT_PENALTY : float
+    Penalty for a claimed ligand contact that the geometry does not realise.
+LIGAND_UNIQUENESS_PENALTY : float
+    Penalty enforcing that the ligand binds exactly one residue.
+LIGAND_ENERGY_MULTIPLIER : float
+    Scaling factor applied to ligand-residue contact energies.
+LIGAND_EXCLUSION_PENALTY : float
+    Penalty for the ligand occupying a residue's lattice site.
+SAME_SUBLATTICE_SHELLS : tuple[float, ...]
+    Squared distances reachable between two sites of the same sublattice.
+DEFAULT_FIELD_DIRECTION : ndarray
+    Default Cartesian direction of the external field gradient.
+LIGAND_SYMBOL_COLNAME : str
+    Column label used for the ligand in tabular output.
 """
 
 from __future__ import annotations
@@ -241,3 +261,35 @@ IBM_QUANTUM_BACKEND_NAME: str | None = "ibm_marrakesh"
 IBM_QUANTUM_SHOTS: int = 1024
 
 MIN_CHAIN_LENGTH: int = 5  # Minimum length of the protein chain to be analyzed
+
+LATTICE_CONTACT_DISTANCE: float = (
+    1.0  # Squared lattice distance between nearest-neighbour sites
+)
+
+DEFAULT_LIGAND_SYMBOL: str = "L"
+
+DEFAULT_LIGAND_STEPS: int = 2  # Lattice steps the ligand may take from the chain origin
+
+LIGAND_CONTACT_PENALTY: float = (
+    5.0  # Penalty for claiming a ligand contact that is not geometrically realised
+)
+
+LIGAND_UNIQUENESS_PENALTY: float = (
+    5.0  # Penalty enforcing that the ligand binds exactly one residue
+)
+
+LIGAND_ENERGY_MULTIPLIER: float = 1.0  # Scales ligand-residue contact energies
+
+LIGAND_EXCLUSION_PENALTY: float = (
+    5.0  # Penalty for the ligand occupying the same lattice site as a residue
+)
+
+SAME_SUBLATTICE_SHELLS: tuple[float, ...] = (
+    0.0,
+    2.0,
+    4.0,
+)  # Squared distances reachable between sites of the same sublattice
+
+DEFAULT_FIELD_DIRECTION: NDArray[np.float64] = np.array([0.0, 0.0, 1.0])
+
+LIGAND_SYMBOL_COLNAME: str = "Ligand"
