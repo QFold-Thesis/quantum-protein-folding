@@ -22,6 +22,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import numpy as np
+from qiskit.quantum_info import Pauli, SparsePauliOp
 
 from exceptions import InvalidOperatorError
 from logger import get_logger
@@ -29,7 +30,6 @@ from utils.qubit_utils import find_unused_qubits
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
-    from qiskit.quantum_info import SparsePauliOp
 
 logger = get_logger()
 
@@ -194,6 +194,73 @@ def compress_with_layout(operator: SparsePauliOp) -> tuple[SparsePauliOp, list[i
         kept,
     )
     return remove_unused_qubits(operator), kept
+
+
+def compress_jointly(
+    operators: list[SparsePauliOp],
+) -> tuple[list[SparsePauliOp], list[int]]:
+    """Compress several operators onto their shared set of acting qubits.
+
+    Comparing an energy against an observable - say a coordination number -
+    requires both to be indexed by the same basis states. Compressing them
+    separately would give each its own register and silently misalign them, so
+    the qubit is dropped only when *no* operator acts on it.
+
+    Args:
+        operators (list[SparsePauliOp]): Operators over one common register.
+
+    Returns:
+        tuple[list[SparsePauliOp], list[int]]: The compressed operators, in the
+        order given, and the original indices of the retained qubits.
+
+    Raises:
+        InvalidOperatorError: If the list is empty or the widths disagree.
+
+    """
+    if not operators:
+        msg: str = "compress_jointly needs at least one operator"
+        raise InvalidOperatorError(msg)
+
+    widths: set[int] = {int(operator.num_qubits) for operator in operators}
+    if len(widths) != 1:
+        msg: str = f"operators must share a register width, got {sorted(widths)}"
+        raise InvalidOperatorError(msg)
+
+    num_qubits: int = widths.pop()
+    unused: set[int] = set(range(num_qubits))
+    for operator in operators:
+        unused &= set(find_unused_qubits(operator))
+
+    kept: list[int] = [qubit for qubit in range(num_qubits) if qubit not in unused]
+
+    logger.debug(
+        "Jointly compressing %d operators from %d to %d qubits.",
+        len(operators),
+        num_qubits,
+        len(kept),
+    )
+    return [restrict_to_qubits(operator, kept) for operator in operators], kept
+
+
+def restrict_to_qubits(operator: SparsePauliOp, qubits: list[int]) -> SparsePauliOp:
+    """Rewrite a diagonal operator over a chosen subset of its qubits.
+
+    Args:
+        operator (SparsePauliOp): Diagonal operator to restrict.
+        qubits (list[int]): Qubit indices to keep, ascending.
+
+    Returns:
+        SparsePauliOp: The operator expressed on the narrower register.
+
+    """
+    from qiskit.quantum_info import Pauli  # noqa: PLC0415
+
+    zeros: NDArray[np.bool_] = np.zeros(len(qubits), dtype=bool)
+    restricted: list[Pauli] = [
+        Pauli((pauli.z[qubits], zeros)) for pauli in operator.paulis
+    ]
+
+    return SparsePauliOp(restricted, operator.coeffs).simplify()
 
 
 def expand_bitstring(bitstring: str, kept_qubits: list[int], num_qubits: int) -> str:

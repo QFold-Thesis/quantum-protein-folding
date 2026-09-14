@@ -118,6 +118,16 @@ LIGAND_EXCLUSION_PENALTY : float
     Penalty for the ligand occupying a residue's lattice site.
 SAME_SUBLATTICE_SHELLS : tuple[float, ...]
     Squared distances reachable between two sites of the same sublattice.
+DEFAULT_HARDCORE_ENERGY : float
+    Penalty for a free particle occupying a residue's lattice site.
+DEFAULT_SHELL_PROFILE : dict[float, float]
+    Default energy multiplier per lattice shell for the radial potential.
+LATTICE_COORDINATION_NUMBER : int
+    Number of nearest-neighbour sites around any tetrahedral lattice site.
+DEFAULT_TEMPERATURE : float
+    Temperature used for Boltzmann-weighted particle position statistics.
+ENCAPSULATION_THRESHOLD : float
+    Occupied-neighbour share above which the particle counts as enclosed.
 DEFAULT_FIELD_DIRECTION : ndarray
     Default Cartesian direction of the external field gradient.
 LIGAND_SYMBOL_COLNAME : str
@@ -289,6 +299,28 @@ SAME_SUBLATTICE_SHELLS: tuple[float, ...] = (
     2.0,
     4.0,
 )  # Squared distances reachable between sites of the same sublattice
+
+DEFAULT_HARDCORE_ENERGY: float = (
+    20.0  # Penalty for a free particle occupying a residue's lattice site
+)
+
+DEFAULT_SHELL_PROFILE: dict[float, float] = {
+    1.0: 1.0,  # touching distance carries the full contact energy
+    2.0: 0.4,  # nearest same-sublattice shell
+    3.0: 0.2,  # second opposite-sublattice shell
+}
+
+LATTICE_COORDINATION_NUMBER: int = (
+    4  # Nearest-neighbour sites surrounding any tetrahedral lattice site
+)
+
+DEFAULT_TEMPERATURE: float = (
+    0.5  # Temperature used for Boltzmann-weighted position statistics
+)
+
+ENCAPSULATION_THRESHOLD: float = (
+    0.5  # Share of neighbour sites that must be occupied to count as enclosed
+)
 
 DEFAULT_FIELD_DIRECTION: NDArray[np.float64] = np.array([0.0, 0.0, 1.0])
 

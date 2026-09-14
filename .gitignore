@@ -1,5 +1,6 @@
 # Quantum protein folding project - specific ignores
 CLAUDE.md
+*.temp.md
 
 .idea/
 plots/

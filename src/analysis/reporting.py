@@ -17,7 +17,11 @@ from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
-from constants import COORDINATES_COLUMN_WIDTH, DEFAULT_LIGAND_SYMBOL
+from constants import (
+    COORDINATES_COLUMN_WIDTH,
+    DEFAULT_LIGAND_SYMBOL,
+    LATTICE_COORDINATION_NUMBER,
+)
 from logger import get_logger
 
 if TYPE_CHECKING:
@@ -198,6 +202,95 @@ def plot_sweep(
     plt.close(figure)
 
     logger.info("Wrote sweep plot to %s", filepath)
+    return filepath
+
+
+def plot_particle_environment(
+    records: list[SweepRecord], filepath: Path, title: str
+) -> Path:
+    """Plot how the chain rearranges around a full-bead particle.
+
+    Shows coordination number and positional entropy against the interaction
+    energy, with the neutral point marked, so encapsulation on one side and
+    expulsion on the other are visible in a single frame.
+
+    Args:
+        records (list[SweepRecord]): Records from a particle environment sweep.
+        filepath (Path): Destination image file.
+        title (str): Plot title.
+
+    Returns:
+        Path: The path written to.
+
+    """
+    import matplotlib  # noqa: PLC0415
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt  # noqa: PLC0415
+
+    ordered: list[SweepRecord] = sorted(
+        records, key=lambda record: float(record["interaction_energy"])
+    )
+    energies: list[float] = [float(record["interaction_energy"]) for record in ordered]
+    coordination: list[float] = [
+        float(record["coordination_number"]) for record in ordered
+    ]
+    mean_coordination: list[float] = [
+        float(record["mean_coordination"]) for record in ordered
+    ]
+    entropy: list[float] = [float(record["position_entropy"]) for record in ordered]
+
+    figure, axes = plt.subplots(figsize=(9, 5))
+
+    axes.plot(
+        energies,
+        coordination,
+        marker="o",
+        color="#2b6cb0",
+        linewidth=1.8,
+        label="coordination (ground state)",
+    )
+    axes.plot(
+        energies,
+        mean_coordination,
+        marker="s",
+        markersize=4,
+        color="#63b3ed",
+        linewidth=1.2,
+        linestyle="--",
+        label="coordination (thermal mean)",
+    )
+    axes.axvline(0.0, color="#718096", linewidth=1.0, alpha=0.7)
+    axes.set_xlabel("ligand-residue interaction energy  (<0 attractive, >0 repulsive)")
+    axes.set_ylabel(f"occupied neighbour sites (of {LATTICE_COORDINATION_NUMBER})")
+    axes.set_ylim(-0.2, LATTICE_COORDINATION_NUMBER + 0.2)
+    axes.grid(visible=True, alpha=0.3)
+
+    entropy_axes = axes.twinx()
+    entropy_axes.plot(
+        energies,
+        entropy,
+        marker="^",
+        markersize=4,
+        color="#c53030",
+        linewidth=1.2,
+        label="position entropy",
+    )
+    entropy_axes.set_ylabel("position entropy (bits)", color="#c53030")
+    entropy_axes.tick_params(axis="y", labelcolor="#c53030")
+
+    handles, labels = axes.get_legend_handles_labels()
+    entropy_handles, entropy_labels = entropy_axes.get_legend_handles_labels()
+    axes.legend(handles + entropy_handles, labels + entropy_labels, loc="upper center")
+
+    axes.set_title(title)
+
+    filepath.parent.mkdir(parents=True, exist_ok=True)
+    figure.tight_layout()
+    figure.savefig(filepath, dpi=150)
+    plt.close(figure)
+
+    logger.info("Wrote particle environment plot to %s", filepath)
     return filepath
 
 

@@ -78,3 +78,22 @@ class LigandInteractionMode(Enum):
 
     HP_LIKE = "hp_like"
     CUSTOM = "custom"
+
+
+class LigandCoupling(Enum):
+    """Enum representing how a free particle is coupled to the chain.
+
+    CONTACT_FLAG spends one qubit per reachable residue on a boolean "the
+    particle claims to touch this residue", and scores the claim against the
+    geometry. It is compact and gives a clean binding energy, but it only ever
+    sees the touching shell and it binds exactly one partner.
+
+    RADIAL_POTENTIAL drops the flags entirely and makes the particle a full bead
+    on the lattice: every residue contributes an energy that depends on its
+    actual distance, through a finite-range shell profile. It costs fewer qubits,
+    lets several residues surround the particle at once, and is what makes
+    encapsulation, expulsion and positional stabilisation observable.
+    """
+
+    CONTACT_FLAG = "contact_flag"
+    RADIAL_POTENTIAL = "radial_potential"

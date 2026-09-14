@@ -25,12 +25,14 @@ from analysis.exact_solver import (
     expand_bitstring,
     solve_exactly,
 )
+from analysis.particle_dynamics import ParticleEnvironment, analyse_environment
 from analysis.structure_decoder import DecodedStructure, decode_structure
 from builder import HamiltonianBuilder
 from constants import DEFAULT_LIGAND_STEPS, EMPTY_SIDECHAIN_PLACEHOLDER
+from enums import LigandCoupling
 from interaction import LigandInteraction
 from logger import get_logger
-from particle import ExternalField, Ligand
+from particle import ExternalField, Ligand, RadialPotential
 from utils.setup_utils import (
     run_vqe_optimization,
     setup_folding_system,
@@ -149,6 +151,8 @@ class LigandAnalysis:
         ligand: Ligand | None = None,
         num_ligand_steps: int = DEFAULT_LIGAND_STEPS,
         external_field: ExternalField | None = None,
+        coupling: LigandCoupling = LigandCoupling.CONTACT_FLAG,
+        radial_potential: RadialPotential | None = None,
     ) -> None:
         """Initialise the analysis.
 
@@ -163,6 +167,10 @@ class LigandAnalysis:
                 DEFAULT_LIGAND_STEPS.
             external_field (ExternalField | None, optional): Field applied to
                 both forms. Defaults to None.
+            coupling (LigandCoupling, optional): How the particle couples to the
+                chain. Defaults to LigandCoupling.CONTACT_FLAG.
+            radial_potential (RadialPotential | None, optional): Shell profile
+                for RADIAL_POTENTIAL coupling. Defaults to the standard well.
 
         """
         self.sequence: str = sequence
@@ -171,6 +179,8 @@ class LigandAnalysis:
             ligand_interaction or LigandInteraction.hp_like("H")
         )
         self.external_field: ExternalField | None = external_field
+        self.coupling: LigandCoupling = coupling
+        self.radial_potential: RadialPotential = radial_potential or RadialPotential()
 
         side_chain: str = EMPTY_SIDECHAIN_PLACEHOLDER * len(sequence)
         (
@@ -198,6 +208,8 @@ class LigandAnalysis:
             external_field=self.external_field,
             ligand=self.ligand if with_ligand else None,
             ligand_interaction=self.ligand_interaction if with_ligand else None,
+            coupling=self.coupling,
+            radial_potential=self.radial_potential,
         )
 
     def solve(
@@ -293,7 +305,7 @@ class LigandAnalysis:
             chain_length=len(self.sequence),
             ligand=self.ligand if with_ligand else None,
             ligand_walk_offset=builder.ligand_walk_offset,
-            ligand_contact_offset=builder.ligand_contact_offset,
+            ligand_contact_offset=builder.contact_flag_offset,
         )
 
     def run(self, *, run_vqe: bool = False) -> BindingResult:
@@ -318,7 +330,11 @@ class LigandAnalysis:
             apo=apo,
             holo=holo,
             ligand=self.ligand,
-            bound_residues=holo.structure.realised_contacts,
+            bound_residues=(
+                holo.structure.realised_contacts
+                if self.coupling == LigandCoupling.CONTACT_FLAG
+                else holo.structure.lattice_neighbours
+            ),
             conformation_changed=apo_turns != holo_turns,
         )
 
@@ -464,6 +480,120 @@ def sweep_field_strength(
             strength,
             exact.energy,
             [turn.value for turn in structure.turns],
+        )
+
+    return records
+
+
+def sweep_particle_environment(
+    sequence: str,
+    energy_scales: list[float],
+    potential: RadialPotential | None = None,
+    num_ligand_steps: int = DEFAULT_LIGAND_STEPS,
+    hp_type: str = "H",
+) -> list[SweepRecord]:
+    """Trace how the chain arranges itself around a full-bead particle.
+
+    Sweeping the interaction energy through zero covers both regimes in one
+    pass. Note that *energy_scale* multiplies an already-negative contact energy,
+    so a positive scale is an attraction and a negative one a repulsion; each
+    record carries the resolved per-residue energy so the sign is never in doubt.
+    Nothing in the Hamiltonian rewards coordination directly, so the coordination
+    number reported here is emergent.
+
+    Args:
+        sequence (str): Main chain sequence.
+        energy_scales (list[float]): Affinity multipliers applied to the contact
+            energy. Negative values invert the interaction into a repulsion.
+        potential (RadialPotential | None, optional): Shell profile. Defaults to
+            the standard finite-range well.
+        num_ligand_steps (int, optional): Lattice steps encoding the particle's
+            position. Defaults to DEFAULT_LIGAND_STEPS.
+        hp_type (str, optional): The particle's HP character. Defaults to "H".
+
+    Returns:
+        list[SweepRecord]: One record per affinity.
+
+    """
+    records: list[SweepRecord] = []
+    side_chain: str = EMPTY_SIDECHAIN_PLACEHOLDER * len(sequence)
+    protein, interaction, contact_map, distance_map = setup_folding_system(
+        main_chain=sequence, side_chain=side_chain
+    )
+    ligand = Ligand(num_steps=num_ligand_steps)
+    shell_profile: RadialPotential = potential or RadialPotential()
+
+    for scale in energy_scales:
+        ligand_interaction = LigandInteraction.hp_like(
+            hp_type=hp_type, energy_scale=scale
+        )
+        strongest_energy: float = max(
+            (ligand_interaction.get_energy(symbol) for symbol in sequence),
+            key=abs,
+        )
+        builder = HamiltonianBuilder(
+            protein=protein,
+            interaction=interaction,
+            distance_map=distance_map,
+            contact_map=contact_map,
+            ligand=ligand,
+            ligand_interaction=ligand_interaction,
+            coupling=LigandCoupling.RADIAL_POTENTIAL,
+            radial_potential=shell_profile,
+        )
+        hamiltonian: SparsePauliOp = builder.sum_hamiltonians()
+        compressed, kept = compress_with_layout(hamiltonian)
+        exact: ExactSolution = solve_exactly(compressed)
+
+        structure: DecodedStructure = decode_structure(
+            bitstring=expand_bitstring(
+                exact.bitstring, kept, int(hamiltonian.num_qubits)
+            ),
+            chain_length=len(sequence),
+            ligand=ligand,
+            ligand_walk_offset=builder.ligand_walk_offset,
+            ligand_contact_offset=builder.contact_flag_offset,
+        )
+        environment: ParticleEnvironment = analyse_environment(
+            hamiltonian=hamiltonian,
+            chain_length=len(sequence),
+            ligand=ligand,
+            walk_qubit_offset=builder.ligand_walk_offset,
+        )
+
+        separations = structure.ligand_separations()
+
+        records.append(
+            {
+                "energy_scale": scale,
+                "interaction_energy": strongest_energy,
+                "regime": (
+                    "attractive"
+                    if strongest_energy < 0
+                    else ("repulsive" if strongest_energy > 0 else "neutral")
+                ),
+                "energy": exact.energy,
+                "degeneracy": exact.degeneracy,
+                "coordination_number": environment.coordination_number,
+                "buried_fraction": environment.buried_fraction,
+                "mean_coordination": environment.mean_coordination,
+                "position_entropy": environment.position_entropy,
+                "nearest_distance": float(separations.min()),
+                "mean_distance": float(separations.mean()),
+                "encapsulated": environment.is_encapsulated,
+                "expelled": environment.is_expelled,
+                "turns": " ".join(str(turn.value) for turn in structure.turns),
+                "touching_residues": " ".join(
+                    sequence[index] for index in structure.lattice_neighbours
+                ),
+            }
+        )
+        logger.info(
+            "Affinity %.2f -> coordination %.0f, nearest %.3f, entropy %.3f",
+            scale,
+            environment.coordination_number,
+            separations.min(),
+            environment.position_entropy,
         )
 
     return records
