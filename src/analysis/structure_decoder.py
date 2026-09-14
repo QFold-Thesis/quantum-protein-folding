@@ -28,6 +28,8 @@ import numpy as np
 
 from constants import (
     FCC_BASIS,
+    LATTICE_CONTACT_DISTANCE,
+    LATTICE_COORDINATION_NUMBER,
     MAIN_CHAIN_FIFTH_FIXED_POSITION,
     MAIN_CHAIN_FIXED_POSITIONS,
     QUBITS_PER_TURN,
@@ -62,9 +64,9 @@ class DecodedStructure:
             or None when no ligand is present.
         ligand_steps (list[TurnDirection]): Lattice steps taken by the ligand.
         claimed_contacts (list[int]): Residue indices the ligand's contact qubits
-            flag as bound.
+            flag as bound. Empty under radial coupling, which has no flags.
         squared_distances (dict[int, float]): Squared lattice distance from the
-            ligand to each residue it could bind.
+            ligand to every residue.
 
     """
 
@@ -76,13 +78,54 @@ class DecodedStructure:
     squared_distances: dict[int, float]
 
     @property
-    def realised_contacts(self) -> list[int]:
-        """list[int]: Residues the ligand both claims and actually touches."""
+    def lattice_neighbours(self) -> list[int]:
+        """list[int]: Residues actually touching the ligand, whatever it claims.
+
+        This is the geometric truth, so it is the meaningful readout under radial
+        coupling, where nothing is declared.
+        """
         return [
             index
-            for index in self.claimed_contacts
-            if np.isclose(self.squared_distances.get(index, np.inf), 1.0)
+            for index, squared in sorted(self.squared_distances.items())
+            if np.isclose(squared, LATTICE_CONTACT_DISTANCE)
         ]
+
+    @property
+    def realised_contacts(self) -> list[int]:
+        """list[int]: Residues the ligand both claims and actually touches."""
+        neighbours: set[int] = set(self.lattice_neighbours)
+        return [index for index in self.claimed_contacts if index in neighbours]
+
+    @property
+    def coordination_number(self) -> int:
+        """int: How many of the ligand's lattice neighbour sites hold a residue."""
+        return len(self.lattice_neighbours)
+
+    def ligand_separations(self) -> NDArray[np.float64]:
+        """Return the Cartesian distance from the ligand to every residue.
+
+        Returns:
+            NDArray[np.float64]: One distance per residue, in chain order.
+
+        Raises:
+            ValueError: If the structure holds no ligand.
+
+        """
+        if self.ligand_position is None:
+            msg: str = "structure has no ligand, cannot measure separations"
+            raise ValueError(msg)
+
+        return np.linalg.norm(self.coordinates - self.ligand_position, axis=1)
+
+    @property
+    def buried_fraction(self) -> float:
+        """float: Share of the ligand's neighbour sites occupied by the chain.
+
+        A lattice site has exactly LATTICE_COORDINATION_NUMBER neighbours, so 1.0
+        means the chain has closed around the ligand completely and 0.0 means it
+        is not touching the chain at all.
+        """
+        return self.coordination_number / LATTICE_COORDINATION_NUMBER
 
 
 def lattice_basis() -> NDArray[np.float64]:
@@ -184,7 +227,7 @@ def decode_structure(
     chain_length: int,
     ligand: Ligand | None = None,
     ligand_walk_offset: int = 0,
-    ligand_contact_offset: int = 0,
+    ligand_contact_offset: int | None = None,
 ) -> DecodedStructure:
     """Decode a full-register bitstring into lattice geometry.
 
@@ -195,8 +238,9 @@ def decode_structure(
             decoded. Defaults to None.
         ligand_walk_offset (int, optional): First qubit of the ligand's walk
             slice. Defaults to 0.
-        ligand_contact_offset (int, optional): First qubit of the ligand's
-            contact slice. Defaults to 0.
+        ligand_contact_offset (int | None, optional): First qubit of the ligand's
+            contact slice, or None when the coupling allocates no contact qubits.
+            Defaults to None.
 
     Returns:
         DecodedStructure: Turns, coordinates and ligand placement.
@@ -225,16 +269,19 @@ def decode_structure(
     ]
     ligand_position: NDArray[np.float64] = walk_to_coordinates(ligand_steps)[-1]
 
-    eligible: list[int] = ligand.eligible_bead_indices(chain_length)
-    claimed_contacts: list[int] = [
-        bead_index
-        for slot, bead_index in enumerate(eligible)
-        if bits[ligand_contact_offset + slot]
-    ]
+    claimed_contacts: list[int] = []
+    if ligand_contact_offset is not None:
+        claimed_contacts = [
+            bead_index
+            for slot, bead_index in enumerate(
+                ligand.eligible_bead_indices(chain_length)
+            )
+            if bits[ligand_contact_offset + slot]
+        ]
 
     squared_distances: dict[int, float] = {
         bead_index: float(_axis_squared_distance(turns, ligand_steps, bead_index))
-        for bead_index in eligible
+        for bead_index in range(chain_length)
     }
 
     logger.debug(

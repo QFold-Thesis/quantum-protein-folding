@@ -23,8 +23,14 @@ backbone operators untouched and keeps results backward compatible::
     [ protein turns | backbone contacts | ligand walk | ligand contacts ]
       (N-1)*Q         (N-1)^2             steps*Q       eligible residues
 
-Ligand coupling
----------------
+In RADIAL_POTENTIAL coupling the contact slice is empty, so the register ends
+after the ligand walk.
+
+Ligand coupling comes in two variants, selected with
+:class:`~enums.LigandCoupling`.
+
+Variant 1 - CONTACT_FLAG
+------------------------
 For each residue the ligand may bind, a boolean contact qubit ``c_i`` states
 whether the ligand claims to touch residue ``i``. The claim is scored against
 the geometry actually encoded in the turn qubits::
@@ -52,6 +58,34 @@ This evaluates to 1 when the ligand occupies residue ``j``'s site and to 0 on th
 two nearest allowed shells. Beyond those shells it grows again, which acts as a
 weak confinement keeping the ligand in the neighbourhood of the chain - harmless
 here, since a ligand encoded with a handful of steps cannot travel far anyway.
+
+Variant 2 - RADIAL_POTENTIAL
+----------------------------
+The flags disappear and the particle becomes a full bead on the lattice. Every
+residue contributes an energy determined by how far it actually is, read off a
+finite-range shell profile::
+
+    H_ligand = sum_i  V(aa_i, d2(i, L))
+
+    V(aa, s) = E(L, aa) * profile(s)   for s in the profile
+             = hardcore                for s = 0
+             = 0                       beyond the cutoff
+
+Three consequences follow, and they are the point of the variant. Several
+residues can be close at once, so the chain is free to *surround* the particle
+instead of touching it at a single declared point. A positive ``E`` makes the
+whole chain repel the particle, which lets it be pushed out rather than merely
+left unbound. And because nothing forces a single partner, where the particle
+settles is decided by the potential alone.
+
+It is also cheaper: no contact qubits at all, so the register is just the protein
+plus the walk.
+
+The exact zero beyond the cutoff is load-bearing rather than cosmetic. A residual
+tail, summed over every residue, would pull the particle toward the chain's
+centroid and manufacture the encapsulation this variant exists to measure. That
+is why the term is built spectrally - see :mod:`utils.spectral_utils` - rather
+than by interpolating a polynomial through the reachable shells.
 """
 
 from __future__ import annotations
@@ -70,9 +104,10 @@ from constants import (
     QUBITS_PER_TURN,
     SAME_SUBLATTICE_SHELLS,
 )
-from enums import Penalties
+from enums import LigandCoupling, Penalties
 from exceptions import InvalidOperatorError
 from logger import get_logger
+from particle.radial_potential import RadialPotential
 from utils.lattice_utils import build_chain_position, build_squared_distance
 from utils.qubit_utils import (
     build_identity_op,
@@ -80,8 +115,11 @@ from utils.qubit_utils import (
     fix_qubits,
     pad_to_n_qubits,
 )
+from utils.spectral_utils import build_diagonal_function
 
 if TYPE_CHECKING:
+    import numpy as np
+    from numpy.typing import NDArray
     from qiskit.quantum_info import SparsePauliOp
 
     from contact.contact_map import ContactMap
@@ -124,6 +162,8 @@ class HamiltonianBuilder:
         external_field: ExternalField | None = None,
         ligand: Ligand | None = None,
         ligand_interaction: LigandInteraction | None = None,
+        coupling: LigandCoupling = LigandCoupling.CONTACT_FLAG,
+        radial_potential: RadialPotential | None = None,
     ) -> None:
         """Initializes the HamiltonianBuilder with required protein data and interaction maps.
 
@@ -139,6 +179,11 @@ class HamiltonianBuilder:
             ligand_interaction (LigandInteraction | None, optional): Energies
                 between the ligand and each residue. Required when *ligand* is
                 given. Defaults to None.
+            coupling (LigandCoupling, optional): How the particle couples to the
+                chain. Defaults to LigandCoupling.CONTACT_FLAG.
+            radial_potential (RadialPotential | None, optional): Shell profile
+                used by RADIAL_POTENTIAL coupling. Defaults to a standard
+                finite-range well.
 
         Raises:
             ValueError: If a ligand is supplied without its interaction model.
@@ -155,6 +200,8 @@ class HamiltonianBuilder:
         self.external_field: ExternalField | None = external_field
         self.ligand: Ligand | None = ligand
         self.ligand_interaction: LigandInteraction | None = ligand_interaction
+        self.coupling: LigandCoupling = coupling
+        self.radial_potential: RadialPotential = radial_potential or RadialPotential()
 
     @property
     def num_protein_qubits(self) -> int:
@@ -169,16 +216,33 @@ class HamiltonianBuilder:
 
     @property
     def ligand_contact_offset(self) -> int:
-        """int: Index of the first qubit flagging a claimed ligand contact."""
+        """int: Index of the first qubit flagging a claimed ligand contact.
+
+        RADIAL_POTENTIAL coupling allocates no contact qubits, so the slice is
+        empty and this marks the end of the register.
+        """
         if self.ligand is None:
             return self.num_protein_qubits
         return self.num_protein_qubits + self.ligand.num_walk_qubits
+
+    @property
+    def has_contact_flags(self) -> bool:
+        """bool: Whether the register carries ligand contact-declaration qubits."""
+        return self.ligand is not None and self.coupling == LigandCoupling.CONTACT_FLAG
+
+    @property
+    def contact_flag_offset(self) -> int | None:
+        """Int | None: Start of the contact slice, or None when there is none."""
+        return self.ligand_contact_offset if self.has_contact_flags else None
 
     @property
     def num_qubits(self) -> int:
         """int: Total register width, including any ligand registers."""
         if self.ligand is None:
             return self.num_protein_qubits
+
+        if self.coupling == LigandCoupling.RADIAL_POTENTIAL:
+            return self.ligand_contact_offset
 
         eligible: list[int] = self.ligand.eligible_bead_indices(
             len(self.protein.main_chain)
@@ -285,6 +349,9 @@ class HamiltonianBuilder:
             logger.debug("No ligand configured - H_ligand omitted.")
             return build_identity_op(num_qubits, EMPTY_OP_COEFF)
 
+        if self.coupling == LigandCoupling.RADIAL_POTENTIAL:
+            return self._build_radial_potential_term(num_qubits)
+
         logger.debug("Creating hamiltonian term of ligand-residue contacts...")
 
         chain_len: int = len(self.protein.main_chain)
@@ -350,6 +417,76 @@ class HamiltonianBuilder:
             num_qubits,
         )
         return fix_qubits(ligand_term.simplify())
+
+    def _build_radial_potential_term(self, num_qubits: int) -> SparsePauliOp:
+        """Builds the full-bead coupling between the particle and every residue.
+
+        Unlike the contact-flag term this spends no qubits on declarations. Each
+        residue contributes an energy read directly off its distance to the
+        particle through the shell profile, so several residues can surround the
+        particle at once and the hard core is part of the same expression.
+
+        The operator is built spectrally rather than as a polynomial in the
+        squared distance, which is what keeps the profile exactly zero beyond its
+        cutoff. See :mod:`utils.spectral_utils` for why that matters.
+
+        Args:
+            num_qubits (int): Width of the register the operator must span.
+
+        Returns:
+            SparsePauliOp: The radial potential term.
+
+        """
+        if self.ligand is None or self.ligand_interaction is None:
+            return build_identity_op(num_qubits, EMPTY_OP_COEFF)
+
+        logger.debug("Creating hamiltonian term of ligand radial potential...")
+
+        chain_len: int = len(self.protein.main_chain)
+        ligand_position: list[SparsePauliOp] = self.ligand.position_operators(
+            num_qubits=num_qubits, walk_qubit_offset=self.ligand_walk_offset
+        )
+
+        potential_term: SparsePauliOp = build_identity_op(num_qubits, EMPTY_OP_COEFF)
+
+        for bead_index in range(chain_len):
+            residue_position: list[SparsePauliOp] = build_chain_position(
+                bead_index=bead_index, num_qubits=num_qubits
+            )
+            squared_distance: SparsePauliOp = fix_qubits(
+                build_squared_distance(residue_position, ligand_position)
+            )
+
+            symbol: str = self.protein.main_chain.get_symbol_at(bead_index)
+            energy: float = (
+                LIGAND_ENERGY_MULTIPLIER * self.ligand_interaction.get_energy(symbol)
+            )
+
+            def shell_energy(
+                distances: NDArray[np.float64], contact_energy: float = energy
+            ) -> NDArray[np.float64]:
+                return self.radial_potential.evaluate(distances, contact_energy)
+
+            potential_term = potential_term + build_diagonal_function(
+                squared_distance, shell_energy
+            )
+
+            logger.debug(
+                "Residue %s (index %s) interacts with %s at energy %s",
+                symbol,
+                bead_index,
+                self.ligand.symbol,
+                energy,
+            )
+
+        logger.info(
+            "Finished creating radial H_ligand for %s over %d residues on %s qubits (%d terms).",
+            self.ligand.symbol,
+            chain_len,
+            num_qubits,
+            len(potential_term.paulis),
+        )
+        return potential_term.simplify()
 
     def _build_exclusion_term(
         self, num_qubits: int, ligand_position: list[SparsePauliOp]

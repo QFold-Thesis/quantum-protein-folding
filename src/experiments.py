@@ -6,6 +6,8 @@ Produces everything needed to judge the extension in one pass, writing to
 * an apo/holo comparison with binding energy, contacts and both conformations,
   solved exactly and variationally so the two can be compared;
 * an affinity sweep showing how binding responds to ligand strength;
+* a particle environment sweep covering the second coupling variant, where the
+  chain is free to close around the particle or push it away;
 * two field sweeps - a gradient field that reshapes the fold, and a uniform
   field that provably cannot, included as a control.
 
@@ -25,10 +27,12 @@ from analysis.ligand_analysis import (
     SweepRecord,
     sweep_field_strength,
     sweep_ligand_affinity,
+    sweep_particle_environment,
     write_records_csv,
 )
 from analysis.reporting import (
     plot_binding_geometry,
+    plot_particle_environment,
     plot_sweep,
     plot_vqe_convergence,
     write_binding_report,
@@ -37,11 +41,14 @@ from analysis.reporting import (
 from constants import DEFAULT_TIMEZONE, ROOT_PROJECT_PATH
 from interaction import LigandInteraction
 from logger import get_logger
+from particle import RadialPotential
 
 logger = get_logger()
 
 DEFAULT_SEQUENCE: str = "APRLRFY"
 AFFINITY_SCALES: list[float] = [0.0, 0.25, 0.5, 1.0, 2.0, 4.0]
+PARTICLE_SCALES: list[float] = [-6.0, -4.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0]
+
 FIELD_STRENGTHS: list[float] = [
     -2.0,
     -1.0,
@@ -118,6 +125,38 @@ def run_affinity_sweep(sequence: str, output_dir: Path) -> list[SweepRecord]:
     return records
 
 
+def run_particle_environment(sequence: str, output_dir: Path) -> list[SweepRecord]:
+    """Sweep a full-bead particle from strong repulsion to strong attraction.
+
+    Covers the second coupling variant: with no contact declarations, how the
+    chain arranges itself around the particle is an outcome rather than an
+    input, so encapsulation and expulsion both show up in the same sweep.
+
+    Args:
+        sequence (str): Main chain sequence.
+        output_dir (Path): Directory to write artefacts into.
+
+    Returns:
+        list[SweepRecord]: The sweep records.
+
+    """
+    logger.info("Running particle environment sweep for %s", sequence)
+
+    records = sweep_particle_environment(
+        sequence=sequence,
+        energy_scales=PARTICLE_SCALES,
+        potential=RadialPotential.square_well({1.0: 1.0, 2.0: 0.6, 3.0: 0.3}),
+    )
+    write_records_csv(records, output_dir / "particle_environment.csv")
+    plot_particle_environment(
+        records,
+        output_dir / "particle_environment.png",
+        title=f"Chain response to a free particle ({sequence})",
+    )
+
+    return records
+
+
 def run_field_sweeps(
     sequence: str, output_dir: Path
 ) -> tuple[list[SweepRecord], list[SweepRecord]]:
@@ -159,6 +198,7 @@ def run_field_sweeps(
 def summarise(
     result: BindingResult,
     affinity: list[SweepRecord],
+    particle: list[SweepRecord],
     gradient: list[SweepRecord],
     uniform: list[SweepRecord],
     output_dir: Path,
@@ -168,6 +208,7 @@ def summarise(
     Args:
         result (BindingResult): Apo/holo comparison.
         affinity (list[SweepRecord]): Affinity sweep records.
+        particle (list[SweepRecord]): Particle environment sweep records.
         gradient (list[SweepRecord]): Gradient field sweep records.
         uniform (list[SweepRecord]): Uniform field sweep records.
         output_dir (Path): Directory the artefacts were written to.
@@ -206,6 +247,21 @@ def summarise(
         f"  scale {record['energy_scale']:>5}  dE = {float(record['binding_energy']):+.4f}"
         f"  bound {record['bound_symbols'] or '-':<4}  fold {record['holo_turns']}"
         for record in affinity
+    )
+
+    lines.extend(
+        [
+            "",
+            "--- Variant 2: free particle with a radial potential ---",
+            "  energy | coord | thermal | nearest | entropy | touching | verdict",
+        ]
+    )
+    lines.extend(
+        f"  {float(record['interaction_energy']):>+6.1f} |   {float(record['coordination_number']):>1.0f}/4 "
+        f"|  {float(record['mean_coordination']):>5.2f}  |  {float(record['nearest_distance']):>5.3f}  "
+        f"|  {float(record['position_entropy']):>5.3f}  | {str(record['touching_residues']) or '-':<8} "
+        f"| {'encapsulated' if record['encapsulated'] else ('expelled' if record['expelled'] else 'bound')}"
+        for record in particle
     )
 
     lines.extend(
@@ -252,9 +308,10 @@ def main() -> None:
 
     result: BindingResult = run_binding_experiment(DEFAULT_SEQUENCE, output_dir)
     affinity = run_affinity_sweep(DEFAULT_SEQUENCE, output_dir)
+    particle = run_particle_environment(DEFAULT_SEQUENCE, output_dir)
     gradient, uniform = run_field_sweeps(DEFAULT_SEQUENCE, output_dir)
 
-    print(summarise(result, affinity, gradient, uniform, output_dir))
+    print(summarise(result, affinity, particle, gradient, uniform, output_dir))
 
 
 if __name__ == "__main__":
